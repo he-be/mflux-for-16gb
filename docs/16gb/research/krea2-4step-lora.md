@@ -38,16 +38,22 @@ mappings = LoRALoader._build_pattern_mappings(Krea2LoRAMapping.get_mapping())
 global 4 個。global 側のキーは `diffusion_model.tmlp.0` / `tmlp.2` / `tproj.1` /
 `last.linear` で、mflux 側の別名定義(`krea2_lora_mapping.py:18-24`)にそのまま載る。
 
-## 3. bake してはいけない(8bit 未満の場合)
+## 3. bake の扱い(q8 では bake してよい)
+
+**このプロジェクトの対象は q8 なので、bake して構わない。** q8 ベースへの bake は
+同じ q8 に戻るだけで、畳んだ後は LoRA 側の 0.44GB が不要になるぶん常駐が減る。
+以下は 8bit 未満を使う場合の注意で、記録として残す。
+
+### 8bit 未満で bake してはいけない理由
 
 `LoRASaver._bake_delta_into_linear` (`lora_saver.py:165`) は、量子化ビット数が
 8 未満の層に LoRA を畳むとき **q8 に再量子化する**。rank 64 のデルタが q4/q3 の
 量子化ステップより小さく、そのまま畳むと丸め潰されるため。
 
 この LoRA は 228 層 = トランスフォーマーの重い linear のほぼ全部を触るので、
-q4 ベースで bake すると 7.4GB → 13〜14GB に膨らむ。**`--no-bake-lora` を付けて
-runtime adapter のまま使う**こと(追加は bf16 で 0.44GB)。q8 ベースなら bake しても
-同じ q8 に戻るだけなので、どちらでもよい。
+8bit 未満のベースに bake すると、その 228 層がまるごと q8 相当に太る。
+その場合は `--no-bake-lora` で runtime adapter のまま使うことになる(bf16 で 0.44GB 追加)。
+本プロジェクトは q8 固定なので、この分岐には入らない。
 
 ## 4. サンプラーと guidance
 
