@@ -32,6 +32,8 @@
 
 ## 索引
 
+- **[引き継ぎ(2026-09-22)](HANDOFF.md)** ← 新しいセッションはここから
+
 - [Krea 2 を 16GB / 18GB で動かすための調査](research/krea2-low-memory-mac.md)
 - [Krea 2 Turbo 4-step 蒸留 LoRA の使い方](research/krea2-4step-lora.md)
 - [M3 Pro 18GB: 計算律速と SSD ストリーミングの実測](measurements/2026-09-22-m3pro-compute-vs-ssd.md)（合成ベンチ。実ウェイトでは未測定）
