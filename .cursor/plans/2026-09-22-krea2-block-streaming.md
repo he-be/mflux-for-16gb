@@ -1,92 +1,130 @@
-# 計画: Krea 2 のブロック単位ウェイトストリーミング
+# 計画: Krea 2 のブロック単位ウェイトストリーミング(実測ゲート方式)
 
-- 日付: 2026-09-22
+- 日付: 2026-09-22(改訂 2)
 - ブランチ: `feat/krea2-block-streaming`
 - 管理先: fork [`he-be/mflux-for-16gb`](https://github.com/he-be/mflux-for-16gb)(upstream へ PR は出さない)
-- 根拠データ: [`docs/16gb/measurements/2026-09-22-m3pro-compute-vs-ssd.md`](../../docs/16gb/measurements/2026-09-22-m3pro-compute-vs-ssd.md)
 
-## 目標
+## 0. この計画の作り方
 
-M3 Pro 18GB で **q8 + 4step LoRA** の生成を、スワップ 0 で通す。
-常駐を「全ブロック」から「1〜2 ブロック + アクティベーション」に落とす。
+**各段階は、落としてきた実ウェイトでの測定に合格したときだけ次に進む。**
+不合格なら、その時点で方式を捨てるか作り直す。基準(kill criteria)は段階ごとに
+数値で書いてある。mflux 本体のコードを触るのは M5 からで、それ以前は
+すべて外側のスクリプトで測る。
 
-検証可能なゴール:
+### 現時点の根拠の限界(正直な棚卸し)
 
-1. `tools/swapwatch.py` の判定が `clean`(swapouts 増加 0)。
-2. ストリーミング on/off で、同一シード・同一プロンプトの出力画像が一致する
-   (数学は変わらないので、ずれたら実装バグ)。比較は q8 が載る機材、または
-   ストリーミング側だけを 2 回実行しての自己再現性で代替。
-3. 1 ステップあたりの時間が、非ストリーミング比で +20% 以内(I/O が隠れていることの確認)。
+[実測メモ](../../docs/16gb/measurements/2026-09-22-m3pro-compute-vs-ssd.md)で分かっているのは:
 
-## 現状
+| 測ったもの | 実測 | Krea 2 の実ウェイトか |
+|---|---|---|
+| 行列積 5120×6144@6144×6144 | 5.1〜5.9 TFLOPS | **違う**(合成テンソル) |
+| SSD 読み出し (F_NOCACHE) | 4.6〜5.2 GB/s | **違う**(合成 8.6GB ファイル) |
+| 28×138MB の bind→eval→drop | 常駐 0.17GB、計算律速 | **違う**(合成 safetensors) |
+| 1 ステップ 約 29 秒 | — | **推定**(FLOPS からの割り算) |
 
-`Krea2Initializer.init` は 3 コンポーネントを構築して `mx.eval(model)` で一括実体化する
-(`krea2_initializer.py:30-38`)。破棄側は `MemorySaver` が持っていて、エンコード直後に TE を、
-`--low-ram` ならループ後にトランスフォーマーを捨てる(`memory_saver.py:77`)。
-足りないのは「まだ使わないブロックを実体化しない」こと。
+つまり「ストリーミングは成立する」は**まだ仮説**。Krea 2 の実ブロックは
+attention・norm・modulation・GQA を含み、行列積だけの合成ベンチとは
+演算密度も読み出しパターンも違う。M1 で本物を測るまで、この仮説には
+何の保証もない。
 
-MLX の `mx.load` は lazy handle を返し、参照を捨てれば解放される(計測 §3)。
-つまり必要なのは新しいローダーではなく、**bind / eval / drop の順序制御**。
+### 測定の作法(前回の誤測定の再発防止)
 
-## 設計
+- ベンチのループは**内側で `mx.eval`**。外でまとめて eval すると未使用グラフが
+  捨てられ、実際より速い数字が出る(初回 20.9 TFLOPS という誤測定をこれで出した)。
+- すべての数字は別経路で sanity check する(例: トークン数を半分にして時間が
+  半分になるか、FLOPS が §1 の行列積ベンチと桁で合うか)。
+- 測定スクリプトは `tools/bench/` に残し、結果は
+  `docs/16gb/measurements/` に日付・機材つきで置く。
+- 生成を伴う実行は必ず `tools/swapwatch.py` 越し。`clean` でない結果は採用しない。
 
-### `Krea2WeightStream`(新規, `src/mflux/models/krea2/weights/krea2_weight_stream.py`)
+## 1. 目標
 
-- 構築時に safetensors のパス群だけを保持する(mflux セーブ形式のシャード + index)。
-- `bind(block_index)`: そのブロックのテンソルを lazy handle として `tree_unflatten` し、
-  `block.update(...)` する。量子化済みチェックポイントなら `weight`/`scales`/`biases` を
-  そのまま流す(再量子化しない)。
-- `release(block_index)`: 実体化済みの配列への参照を捨て、lazy handle に戻す。
-- `prefetch(block_index)`: `mx.async_eval` で次ブロックの実体化を先行させる(第 2 段階)。
-- ブロック外の小物(`first`, `tmlp`, `tproj`, `txtfusion`, `last`)は常駐のまま。
+M3 Pro 18GB で **q8 + 4step LoRA / 1024² / 4 ステップ**を、スワップ 0 で通す。
 
-### フック位置
+最終的な検証可能ゴール:
 
-- `Krea2Transformer.__call__` の 28 ブロックのループに、bind → 実行 → release を差し込む。
-  ストリームが `None` のときは現状の挙動のまま(既定は非ストリーミング)。
-- `Krea2Initializer.init`: ストリーミング有効時はトランスフォーマーの重みを
-  `mx.eval` せず、構造(QuantizedLinear の形)だけ作ってストリームを持たせる。
-- LoRA: `--no-bake-lora` の runtime adapter は rank 64 = 0.44GB なので常駐のまま扱う。
-  bake は bind 後のブロックに対して行う必要があり、ステップごとに再計算になるので
-  ストリーミング時は bake を禁止(明示エラー)。
+1. swapwatch の判定が `clean`(swapouts 増分 0)。
+2. 同一シードで 2 回実行して画像が一致(自己再現性)。
+3. ブロック単体で、常駐実行とストリーミング実行の出力が**ビット一致**(M3)。
+4. 画質の基準は、後日 M6 mac mini の全常駐 q8 実行と突き合わせる。
 
-### CLI
+## 2. 段階と合格基準
 
-- `--stream-weights`(既定オフ)。`--low-ram` からも有効化するかは実測後に決める。
-- 進捗表示は既存の `MemorySaver` のメモリ統計に相乗り。
+### M0. チェックポイントの物理的事実(ダウンロード完了後すぐ)
 
-## 変更ファイル
+- `model.safetensors.index.json` と各シャードのヘッダから、**ブロックごとの実バイト数**、
+  シャードへの分散、q8 の格納形式(`weight`/`scales`/`biases`)を出す。
+- 実シャードを `F_NOCACHE` で読んで帯域を測る(合成ファイルではなく本物で)。
+- **合格基準**: 1 ブロックのテンソルが 1〜2 シャードに収まり、連続読みできること。
+  ばらけていてシーク主体になるなら、ブロック順に並べ直した専用ファイルを
+  書き出す工程(M0b)を先に入れる。
+
+### M1. 実ブロック 1 個 ← **本命の go/no-go**
+
+- `Krea2Transformer` のブロックを 1 個だけ構築し、実 q8 重みを bind して、
+  1024² 相当の実形状(画像 4096 + テキスト ~1024 トークン)で forward。
+- 測る: ブロックの計算時間 / bind+eval の時間 / 実読み出しバイト /
+  bind→drop で RSS がベースラインに戻るか。
+- **合格基準**:
+  - 計算時間 ÷ I/O 時間 ≥ **2.0**(これを下回るとストリーミングで隠れない → 中止)
+  - drop 後の常駐がベースライン +100MB 以内(戻らなければ MLX 側で解放されて
+    いない → bind 方式を作り直す)
+  - bind のオーバーヘッドがブロック計算時間の 10% 未満
+
+### M2. 28 ブロック = 1 ステップ(swapwatch 下)
+
+- M1 のループを 28 ブロックに広げ、1 ステップ分を実行。
+- 測る: 1 ステップの実時間、peak RSS、swapwatch verdict、実読み出し量。
+- **合格基準**: verdict `clean`、peak RSS < 6GB、1 ステップ < 60 秒。
+  60 秒を超えるなら 4 ステップで 4 分。使い物にならないので設計を見直す。
+
+### M3. 数値的同一性
+
+- 同じブロック・同じ入力で、(a) 重み常駐 (b) ストリーミング の出力を比較。
+- **合格基準**: ビット一致。数学は変わらないので、ずれたら実装バグ。
+  一致するまで次へ進まない。
+
+### M4. テキストエンコーダ
+
+- Qwen3-VL-4B (bf16 8.05GB) を load → encode → 破棄、を swapwatch 下で実測。
+- **合格基準**: `clean`。通れば TE はストリーミング不要(エンコードは 1 回きりで
+  計算量が小さく、ストリーミングしても I/O が隠れない可能性が高い)。
+  落ちるなら TE もブロック単位に落とす。
+
+### M5. mflux 本体への実装 ← **ここで初めてコードを触る**
+
+M1〜M4 の数字を満たした形だけを入れる。
 
 | ファイル | 変更 |
 |---|---|
-| `src/mflux/models/krea2/weights/krea2_weight_stream.py` | 新規 |
+| `src/mflux/models/krea2/weights/krea2_weight_stream.py` | 新規(bind / release / prefetch) |
 | `src/mflux/models/krea2/model/krea2_transformer/transformer.py` | ブロックループにフック |
 | `src/mflux/models/krea2/krea2_initializer.py` | ストリーミング時は eval を遅延 |
-| `src/mflux/models/krea2/variants/txt2img/krea2.py` | ストリーム生成とライフサイクル |
-| `src/mflux/cli/parser/parsers.py` | `--stream-weights` |
-| `tools/swapwatch.py` | 済(スワップ見張り) |
-| `docs/16gb/` | 計測・運用の記録 |
+| `src/mflux/models/krea2/variants/txt2img/krea2.py` | ストリームのライフサイクル |
+| `src/mflux/cli/parser/parsers.py` | `--stream-weights`(既定オフ) |
 
-## 段階
+- LoRA は `--no-bake-lora` の runtime adapter(rank 64 = 0.44GB)を常駐扱い。
+  ストリーミング時の bake はステップごとの再計算になるので明示エラーで禁止。
+- **合格基準**: M2 と同じ数字が mflux 経由でも出ること(スクリプトと本体で
+  差が出たら、その差の原因を特定するまで進まない)。
 
-1. **PoC**(mflux 本体は触らない): スクリプトで Krea2Transformer をストリーミング実行し、
-   1 ステップ時間と常駐を実測する。ここで bind/drop のオーバーヘッドを確認。
-2. **本実装**: 上記の変更。まず q8 + 4step LoRA、1024²、4 ステップ、seed 42 で通す。
-3. **TE**: エンコードは 1 回きりで計算量が小さいので、ストリーミングより
-   「load → encode → 破棄」で足りるか実測してから決める。
-4. **記録**: `docs/16gb/runs/` に swapwatch の CSV とコマンドを残す。
+### M6. 実運用
 
-## 非目標
+- q8 + 4step LoRA、1024²、4 ステップ、seed 42、`--scheduler euler`、swapwatch 下。
+- 2 回実行して画像一致を確認。CSV とコマンドと所要時間を `docs/16gb/runs/` に記録。
+- その後 1280²(LoRA の学習 σ と一致する解像度)でも実行。
 
-- upstream への PR、他モデルへの一般化(まず Krea 2 だけ)。
-- 画質の評価(ストリーミングは数学を変えないので、画質は別の軸)。
+## 3. 非目標
 
-## リスク
+- upstream への PR。
+- 他モデルへの一般化(まず Krea 2 だけ)。
+- 画質の評価(ストリーミングは数学を変えない。画質は量子化ビット数の軸の話)。
 
-- bind を 28 回/ステップ行うオーバーヘッドが無視できない場合 → 2 ブロック分の
-  ダブルバッファに切り替える。
-- MLX のキャッシュアロケータが解放を遅延させる場合 → ブロックごとに `mx.clear_cache()`、
-  あるいは `--mlx-cache-limit-gb` を小さくする。
-- 量子化済みチェックポイントの `scales`/`biases` を含む部分更新で
-  `nn.QuantizedLinear` の内部整合が崩れる場合 → 形だけ先に作ってから
-  `update` する順序を守る(`WeightApplier` の stored-quantization 経路と同じ作り)。
+## 4. 想定される失敗と撤退先
+
+| 失敗 | 兆候 | 撤退先 |
+|---|---|---|
+| I/O が隠れない | M1 で比 < 2.0 | ストリーミングを捨て、段階ロード(TE→DiT→VAE)に戻す。q4 なら 18GB に収まる |
+| メモリが解放されない | M1 で RSS が戻らない | bind をプロセス内で完結させず、mmap の扱いを MLX 側から再検討 |
+| 速度が実用外 | M2 で 1 ステップ > 60 秒 | 解像度を下げる / M6 mini 前提に切り替える |
+| シャード配置が不利 | M0 でブロックが分散 | ブロック順に並べ直した専用ファイルを書き出す |
