@@ -25,7 +25,8 @@ class Sample:
     swapins: int
     swapouts: int
     swapouts_delta: int
-    child_rss_mb: float
+    child_footprint_mb: float
+    child_peak_footprint_mb: float
 
 
 class SwapWatch:
@@ -76,6 +77,7 @@ class SwapWatch:
     def _sample(self, start, base_swap, base_out, pid, writer, handle) -> None:
         counters = self._vm_counters()
         used = self._swap_used_mb()
+        footprint, peak_footprint = self._footprint_mb(pid)
         sample = Sample(
             t=time.time() - start,
             swap_used_mb=used,
@@ -84,7 +86,8 @@ class SwapWatch:
             swapins=counters["swapins"],
             swapouts=counters["swapouts"],
             swapouts_delta=counters["swapouts"] - base_out,
-            child_rss_mb=self._rss_mb(pid),
+            child_footprint_mb=footprint,
+            child_peak_footprint_mb=peak_footprint,
         )
         self.samples.append(sample)
 
@@ -98,14 +101,15 @@ class SwapWatch:
                     sample.swapins,
                     sample.swapouts,
                     sample.swapouts_delta,
-                    f"{sample.child_rss_mb:.1f}",
+                    f"{sample.child_footprint_mb:.1f}",
+                    f"{sample.child_peak_footprint_mb:.1f}",
                 ]
             )
             handle.flush()
 
         if not self.warned and sample.swap_delta_mb >= self.warn_delta_mb:
             self.warned = True
-            print(f"⚠️  swapwatch: swap grew {sample.swap_delta_mb:.0f} MB at t={sample.t:.0f}s (RSS {sample.child_rss_mb:.0f} MB)")  # fmt: skip
+            print(f"⚠️  swapwatch: swap grew {sample.swap_delta_mb:.0f} MB at t={sample.t:.0f}s (footprint {sample.child_footprint_mb:.0f} MB)")  # fmt: skip
 
         if self.abort_delta_mb is not None and sample.swap_delta_mb >= self.abort_delta_mb:
             self.aborted = True
@@ -116,14 +120,14 @@ class SwapWatch:
             print("🛁 swapwatch: the command exited before the first sample")
             return
         peak_swap = max(s.swap_delta_mb for s in self.samples)
-        peak_rss = max(s.child_rss_mb for s in self.samples)
+        peak_footprint = max(s.child_peak_footprint_mb for s in self.samples)
         peak_comp = max(s.compressor_mb for s in self.samples)
         out_delta = self.samples[-1].swapouts - base_out
         in_delta = self.samples[-1].swapins - self.samples[0].swapins
         verdict = "SWAPPED" if (out_delta > 0 or peak_swap >= self.warn_delta_mb) else "clean"
         print("🛁 swapwatch summary")
         print(f"   duration          : {self.samples[-1].t:.0f} s ({len(self.samples)} samples)")
-        print(f"   peak child RSS    : {peak_rss / 1000:.2f} GB")
+        print(f"   peak footprint    : {peak_footprint / 1000:.2f} GB (phys_footprint, process tree)")
         print(f"   swap used (base)  : {base_swap:.0f} MB")
         print(f"   swap rise (peak)  : {peak_swap:.0f} MB")
         print(f"   swapouts / swapins: {out_delta} / {in_delta} pages ({out_delta * PAGE_SIZE / 1e6:.0f} MB out)")
@@ -147,7 +151,8 @@ class SwapWatch:
                 "swapins",
                 "swapouts",
                 "swapouts_delta",
-                "child_rss_mb",
+                "child_footprint_mb",
+                "child_peak_footprint_mb",
             ]  # fmt: skip
         )
         return writer, handle
@@ -180,9 +185,54 @@ class SwapWatch:
         return int(match.group(1)) if match else 0
 
     @staticmethod
-    def _rss_mb(pid: int) -> float:
-        out = subprocess.run(["ps", "-o", "rss=", "-p", str(pid)], capture_output=True, text=True).stdout.strip()
-        return float(out) / 1024 if out else 0.0
+    def _footprint_mb(pid: int) -> tuple[float, float]:
+        # ps rss does not see MLX's buffers at all: a process holding a 4 GB mx array
+        # reports 30 MB, because the allocation is an IOAccelerator region. phys_footprint
+        # does count it (3840 MB for that same array), so it is the only honest
+        # per-process number here. footprint reports the peak too, which means a coarse
+        # sampling interval cannot miss a short-lived high-water mark.
+        # Summed over the process tree because every run goes through `uv run`, which
+        # execs the real python as a grandchild.
+        total = peak = 0.0
+        for target in SwapWatch._tree_pids(pid):
+            out = subprocess.run(["footprint", "-p", str(target)], capture_output=True, text=True).stdout
+            total += SwapWatch._parse_footprint(out, "phys_footprint")
+            peak += SwapWatch._parse_footprint(out, "phys_footprint_peak")
+        return total, peak
+
+    @staticmethod
+    def _parse_footprint(out: str, field: str) -> float:
+        match = re.search(rf"{field}:\s*([\d.]+)\s*([KMG]?B)", out)
+        if not match:
+            return 0.0
+        scale = {"B": 1e-6, "KB": 1 / 1024, "MB": 1.0, "GB": 1024.0}
+        return float(match.group(1)) * scale.get(match.group(2), 1.0)
+
+    @staticmethod
+    def _tree_pids(pid: int) -> list[int]:
+        out = subprocess.run(["ps", "-Axo", "pid=,ppid="], capture_output=True, text=True).stdout
+        children: dict[int, list[int]] = {}
+        for line in out.splitlines():
+            fields = line.split()
+            if len(fields) != 2:
+                continue
+            try:
+                child, parent = int(fields[0]), int(fields[1])
+            except ValueError:
+                continue
+            children.setdefault(parent, []).append(child)
+
+        pids: list[int] = []
+        stack = [pid]
+        seen: set[int] = set()
+        while stack:
+            current = stack.pop()
+            if current in seen:
+                continue
+            seen.add(current)
+            pids.append(current)
+            stack.extend(children.get(current, []))
+        return pids
 
 
 def main() -> int:
