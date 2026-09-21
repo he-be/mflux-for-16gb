@@ -25,11 +25,15 @@ M3 Pro 18GB の MacBook Pro で **Krea 2 Turbo q8 + 4step 蒸留 LoRA** の画�
 | fork remote | `fork` = `https://github.com/he-be/mflux-for-16gb`(**PR は出さない**) |
 | ブランチ | `feat/krea2-block-streaming` |
 | q8 ウェイト | `~/.cache/huggingface/hub/models--mflux-community--krea-2-turbo-mflux-q8/snapshots/ad5c0b1784c486bd45c2ced8a9f10aa45293a7c8/` |
-| 4step LoRA | `~/.cache/huggingface/hub/models--lvladikov--Krea2-Turbo-Distill-4step-LoRA/snapshots/597eb1382f58a1fa38b5694ee19a364ee2690103/krea2_turbo_4step_rank_64_lora_comfyui.safetensors` |
+| 4step LoRA | `~/Library/Caches/mflux/loras/krea2_turbo_4step_rank_64_lora_comfyui.safetensors` |
+| 中間生成物 | `~/Library/Caches/mflux/16gb-bench/`(M2 の埋め込みなど。リポジトリ外) |
 | スワップ見張り | `tools/swapwatch.py` |
+| 計測スクリプト | `tools/bench/`(`memstat.py` / `te_encode.py` / `dit_steps.py`) |
 | 文書 | `docs/16gb/`(research / measurements / runs)、計画は `.cursor/plans/` |
 
-ダウンロードは完了済み(q8 21GB + LoRA 438MB)。再取得は不要。
+ダウンロードは完了済み(q8 21GB + LoRA 438MB)。再取得は不要。LoRA は
+`lvladikov/Krea2-Turbo-Distill-4step-LoRA:krea2_turbo_4step_rank_64_lora_comfyui.safetensors`
+という指定でも通る(mflux が自前のキャッシュに写しを持っている)。
 
 ## 3. 確定した事実(すべてこのマシンでの実測)
 
@@ -39,6 +43,7 @@ M3 Pro 18GB の MacBook Pro で **Krea 2 Turbo q8 + 4step 蒸留 LoRA** の画�
 hw.memsize                        19.33 GB
 iogpu.wired_limit_mb              14336 MB (14.34 GB)
 max_recommended_working_set_size  15.03 GB
+max_buffer_length                  9.66 GB
 mx.set_wired_limit                既定 0(MLX は何も wire しない)
 ```
 
@@ -72,6 +77,28 @@ mx.set_wired_limit                既定 0(MLX は何も wire しない)
 | q8 / q4 quantized matmul 同形状 | 75 ms = 5.1 TFLOPS |
 | 合成 28×138MB の bind→eval→drop | 常駐 0.17GB、計算律速のまま |
 
+### 計器(ここを間違えると全部無意味になる)
+
+- **`ps rss` は MLX の確保を 1 バイトも見ない。** 4.00 GB の `mx.array` を持つプロセスを
+  `ps` は 0.03 GB と報告する。`phys_footprint` なら 3.84 GB。
+- 判定に使うのは `mx.get_peak_memory()`(プロセス内)と `footprint -p <pid>` の
+  `phys_footprint` / `phys_footprint_peak`(外から、ツリー全体を合計)。2 本が一致する
+  ことを毎回確認する。
+- `swapwatch` はこれに直してある。直す前は `uv run` の launcher を測っていて、8 GB
+  常駐の実行を「peak child RSS 0.03 GB」と報告していた。
+- 空きメモリは `free` ではなく **claimable = free + inactive + speculative + purgeable**
+  で見る(`tools/bench/memstat.py`)。
+- 詳細: [計測の土台](measurements/2026-09-22-memory-instrumentation.md)
+
+### M2 の結果(合格、ただし条件は汚い)
+
+TE だけのプロセス: MLX ピーク **8.19 GB**、footprint ピーク 8.11〜8.29 GB、
+**swapouts 0**、verdict `clean`。実体化 1.3 s (5.9 GB/s)、エンコード 0.63〜0.81 s。
+埋め込みは `(1, 30, 30720)` bf16 = 1.84 MB。
+[記録](measurements/2026-09-22-m2-text-encoder.md)
+
+**再起動前の状態で測った**ので、M1 の後にもう一度通しておくこと。
+
 ### mflux 側の作法(コードを読んで確認済み)
 
 - `--steps 4` を明示(既定 8)、`--scheduler euler`(既定 er_sde)、guidance は 1.0 のまま
@@ -79,9 +106,15 @@ mx.set_wired_limit                既定 0(MLX は何も wire しない)
 - LoRA の全 456 キーが `Krea2LoRAMapping` に 456/456 で一致(検証済み)。
 - q8 なら LoRA は bake してよい(8bit 未満のときだけ `--no-bake-lora` が要る)。
 - σ スケジュールは動的シフト。LoRA の学習点 (μ=1.15) と一致するのは **1280×1280**。
-  1024² は μ=0.906 でわずかにずれる。
-- 現状の `Krea2Initializer.init` は 3 コンポーネントを構築して `mx.eval(model)` で
-  一括実体化する(`krea2_initializer.py:30-38`)。段階ロードは未実装。
+  1024² は μ=0.906 でわずかにずれる。1024²/4 ステップの σ は
+  `[1.0, 0.8813, 0.7122, 0.4521, 0.0]`(実測)。
+- `Krea2Initializer.init` は 3 コンポーネントを構築して `mx.eval(model)` で一括実体化する
+  (`krea2_initializer.py:30-38`)。段階ロードは未実装。**`tools/bench/` はこれを迂回して
+  コンポーネント単位で `WeightLoader.load_single_local` を呼ぶ。**
+- q8 DiT の配線は検証済み: 956 パラメータが 956/956 で一致、形の不一致 0、
+  量子化層 263、`bits=8`。
+- **`mx.load` は lazy。** 上の検証は 13.62 GB を一切実体化せずに通る(active 0.000 GB)。
+  読み出し時間を測るなら `mx.eval(model)` を明示すること。
 - `MemorySaver` はエンコード後に TE を、`--low-ram` はループ後に DiT を破棄する
   (`memory_saver.py:77`)。
 
@@ -94,30 +127,53 @@ mx.set_wired_limit                既定 0(MLX は何も wire しない)
 
 ## 5. 次の手順
 
-計画の M1 から。**mflux 本体のコードは M6 まで触らない。**
+**M1 から。このために再起動が必要で、そこが今の停止点。**
+mflux 本体のコードは M6 まで触らない。
 
-### M1. クリーンな状態の測定
+### M1. クリーンな状態の測定 ← いまここ
 
-常駐アプリを落として再起動し、空きメモリ・`memory_pressure`・スワップのベースラインを
-記録する。これが土俵の広さで、以降の実験条件の一部になる。
+常駐アプリを落として再起動し、ベースラインを記録する:
 
-### M2. TE だけのプロセス(埋め込みを保存)
+```sh
+uv run python tools/bench/memstat.py --label clean-boot --json docs/16gb/runs/$(date +%Y%m%d-%H%M)-m1-baseline.json
+```
 
-`tools/bench/` にスクリプトを書く。text encoder だけを構築してプロンプトをエンコードし、
-結果を safetensors に保存して終了。swapwatch 下で `clean` を確認。
+参考(汚れた状態での値): claimable 7.5〜11.0 GB、swap 既使用 492 MB、
+compressor 1.26 GB。**14.06 GB には足りない。** 再起動後にどこまで広がるかが土俵。
 
-### M3. DiT だけのプロセス ← 本命
+### M2. TE だけのプロセス ← 済。M1 の後に再実行して数字を揃える
 
-M2 の埋め込みを読み、**q8 DiT + LoRA (14.06GB) だけ**を載せて 4 ステップ回し、
-latent を保存する。測るのは peak RSS / 1 ステップの実時間 / swapwatch verdict /
-`mx.get_peak_memory()`。
+```sh
+uv run python tools/swapwatch.py --csv docs/16gb/runs/$(date +%Y%m%d-%H%M)-m2-te.csv -- \
+  uv run python tools/bench/te_encode.py \
+    --model ~/.cache/huggingface/hub/models--mflux-community--krea-2-turbo-mflux-q8/snapshots/ad5c0b1784c486bd45c2ced8a9f10aa45293a7c8 \
+    --out ~/Library/Caches/mflux/16gb-bench/krea2-embeds.safetensors \
+    --json docs/16gb/runs/$(date +%Y%m%d-%H%M)-m2-te.json
+```
 
-無理のかけ方は段階的に(スワップしたら次へ):
-1. そのまま 2. キャッシュを絞る(`mx.set_cache_limit`、ブロックごとに `mx.clear_cache()`)
-3. `sudo sysctl iogpu.wired_limit_mb` を上げて `mx.set_wired_limit` で常駐を保証
-4. 768² に落とす(1024² が駄目だった証拠として記録)
+### M3. DiT だけのプロセス ← 本命。スクリプトは書いてあり、配線は検証済み
 
-### M4. VAE だけのプロセスでデコード → **実画像 1 枚**
+```sh
+uv run python tools/swapwatch.py --csv docs/16gb/runs/$(date +%Y%m%d-%H%M)-m3-dit.csv -- \
+  uv run python tools/bench/dit_steps.py \
+    --model ~/.cache/huggingface/hub/models--mflux-community--krea-2-turbo-mflux-q8/snapshots/ad5c0b1784c486bd45c2ced8a9f10aa45293a7c8 \
+    --embeds ~/Library/Caches/mflux/16gb-bench/krea2-embeds.safetensors \
+    --out ~/Library/Caches/mflux/16gb-bench/krea2-latents.safetensors \
+    --json docs/16gb/runs/$(date +%Y%m%d-%H%M)-m3-dit.json
+```
+
+測るのは `mx.get_peak_memory()` / 1 ステップの実時間 / swapwatch verdict /
+`phys_footprint_peak`。無理のかけ方は段階的に(スワップしたら次へ):
+
+1. そのまま(上のコマンド)
+2. `--cache-limit-gb 1 --clear-cache-each-step`
+3. `sudo sysctl -w iogpu.wired_limit_mb=<もっと大きく>` してから `--wired-limit-gb 14`
+4. `--width 768 --height 768`(1024² が駄目だった証拠として記録)
+
+`--no-lora` で LoRA の 0.44 GB を切り分けられる。`--compile` は mflux 本体と同じ
+`mx.compile` 経路を試すとき。
+
+### M4. VAE だけのプロセスでデコード → **実画像 1 枚**(スクリプト未作成)
 
 ### M5. ブロック単位ストリーミングの実測(M3 の結果にかかわらず)
 
@@ -133,18 +189,21 @@ latent を保存する。測るのは peak RSS / 1 ステップの実時間 / sw
 - **ベンチのループは内側で `mx.eval`。** 外でまとめて eval すると未使用グラフが
   捨てられ、実際より速い数字が出る。初回 20.9 TFLOPS という誤測定をこれで出した
   (正しくは 5.9)。
+- **`ps rss` でメモリを測らない。** §3 の計器の節を読むこと。
 - **index レベルの観察で物理配置を語らない。** 「ブロック順に連続配置」と一度
   結論したが、バイトオフセットを見たら入り組んでいた。
 - **見積りで「載らない」と結論しない。** 一方で、載せるために画質を落とす案も出さない。
 - 数字は別経路で sanity check する。スクリプトは `tools/bench/` に残し、結果は
   `docs/16gb/measurements/` に日付・機材つきで置く。
+- **`just format` をリポジトリ全体にかけない。** ruff 0.16.3 は markdown 内の python
+  コードブロックまで整形するので、`docs/16gb/` の既存メモに無関係な差分が出る。
+  自分が触ったファイルだけを指定して整形する。
 
 ## 7. リポジトリの状態
 
-ブランチ `feat/krea2-block-streaming` に 5 コミット。
-`b01d4d7` のみ push 済み、以降の 4 つ(`5b7e487` / `66f9aa1` / `0ec6efe` / `1e7b8a8`)は
-**ローカルのみ**。新セッションの最初に push の可否を確認すること
-(RULE.md: push は毎回明示の承認が要る)。
+ブランチ `feat/krea2-block-streaming`。`dd87bce` までは `fork` に push 済み
+(以前の引き継ぎに残っていた「4 コミットがローカルのみ」は解消済み)。
+push は毎回明示の承認が要る(RULE.md)。
 
-作業ツリーはクリーン。upstream のファイルで触ったのは `_typos.toml` の 1 行だけ
-(`nax` を辞書に追加)。
+upstream のファイルで触ったのは `_typos.toml` の 1 行だけ(`nax` を辞書に追加)。
+`tools/swapwatch.py` は fork 固有のファイルで、計器の修正で書き換えてある。

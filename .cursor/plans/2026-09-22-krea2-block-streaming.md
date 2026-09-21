@@ -27,43 +27,61 @@ q8 の内訳(`mflux-community/krea-2-turbo-mflux-q8` の実ファイルサイズ
 
 | | サイズ |
 |---|---|
-| DiT (transformer, q8) | 14.06 GB |
+| DiT (transformer, q8) | 13.62 GB |
 | 4step LoRA (bf16, rank 64) | 0.44 GB |
 | text encoder (Qwen3-VL-4B, bf16) | 8.05 GB |
 | VAE | 0.51 GB |
 
-- 全部同時 = 23.1 GB。**載らない。**
-- DiT + LoRA のみ = **14.50 GB**。クリーンな状態の空きメモリ次第で載る可能性がある。
+- 全部同時 = 22.2 GB。**載らない。**
+- DiT + LoRA のみ = **14.06 GB**。クリーンな状態の空きメモリ次第で載る可能性がある。
   ここが勝負どころ。
+
+DiT の数字はこの改訂で 14.06 → 13.62 GB に直した(初版は概算。実測は
+[M0](../../docs/16gb/measurements/2026-09-22-krea2-q8-checkpoint-layout.md) の
+safetensors ヘッダから)。以下 14.06 GB は DiT + LoRA の合計を指す。
 
 ## 2. 段階(すべて実ウェイトで測る)
 
 mflux 本体のコードは M4 まで触らない。M1〜M3 はプロセスを分けることで、
 **コード変更なしに段階ロードを実現する**。
 
-### M0. チェックポイントの物理配置 ← 済(一部)
+### M0. チェックポイントの物理配置 ← 済
 
-- 28 ブロック × 29 テンソル、ブロック番号順に配置、1 ブロックは 1〜2 シャード。
-  連続読みできる。[記録](../../docs/16gb/measurements/2026-09-22-krea2-q8-checkpoint-layout.md)
-- 残: ブロックごとの実バイト数、実シャードの F_NOCACHE 帯域。
+- 28 ブロック × 29 テンソル、1 ブロック 461.3 MB。シャード単位ではブロック番号順だが、
+  **シャード内部では 1 ブロックのテンソルは連続していない**。それでも拾い読みで
+  6.24 GB/s 出るので並べ直しは不要。
+  [記録](../../docs/16gb/measurements/2026-09-22-krea2-q8-checkpoint-layout.md)
+
+### M0b. 計器の検証 ← 済
+
+`ps rss` は MLX の確保を 1 バイトも見ない(4 GB 保持のプロセスを 30 MB と報告する)。
+判定は `mx.get_peak_memory()` と `footprint -p` の `phys_footprint` で行う。
+[記録](../../docs/16gb/measurements/2026-09-22-memory-instrumentation.md)
 
 ### M1. クリーンな状態の測定(再起動直後)
 
 - 常駐アプリを落とし、再起動してから測る: 空きメモリ、`memory_pressure`、
   スワップのベースライン、`iogpu.wired_limit_mb`。
-- **これが 14.50 GB を載せられるかどうかの土俵の広さ**。記録して以降の実験の前提にする。
+- **これが 14.06 GB を載せられるかどうかの土俵の広さ**。記録して以降の実験の前提にする。
+- 計器は `tools/bench/memstat.py`(claimable = free + inactive + speculative + purgeable)。
 
-### M2. TE をプロセス 1 で回し、埋め込みをディスクに出す
+### M2. TE をプロセス 1 で回し、埋め込みをディスクに出す ← 済(条件は汚い)
 
 - text encoder だけを構築してプロンプトをエンコードし、結果を safetensors に保存して終了。
 - 常駐は TE 8.05 GB のみ。swapwatch 下で実測。
-- **合格基準**: `clean`。
+- **合格基準**: `clean`。→ **合格**。MLX ピーク 8.19 GB、footprint 8.11〜8.29 GB、
+  swapouts 0。エンコード 0.63〜0.81 s。
+  [記録](../../docs/16gb/measurements/2026-09-22-m2-text-encoder.md)
+- ただし再起動前の状態で測ったので、M1 の後にもう一度通しておくこと(compressor が
+  1.26 → 6.21 GB に伸びている)。
 
 ### M3. DiT をプロセス 2 で無理やり載せる ← **本命**
 
-- M2 の埋め込みを読み、**q8 DiT + 4step LoRA(14.50 GB)だけ**を載せて 4 ステップ回し、
+- M2 の埋め込みを読み、**q8 DiT + 4step LoRA(14.06 GB)だけ**を載せて 4 ステップ回し、
   latent を保存する。TE も VAE もこのプロセスには存在しない。
-- 測る: peak RSS、1 ステップの実時間、swapwatch verdict、`mx.get_peak_memory()`。
+- 計器は `tools/bench/dit_steps.py`(段階ごとのフラグは下の 1〜4 に対応)。
+- 測る: `mx.get_peak_memory()`、`phys_footprint_peak`、1 ステップの実時間、
+  swapwatch verdict。**peak RSS は測れない**(M0b)。
 - 段階的に無理をする(各段でスワップしたら次へ):
   1. そのまま実行
   2. `mx.set_cache_limit` を絞る / ブロックごとに `mx.clear_cache()`
@@ -86,7 +104,7 @@ M3 が通っても、マージンは「クリーンな状態でギリギリ」�
 
 - 実ブロック 1 個を bind → forward → drop し、**計算時間 ÷ I/O 時間**を実測。
   合成ベンチでは計算律速だったが、実ブロックでは未確認。
-- 28 ブロックに広げて 1 ステップを回し、peak RSS と 1 ステップ時間を測る。
+- 28 ブロックに広げて 1 ステップを回し、`mx.get_peak_memory()` と 1 ステップ時間を測る。
 - **合格基準**: 比 ≥ 2.0、drop 後の常駐がベースライン +100 MB 以内、
   1 ステップが M3 の実測値の +20% 以内。
 - **不合格なら**: ストリーミングは成立しないと結論する(これも正当な結論)。
@@ -113,8 +131,14 @@ M3 / M5 で数字が出た方式だけを入れる。
 
 - ベンチのループは**内側で `mx.eval`**。外でまとめて eval すると未使用グラフが捨てられ、
   実際より速い数字が出る(初回 20.9 TFLOPS という誤測定をこれで出した。正しくは 5.9)。
+- **`mx.load` は lazy。** ウェイトを読む時間を測るなら `mx.eval(model)` を明示する。
+  しないと読み出しコストが次の処理の時間に紛れる。
+- **メモリは `ps rss` で測らない**(M0b)。`mx.get_peak_memory()` と
+  `footprint -p` の `phys_footprint` の 2 本で、一致することを確認して使う。
 - 数字は別経路で sanity check する(トークン数半減で時間が半分になるか、など)。
 - スクリプトは `tools/bench/`、結果は `docs/16gb/measurements/` に日付・機材つきで。
+  swapwatch の CSV / JSON は `docs/16gb/runs/`、中間生成物(埋め込み・latent)は
+  リポジトリ外の `~/Library/Caches/mflux/16gb-bench/`。
 
 ## 4. 非目標
 

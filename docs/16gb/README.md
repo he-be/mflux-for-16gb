@@ -28,7 +28,9 @@
 | `docs/16gb/measurements/` | 実測値。機材・日付・再現コードつき |
 | `docs/16gb/runs/` | 実行ログ(swapwatch の CSV、コマンド、所要時間) |
 | `.cursor/plans/` | 実装計画(RULE.md の規約) |
-| `tools/` | fork 固有のツール |
+| `tools/` | fork 固有のツール(`swapwatch.py`) |
+| `tools/bench/` | 段階ごとの計測スクリプト(`memstat.py` / `te_encode.py` / `dit_steps.py`) |
+| `~/Library/Caches/mflux/16gb-bench/` | 段の間で受け渡す中間生成物(埋め込み・latent)。リポジトリには入れない |
 
 ## 索引
 
@@ -38,6 +40,8 @@
 - [Krea 2 Turbo 4-step 蒸留 LoRA の使い方](research/krea2-4step-lora.md)
 - [M3 Pro 18GB: 計算律速と SSD ストリーミングの実測](measurements/2026-09-22-m3pro-compute-vs-ssd.md)（合成ベンチ。実ウェイトでは未測定）
 - [M0: Krea 2 Turbo q8 チェックポイントの物理配置](measurements/2026-09-22-krea2-q8-checkpoint-layout.md)
+- [計測の土台: macOS で MLX のメモリを何で測るか](measurements/2026-09-22-memory-instrumentation.md)
+- [M2: text encoder だけのプロセスで埋め込みを作る](measurements/2026-09-22-m2-text-encoder.md)
 - [計画: ブロック単位ウェイトストリーミング](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)
 
 ## いま分かっていること(2026-09-22)
@@ -45,7 +49,7 @@
 **実測済み(事実)**
 
 - このマシン: `hw.memsize` 19.33GB、`iogpu.wired_limit_mb` 14.34GB、
-  `max_recommended_working_set_size` 15.03GB。
+  `max_recommended_working_set_size` 15.03GB、GPU の max buffer length 9.66GB。
 - q8 の実サイズ: DiT 13.62GB(1 ブロック 461.3MB × 28 + globals 0.71GB)、
   TE 8.05GB、VAE 0.51GB。**DiT + 4step LoRA = 14.06GB** が載るかどうかが勝負どころ。
 - 実ウェイトの読み出し: 1 ブロック 461.3MB を **74 ms (6.24 GB/s)**、
@@ -53,11 +57,15 @@
 - M3 Pro の行列積は 5.1〜5.9 TFLOPS(合成テンソル)。
 - 合成 safetensors 28 個 × 138MB を毎周ディスクから流し直しても、常駐 0.17GB で
   計算律速のまま(bind→eval→drop でメモリは戻る)。
+- **`ps rss` は MLX の確保を見ない。** 4GB 保持のプロセスを 30MB と報告する。
+  判定は `mx.get_peak_memory()` と `footprint -p` の `phys_footprint` で行う。
+- **M2 合格**: TE だけのプロセスは 8.05GB 常駐・swapouts 0 で通る。エンコード 0.63〜0.81 s。
 
 **まだ仮説(Krea 2 の実ウェイトでは未測定)**
 
 - **q8 DiT を 18GB 機に常駐させられるか。** クリーンな状態(再起動直後、常駐アプリ無し)で
-  14.06GB + アクティベーションが載るかは未測定。プロセスを分けて測る(計画 M2〜M4)。
+  14.06GB + アクティベーションが載るかは未測定。アクティベーション量そのものも未測定。
+  プロセスを分けて測る(計画 M3)。
 - **ブロック単位ストリーミングで I/O が隠れるか。** 読み出し側は 74 ms/ブロックと
   確定したが、計算側(実ブロックの forward 時間)が未測定。比が 2.0 を超えるかが
   分かれ目(計画 M5)。1 ステップ 約 29 秒という数字は FLOPS からの割り算であって
