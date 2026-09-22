@@ -47,6 +47,10 @@ class Snapshot:
     def compressor_gb(self) -> float:
         return self.pages.get("compressor", 0) * self.page_size / 1e9
 
+    @property
+    def filebacked_gb(self) -> float:
+        return self.pages.get("filebacked", 0) * self.page_size / 1e9
+
     def report(self) -> None:
         pressure = PRESSURE_LEVELS.get(self.pressure_level, str(self.pressure_level))
         print(f"📏 memstat {self.label or '(unlabeled)'} @ {self.when}")
@@ -59,6 +63,7 @@ class Snapshot:
         print(f"   claimable         : {self.claimable_gb:.2f} GB  (free {self.free_gb:.2f})")
         print(f"   wired down        : {self.wired_gb:.2f} GB")
         print(f"   compressor        : {self.compressor_gb:.2f} GB")
+        print(f"   page cache        : {self.filebacked_gb:.2f} GB (file-backed)")
         print(f"   swap used / total : {self.swap_mb.get('used', 0):.0f} / {self.swap_mb.get('total', 0):.0f} MB")  # fmt: skip
         print(f"   swapins/swapouts  : {self.pages.get('swapins', 0)} / {self.pages.get('swapouts', 0)} pages")
         print(f"   memory pressure   : {pressure}")
@@ -74,6 +79,7 @@ class Snapshot:
             "free_gb": round(self.free_gb, 3),
             "wired_gb": round(self.wired_gb, 3),
             "compressor_gb": round(self.compressor_gb, 3),
+            "filebacked_gb": round(self.filebacked_gb, 3),
         }
         path.write_text(json.dumps(payload, indent=2) + "\n")
 
@@ -116,6 +122,8 @@ class MemStat:
             "Pages wired down": "wired",
             "Pages purgeable": "purgeable",
             "Pages occupied by compressor": "compressor",
+            "File-backed pages": "filebacked",
+            "Anonymous pages": "anonymous",
             "Swapins": "swapins",
             "Swapouts": "swapouts",
         }

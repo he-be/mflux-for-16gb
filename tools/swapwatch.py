@@ -25,6 +25,8 @@ class Sample:
     swapins: int
     swapouts: int
     swapouts_delta: int
+    filebacked_mb: float
+    anonymous_mb: float
     child_footprint_mb: float
     child_peak_footprint_mb: float
 
@@ -86,6 +88,8 @@ class SwapWatch:
             swapins=counters["swapins"],
             swapouts=counters["swapouts"],
             swapouts_delta=counters["swapouts"] - base_out,
+            filebacked_mb=counters["filebacked"] * PAGE_SIZE / 1e6,
+            anonymous_mb=counters["anonymous"] * PAGE_SIZE / 1e6,
             child_footprint_mb=footprint,
             child_peak_footprint_mb=peak_footprint,
         )
@@ -101,6 +105,8 @@ class SwapWatch:
                     sample.swapins,
                     sample.swapouts,
                     sample.swapouts_delta,
+                    f"{sample.filebacked_mb:.1f}",
+                    f"{sample.anonymous_mb:.1f}",
                     f"{sample.child_footprint_mb:.1f}",
                     f"{sample.child_peak_footprint_mb:.1f}",
                 ]
@@ -122,6 +128,8 @@ class SwapWatch:
         peak_swap = max(s.swap_delta_mb for s in self.samples)
         peak_footprint = max(s.child_peak_footprint_mb for s in self.samples)
         peak_comp = max(s.compressor_mb for s in self.samples)
+        peak_file = max(s.filebacked_mb for s in self.samples)
+        base_file = self.samples[0].filebacked_mb
         out_delta = self.samples[-1].swapouts - base_out
         in_delta = self.samples[-1].swapins - self.samples[0].swapins
         verdict = "SWAPPED" if (out_delta > 0 or peak_swap >= self.warn_delta_mb) else "clean"
@@ -132,6 +140,7 @@ class SwapWatch:
         print(f"   swap rise (peak)  : {peak_swap:.0f} MB")
         print(f"   swapouts / swapins: {out_delta} / {in_delta} pages ({out_delta * PAGE_SIZE / 1e6:.0f} MB out)")
         print(f"   compressor (peak) : {peak_comp / 1000:.2f} GB")
+        print(f"   page cache        : {base_file / 1000:.2f} -> {peak_file / 1000:.2f} GB (file-backed)")
         print(f"   verdict           : {verdict}")
         if self.csv_path is not None:
             print(f"   csv               : {self.csv_path}")
@@ -151,6 +160,8 @@ class SwapWatch:
                 "swapins",
                 "swapouts",
                 "swapouts_delta",
+                "filebacked_mb",
+                "anonymous_mb",
                 "child_footprint_mb",
                 "child_peak_footprint_mb",
             ]  # fmt: skip
@@ -169,7 +180,7 @@ class SwapWatch:
     @staticmethod
     def _vm_counters() -> dict[str, int]:
         out = subprocess.run(["vm_stat"], capture_output=True, text=True).stdout
-        counters = {"swapins": 0, "swapouts": 0, "compressor": 0}
+        counters = {"swapins": 0, "swapouts": 0, "compressor": 0, "filebacked": 0, "anonymous": 0}
         for line in out.splitlines():
             if "Swapins" in line:
                 counters["swapins"] = SwapWatch._parse_count(line)
@@ -177,6 +188,13 @@ class SwapWatch:
                 counters["swapouts"] = SwapWatch._parse_count(line)
             elif "occupied by compressor" in line:
                 counters["compressor"] = SwapWatch._parse_count(line)
+            elif "File-backed pages" in line:
+                # The page cache. Reading a 13.6 GB checkpoint through mx.load fills this
+                # alongside the Metal buffers holding the same bytes, which is the thing
+                # to watch when the machine starts evicting.
+                counters["filebacked"] = SwapWatch._parse_count(line)
+            elif "Anonymous pages" in line:
+                counters["anonymous"] = SwapWatch._parse_count(line)
         return counters
 
     @staticmethod

@@ -49,6 +49,9 @@ class Krea2DitBench:
         loaded_peak = mx.get_peak_memory()
         print(f"   DiT resident      : active {mx.get_active_memory() / 1e9:.2f} GB, peak {loaded_peak / 1e9:.2f} GB")
 
+        if self.args.load_only:
+            return self._load_only_result(loaded_peak, bits, before)
+
         embeds, prompt = self._read_embeds()
         latents, config = self._denoise(transformer, embeds)
         self._save(latents, prompt, config, bits)
@@ -84,6 +87,39 @@ class Krea2DitBench:
             "memstat_after": {"claimable_gb": round(after.claimable_gb, 3), "when": after.when},
         }
         self._report(result)
+        return result
+
+    def _load_only_result(self, loaded_peak: int, bits: int | None, before) -> dict:
+        # Hold still while the sentry samples: the question here is whether the weights
+        # can simply sit there, so the steady state matters more than the peak.
+        if self.args.hold_seconds > 0:
+            time.sleep(self.args.hold_seconds)
+        after = MemStat.capture(label="dit-loaded")
+        result = {
+            "stage": "M3-dit-load-only",
+            "model_path": str(self.model_path),
+            "stored_bits": bits,
+            "lora": None if self.args.no_lora else self.args.lora_path,
+            "limits": {
+                "cache_limit_gb": self.args.cache_limit_gb,
+                "wired_limit_gb": self.args.wired_limit_gb,
+            },
+            "timings_s": {k: round(v, 3) for k, v in self.timings.items()},
+            "dit_resident_gb": round(loaded_peak / 1e9, 3),
+            "peak_memory_gb": round(mx.get_peak_memory() / 1e9, 3),
+            "active_memory_gb": round(mx.get_active_memory() / 1e9, 3),
+            "cache_memory_gb": round(mx.get_cache_memory() / 1e9, 3),
+            "held_seconds": self.args.hold_seconds,
+            "memstat_before": {"claimable_gb": round(before.claimable_gb, 3), "when": before.when},
+            "memstat_after": {"claimable_gb": round(after.claimable_gb, 3), "when": after.when},
+        }
+        print("🧮 M3 DiT (load only)")
+        print(f"   LoRA              : {result['lora']}")
+        for name, value in result["timings_s"].items():
+            print(f"   {name:<18}: {value:.2f} s")
+        print(f"   mx peak memory    : {result['peak_memory_gb']:.2f} GB")
+        print(f"   mx active memory  : {result['active_memory_gb']:.2f} GB")
+        print(f"   mx cache memory   : {result['cache_memory_gb']:.2f} GB")
         return result
 
     def _apply_limits(self) -> None:
@@ -241,6 +277,12 @@ def main() -> int:
     parser.add_argument("--cache-limit-gb", type=float, default=None, help="ladder step 2: cap MLX's buffer cache")
     parser.add_argument("--clear-cache-each-step", action="store_true", help="ladder step 2: clear the cache per step")
     parser.add_argument("--wired-limit-gb", type=float, default=None, help="ladder step 3: wire the weights down")
+    parser.add_argument(
+        "--load-only",
+        action="store_true",
+        help="stop after the weights are resident, before any step: isolates the residency floor",
+    )
+    parser.add_argument("--hold-seconds", type=float, default=0.0, help="sit still this long so the sentry can sample")
     args = parser.parse_args()
 
     bench = Krea2DitBench(model_path=args.model, embeds_path=args.embeds, out_path=args.out, args=args)
