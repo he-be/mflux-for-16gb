@@ -28,7 +28,7 @@ M3 Pro 18GB の MacBook Pro で **Krea 2 Turbo q8 + 4step 蒸留 LoRA** の画�
 | 4step LoRA | `~/Library/Caches/mflux/loras/krea2_turbo_4step_rank_64_lora_comfyui.safetensors` |
 | 中間生成物 | `~/Library/Caches/mflux/16gb-bench/`(M2 の埋め込みなど。リポジトリ外) |
 | スワップ見張り | `tools/swapwatch.py` |
-| 計測スクリプト | `tools/bench/`(`memstat.py` / `te_encode.py` / `dit_steps.py`) |
+| 計測スクリプト | `tools/bench/`(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py`) |
 | 文書 | `docs/16gb/`(research / measurements / runs)、計画は `.cursor/plans/` |
 
 ダウンロードは完了済み(q8 21GB + LoRA 438MB)。再取得は不要。LoRA は
@@ -99,14 +99,13 @@ mx.set_wired_limit                既定 0(MLX は何も wire しない)
   で見る(`tools/bench/memstat.py`)。
 - 詳細: [計測の土台](measurements/2026-09-22-memory-instrumentation.md)
 
-### M2 の結果(合格、ただし条件は汚い)
+### M2 の結果(合格)
 
 TE だけのプロセス: MLX ピーク **8.19 GB**、footprint ピーク 8.11〜8.29 GB、
-**swapouts 0**、verdict `clean`。実体化 1.3 s (5.9 GB/s)、エンコード 0.63〜0.81 s。
+**swapouts 0**、verdict `clean`。実体化 1.3〜2.1 s、エンコード 0.63〜0.82 s。
 埋め込みは `(1, 30, 30720)` bf16 = 1.84 MB。
+再起動の前後で 4 回測って数字は同じだった。
 [記録](measurements/2026-09-22-m2-text-encoder.md)
-
-**再起動前の状態で測った**ので、M1 の後にもう一度通しておくこと。
 
 ### mflux 側の作法(コードを読んで確認済み)
 
@@ -114,6 +113,8 @@ TE だけのプロセス: MLX ピーク **8.19 GB**、footprint ピーク 8.11�
   (mflux の 1.0 = 単一パス = ComfyUI の cfg 1.0)。
 - LoRA の全 456 キーが `Krea2LoRAMapping` に 456/456 で一致(検証済み)。
 - q8 なら LoRA は bake してよい(8bit 未満のときだけ `--no-bake-lora` が要る)。
+  **このマシンでは bake すべき**(実測: 常駐 -0.44 GB、1 ステップ 41.9 → 30.9 s)。
+  bake すると LoRA は q8 のウェイトに畳み込まれ、常駐は 13.62 GB のまま増えない。
 - σ スケジュールは動的シフト。LoRA の学習点 (μ=1.15) と一致するのは **1280×1280**。
   1024² は μ=0.906 でわずかにずれる。1024²/4 ステップの σ は
   `[1.0, 0.8813, 0.7122, 0.4521, 0.0]`(実測)。
