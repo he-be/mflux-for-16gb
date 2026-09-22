@@ -234,3 +234,39 @@ swapouts に対して swapins は 636 ページしかない。追い出されて
 
 確かめるために `vm_stat` の **File-backed pages** を `swapwatch` と `memstat` に
 追加した。ロード中にこれが 13 GB 級に膨らめば仮説は正しい。
+
+---
+
+## ページキャッシュ仮説 → **外れ**
+
+同じ `--load-only` を、`vm_stat` の File-backed pages を追いながら 0.5 秒間隔で回した。
+
+- 実行: `20260922-0910`、記録: `docs/16gb/runs/20260922-0910-m3-loadonly-pagecache.csv`
+
+| t | footprint | **file-backed** | swap 増分 |
+|---|---|---|---|
+| 0.1 s | 0.01 GB | 2.81 GB | 0 |
+| 1.3 s | 0.21 GB | 2.92 GB | 0 |
+| 2.0 s | 4.13 GB | **6.47 GB** | 0 |
+| 3.0 s | 9.12 GB | **6.71 GB** ← 山 | 0 |
+| 4.2 s | 11.28 GB | 3.47 GB ← 回収されている | 0 |
+| 4.9 s | 13.33 GB | 2.25 GB | **1387 MB** |
+
+**仮説は外れ。** ページキャッシュは +3.9 GB しか伸びず(山は 6.71 GB)、こちらの
+footprint が育つにつれて **OS が正しく回収している**。「13.62 GB のバッファ +
+13.62 GB のページキャッシュ = 27 GB の瞬間需要」は起きていない。
+
+したがって **読み出しで `F_NOCACHE` を使っても、この失敗は消えない。**
+消せるのは山の 3.9 GB 分の一時的な圧力だけで、しかもそれは OS が既に回収している。
+
+### 補足: compressor の数字は信用しない
+
+`vm_stat` の「Pages occupied by compressor」は、実行中に 11.57 GB まで伸びたと
+報告する。しかし同時刻の footprint 13.33 + file-backed 2.25 + wired 1.95 だけで
+17.5 GB あり、物理 19.33 GB に 11.57 GB 分の余地はない。**この値は額面どおり
+受け取れない**(phys_footprint が自分の圧縮済みページを二重に数えている可能性が
+ある)。
+
+**以降、compressor の値を結論の根拠に使わない。** 根拠に使うのは相互に整合が
+取れている 4 つだけ: `mx.get_active_memory()` / `phys_footprint` /
+swapouts・swapins / file-backed。
