@@ -30,7 +30,7 @@ class Krea2StagedLoader:
             patterns=Krea2WeightDefinition.get_download_patterns(model_config.model_name),
         )
         if root is None:
-            raise ValueError("Staged loading needs a snapshot to load from: pass --model-path.")
+            raise ValueError("Block streaming needs a snapshot on disk to stream from: name one with --model.")
         self.root: Path = root
         self.model_config = model_config
         self.quantize = quantize

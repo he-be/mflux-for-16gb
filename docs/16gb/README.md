@@ -49,6 +49,7 @@
 - [M4: VAE でデコード → 実画像 1 枚](measurements/2026-09-22-m4-vae-decode.md)
 - **[M5: ブロック単位ストリーミング(結論: 合格)](measurements/2026-09-22-m5-block-streaming.md)**
 - [M5b: text encoder を q8 にする(結論: 採用)](measurements/2026-09-22-m5b-text-encoder-q8.md)
+- **[M6: mflux 本体への実装(結論: 合格。1280² も clean)](measurements/2026-09-22-m6-mflux-cli.md)**
 - [計画: ブロック単位ウェイトストリーミング](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)
 
 ## いま分かっていること(2026-09-22)
@@ -98,26 +99,67 @@ q8 + 4step LoRA / 1024² / 4 ステップ / euler / guidance 1.0 / seed 42。
 **どの段も 5GB を超えない。** text encoder を q8 にして 8.29 → 4.96GB にした(M5b)。
 1 回だけ必要な前処理: TE の量子化(1.19GB / 2.3s)と LoRA の焼き込み(1.89GB / 13s)。
 
+mflux 本体経由(`--block-streaming`)でも同じ: 1024² で footprint 5.21GB / 29.60 s/step、
+1280² で 6.89GB / 48.91 s/step、どちらも swapouts 0(M6)。
+
+- **M6 合格 — mflux 本体に入った。** `--block-streaming` 1 本で、`tools/bench/` の
+  4 プロセス分割版と同じ数字が出る(29.60 s/step、計算 ÷ I/O 13.59、I/O 71.9 ms)。
+  **出力はピクセル完全一致**(1048576 中 0 ピクセル違い)。
+- **1280² も clean。** LoRA の学習 σ と一致する解像度(μ=1.15)で
+  48.91 s/step、footprint 6.89GB、**swapouts 0**。1024² より明らかに描き込みが多い。
+
 **まだやっていないこと**
 
-- **M6**: この方式を mflux 本体へ入れる(いまは `tools/bench/` の分割プロセス版のみ)。
-- **M7**: 2 回実行して画像一致の確認、1280²(LoRA の学習 σ と一致する解像度)。
+- **`iogpu.wired_limit_mb=0` での再測定**(上の 2 本は前セッションが残した 15360 の
+  設定下。ストリーミングにこの設定は不要なので、既定に戻して通ることを確認する)。
 
 ## 実行のしかた
 
-現状の mflux は 3 コンポーネントを同時に載せるので、この構成 (22.2GB) は 18GB 機では
-そのまま走らない。**いま動くのは `tools/bench/` の 3 プロセス分割版**
-(引き継ぎの §5 にコマンドがある)。下は段階ロード / ストリーミングが入った後の形。
+M6 で mflux 本体に入ったので、**フラグ 1 本で通る**(`--block-streaming`)。
+
+### 1 回だけの前処理
+
+`--block-streaming` は「ブロックごとに 1 ファイル」のチェックポイントを要求する。
+LoRA も事前に焼き込む(実行時に当てると 1 ステップ +11 秒。M3 の実測)。
+
+```sh
+B=~/Library/Caches/mflux/16gb-bench
+Q8=~/.cache/huggingface/hub/models--mflux-community--krea-2-turbo-mflux-q8/snapshots/<rev>
+
+# DiT: 4step LoRA を焼き込んでブロック単位に書き出す(2.14GB / 13 秒)
+uv run python tools/bench/bake_lora_checkpoint.py --model $Q8 --out $B/krea2-q8-4step-baked
+
+# text encoder: 1 回だけ q8 にする(1.19GB / 2.3 秒)
+uv run python tools/bench/quantize_te_checkpoint.py --model $Q8 --out $B/krea2-te-q8
+
+# 3 つを 1 つのスナップショットに並べる(新しい形式ではない。ふつうの mflux 配置)
+mkdir -p $B/krea2-lowram
+ln -sfn $B/krea2-q8-4step-baked    $B/krea2-lowram/transformer
+ln -sfn $B/krea2-te-q8/text_encoder $B/krea2-lowram/text_encoder
+ln -sfn $Q8/vae                     $B/krea2-lowram/vae
+ln -sfn $Q8/tokenizer               $B/krea2-lowram/tokenizer
+```
+
+### 生成
 
 ```sh
 uv run python tools/swapwatch.py --csv docs/16gb/runs/$(date +%Y%m%d-%H%M)-q8-4step.csv -- \
   uv run mflux-generate-krea2 \
-    --model ~/.cache/huggingface/hub/models--mflux-community--krea-2-turbo-mflux-q8/snapshots/<rev> \
-    --prompt "..." --seed 42 --steps 4 --scheduler euler \
-    --width 1024 --height 1024 \
-    --lora-paths 'lvladikov/Krea2-Turbo-Distill-4step-LoRA:krea2_turbo_4step_rank_64_lora_comfyui.safetensors' \
-    --lora-scales 1.0 --low-ram
+    --model ~/Library/Caches/mflux/16gb-bench/krea2-lowram --base-model krea-2 \
+    --block-streaming \
+    --prompt "..." --seed 42 --steps 4 --scheduler euler --guidance 1.0 \
+    --width 1024 --height 1024 --output image.png
 ```
+
+`--block-streaming` がやること:
+
+1. **段階ロード。** text encoder → 破棄 → DiT → 破棄 → VAE。3 つ同時は 22.2GB で載らない
+2. **ブロック単位ストリーミング。** 28 ブロックをディスクに置いたまま bind → forward → drop
+3. **VAE タイル 256 を既定にする**(`--vae-tile-size` を明示すればそちらが勝つ)
+
+`--lora-paths` との併用はエラーになる(事前焼き込みを使うこと)。
+`--low-ram` は**使わない**。あれが入れる `mx.set_cache_limit(1GB)` は M3 でループを
+9 倍悪化させた手で、ストリーミングには不要。
 
 `swapwatch` は既定でスワップが 1GB 増えた時点で実行を落とす
 (`--abort-delta-mb 0` で無効化、`--warn-delta-mb` で警告閾値)。

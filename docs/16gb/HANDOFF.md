@@ -118,9 +118,10 @@ TE だけのプロセス: MLX ピーク **8.19 GB**、footprint ピーク 8.11�
 - σ スケジュールは動的シフト。LoRA の学習点 (μ=1.15) と一致するのは **1280×1280**。
   1024² は μ=0.906 でわずかにずれる。1024²/4 ステップの σ は
   `[1.0, 0.8813, 0.7122, 0.4521, 0.0]`(実測)。
-- `Krea2Initializer.init` は 3 コンポーネントを構築して `mx.eval(model)` で一括実体化する
-  (`krea2_initializer.py:30-38`)。段階ロードは未実装。**`tools/bench/` はこれを迂回して
-  コンポーネント単位で `WeightLoader.load_single_local` を呼ぶ。**
+- `Krea2Initializer.init` は既定では 3 コンポーネントを構築して `mx.eval(model)` で
+  一括実体化する。**`--block-streaming` のときだけ何も構築せず、`Krea2StagedLoader` が
+  生成中に 1 個ずつ作って手放す**(M6)。`tools/bench/` も同じ経路
+  (`WeightLoader.load_single_local`)を使う。
 - q8 DiT の配線は検証済み: 956 パラメータが 956/956 で一致、形の不一致 0、
   量子化層 263、`bits=8`。
 - **`mx.load` は lazy。** 上の検証は 13.62 GB を一切実体化せずに通る(active 0.000 GB)。
@@ -128,9 +129,11 @@ TE だけのプロセス: MLX ピーク **8.19 GB**、footprint ピーク 8.11�
 - `MemorySaver` はエンコード後に TE を、`--low-ram` はループ後に DiT を破棄する
   (`memory_saver.py:77`)。
 
-## 4. 結論: **目標構成は 18GB 機でスワップなしに通る**
+## 4. 結論: **目標構成は 18GB 機でスワップなしに通る。mflux 本体に入っている**
 
 方法は**ブロック単位ストリーミング**(M5)。常駐方式(M3)は不可能だった。
+**M6 で mflux 本体に入り、`--block-streaming` 1 本で通る。**
+1280²(LoRA の学習 σ と一致する解像度)も clean。
 
 **生成のたびに走る段**(どの段も 5 GB を超えない):
 
@@ -148,7 +151,8 @@ TE だけのプロセス: MLX ピーク **8.19 GB**、footprint ピーク 8.11�
 | LoRA の焼き込み `bake_lora_checkpoint.py` | 1.89 GB | 13 s | `krea2-q8-4step-baked/` 13 GB |
 
 q8 + 4step LoRA / 1024² / 4 ステップ / euler / guidance 1.0 / seed 42。
-出力は `docs/16gb/runs/images/`。**常駐版とバイト単位で一致**している。
+出力は `docs/16gb/runs/images/`。**常駐版とビット単位で一致**している
+(mflux CLI 経由の M6 の出力も、`tools/bench/` 版と**ピクセル完全一致**)。
 
 ### 各段の結果
 
@@ -160,6 +164,7 @@ q8 + 4step LoRA / 1024² / 4 ステップ / euler / guidance 1.0 / seed 42。
 | M4 VAE | **合格 clean**。タイル 256 |
 | M5 ストリーミング | **合格 clean**。要求 3.72 GB、比 13.65、ビット一致 |
 | M5b TE を q8 に | **採用**。8.29 → 4.96 GB。画像は目視で同じ、描き込みは同等 |
+| M6 本体への実装 | **合格**。`--block-streaming`。CLI 経由で 29.60 s/step、比 13.59、**出力はピクセル完全一致**。1280² も clean(48.91 s/step、6.89 GB) |
 
 ### M3(常駐)がなぜ駄目だったか
 
@@ -198,27 +203,58 @@ I/O             : 71.8 ms / ブロック(M0 の実測 74 ms と一致)
 
 ## 5. 次にやること
 
-### M6: mflux 本体への実装 ← いまここ
+### すぐやること: `iogpu.wired_limit_mb=0` で測り直す ← いまここ
 
-いま動くのは `tools/bench/` の分割プロセス版だけ。本体に入れる。
+M6 の 2 本(1024² / 1280²)は、前セッションが残した `15360` の設定下で測っている。
+**ストリーミングにこの設定は不要**なので、既定の 0 に戻して通ることを確認する。
+特別な設定なしで通ることがこの方式の価値なので、ここは省けない。
 
-| ファイル | 変更 |
-|---|---|
-| `krea2_initializer.py` / `variants/txt2img/krea2.py` | 段階ロード(TE→破棄→DiT→破棄→VAE) |
-| `weights/krea2_weight_stream.py`(新規) | ブロックの bind / drop。`tools/bench/block_stream.py` がそのまま雛形になる |
-| `model/krea2_transformer/transformer.py` | ブロックのリストを差し替え可能にする(今回はテスト側から差し替えた) |
-| `cli/parser/parsers.py` | フラグ |
+```sh
+sudo sysctl -w iogpu.wired_limit_mb=0    # sudo が要る。確認は sysctl -n iogpu.wired_limit_mb
+```
 
-**合格基準**: 1024²/4 ステップで peak 3.72 GB・29.8 s/step・swapouts 0、
-出力が `tools/bench/` 版とバイト一致すること。
+そのあと README の §実行のしかた のコマンドをそのまま 1024² で 1 回。
+期待値は 29.6 s/step / footprint 5.2 GB / swapouts 0 / 前回とピクセル一致。
 
-**実装上の注意(実測で踏んだもの)**
+### M7: 実運用
 
-- **毎回新しい lazy ハンドルを読むこと。** 一度読んだツリーを使い回すと評価済みの
+- 2 回実行して画像一致 → **実質済み。** M6 の 1024² の出力が、40 分前の別プロセス
+  (`tools/bench/`)の結果と**ピクセル完全一致**した。
+- 1280²(LoRA の学習 σ と一致する解像度) → **済。clean。**
+  48.91 s/step、footprint 6.89 GB、swapouts 0。1024² より明らかに描き込みが多い。
+  `images/20260922-1129-m6-cli-1280.png`
+
+### その先
+
+**どの段も 7 GB を超えていないので、16GB 機には余裕がある。** 次の削りどころを
+探すより、M6 mac mini の実機で回して確認する方が先(§1 の目的)。
+
+やるとすれば:
+
+- **前処理ツールの昇格。** `bake_lora_checkpoint.py` と `quantize_te_checkpoint.py` は
+  まだ `tools/bench/` にいる。低メモリ用スナップショットを 1 コマンドで作る
+  CLI にすれば、シンボリックリンクを手で張る手順が消える。
+- **プリフェッチ。** I/O 72 ms は計算 977 ms の下に完全に隠れているので、
+  **やる理由は今のところない**(比 13.59)。1280² では比 22.9 でさらに余裕がある。
+
+**TE の q8 について**: 「TE の量子化は禁止」と書いてあったのは
+**エージェントが根拠なく足した行**で、ユーザの要件ではなかった(`b01d4d7`)。
+実測したら常駐が半分になり、画像は目視で同じだった。
+[記録](measurements/2026-09-22-m5b-text-encoder-q8.md)
+
+### M6 の実装で踏んだもの(次に触るとき用)
+
+- **`mx.compile` は切る。** ストリーミングされたブロックは forward の中でディスクを
+  読み `mx.eval` を呼ぶので、トレースに乗らない。
+- **TE を手放す前に `mx.eval(embeds)`。** 遅延評価のままだとグラフがエンコーダの
+  ウェイトを掴んだままで、参照を捨てても 1 バイトも解放されない。
+- **毎回新しい lazy ハンドルを読む。** 一度読んだツリーを使い回すと評価済みの
   配列がそこから参照され続け、drop しても 1 バイトも解放されない。
-- **`mx.eval(out)` をブロックごとに入れること。** MLX は遅延評価なので、
-  入れないとグラフ未評価のままウェイトを drop することになる。
-- **`bake_and_strip_lora` を transformer 全体に呼ばないこと。**
+- **`mx.eval(out)` をブロックごとに入れる。** 入れないとグラフ未評価のまま
+  ウェイトを drop することになる。
+- **`staged_loader` はクラス属性の既定値で持つ。** `Krea2.__new__(Krea2)` で組み立てる
+  テストがあるので、`__init__` だけで設定すると AttributeError になる。
+- **`bake_and_strip_lora` を transformer 全体に呼ばない。**
   `lora_saver.py:125` が層ごとに eval するので全部実体化する(実測 13.10 GB、失敗)。
   ブロック単位で呼ぶ。
 - **`nn.quantize` はルートモジュール自身を置換できない。** 部分モジュールを直接渡すと
@@ -226,25 +262,13 @@ I/O             : 71.8 ms / ブロック(M0 の実測 74 ms と一致)
   bf16 のまま残って気づいた)。**評価前にモデル全体を 1 回で量子化する。**
 - **TE を q8 で読むには `skip_quantization=False` が要る。** 定義が True のままだと
   量子化構造を作らずに packed な q8 テンソルを update することになる。
-  `TextEncoderQuantizer.loadable_component()` がこれをやっている。
-- **VAE は DiT を破棄してから構築すること。** VAE は `mx.get_peak_memory()` が
+- **VAE は DiT を破棄してから構築する。** VAE は `mx.get_peak_memory()` が
   4.40 GB でも実 footprint は(タイル 512 で)14.15 GB ある。
-- VAE のタイルは **256** を既定に。ただし**タイルサイズを変えると出力が変わる**ので、
-  再現性のために固定して記録する。
-
-### M7: 実運用
-
-2 回実行して画像一致、1280²(LoRA の学習 σ と一致する解像度)。
-
-### その先
-
-**どの段も 5 GB を超えていないので、16GB 機には十分な余裕がある。**
-次の削りどころを探すより、M6 / M7 を通して実機で確認する方が先。
-
-**TE の q8 について**: 「TE の量子化は禁止」と書いてあったのは
-**エージェントが根拠なく足した行**で、ユーザの要件ではなかった(`b01d4d7`)。
-実測したら常駐が半分になり、画像は目視で同じだった。
-[記録](measurements/2026-09-22-m5b-text-encoder-q8.md)
+- VAE のタイルは **256** が既定(`--block-streaming` が入れる)。ただし
+  **タイルサイズを変えると出力が変わる**ので、再現性のために固定して記録する。
+- **swapwatch の swapout カウンタはマシン全体。** 数十ページ規模の値は自分の実行と
+  区別できない。1024² の実行で出た 56 ページは、同じサンプルで swap used が 21 MB
+  減っていたので外来だった。**より重い 1280² が swapouts 0 で通って決着した。**
 
 ## 6. 測定の作法(踏んだ地雷)
 
@@ -270,18 +294,28 @@ I/O             : 71.8 ms / ブロック(M0 の実測 74 ms と一致)
 ## 7. リポジトリの状態
 
 ブランチ `feat/krea2-block-streaming`。**`dd87bce` までが `fork` に push 済みで、
-それ以降の M1〜M4 のコミットはすべてローカルのみ。**
+それ以降の M1〜M6 のコミットはすべてローカルのみ。**
 push は毎回明示の承認が要る(RULE.md)。
 
-upstream のファイルで触ったのは `_typos.toml` の 1 行だけ(`nax` を辞書に追加)。
-`tools/swapwatch.py` と `tools/bench/` は fork 固有。
+### M6 で upstream のファイルに入れた変更
+
+ここまでは fork 固有のファイルだけで済んでいたが、M6 で本体に入った。
+
+| ファイル | |
+|---|---|
+| `models/krea2/weights/krea2_weight_stream.py` | 新規。`Krea2BlockStream` / `Krea2StreamedBlock` |
+| `models/krea2/krea2_staged_loader.py` | 新規。`Krea2StagedLoader` |
+| `models/krea2/krea2_initializer.py` | `block_streaming=True` のとき何も構築しない経路 |
+| `models/krea2/variants/txt2img/krea2.py` | `with self._component(...)` 3 か所、`mx.compile` の回避、クラス属性 `staged_loader` |
+| `models/krea2/cli/krea2_generate.py` | フラグの受け渡し、タイル 256 の既定 |
+| `cli/parser/parsers.py` | `add_block_streaming_arguments()`(krea2 の parser だけが呼ぶ) |
+| `tests/test_krea2_block_streaming.py` | 新規。5 件。ストリーミングした forward が常駐版と**ビット一致**することを見る |
+| `_typos.toml` | 1 行(`nax` を辞書に追加)。M1 以前から |
+
+**常駐モードの挙動は変えていない。** `_component` は素通りする。
+fast テストは 1504 件すべて緑。
 
 ### 実行中の一時設定
 
-`sudo sysctl -w iogpu.wired_limit_mb=15360` が入ったままになっている可能性がある
-(再起動で 0 に戻る)。**ストリーミング方式にはこの設定は不要**なので、
-戻してよい。確認は `sysctl -n iogpu.wired_limit_mb`、戻すのは
-`sudo sysctl -w iogpu.wired_limit_mb=0`。
-
-**むしろ 0 に戻した状態で M6 の合格判定をすること。** 特別な設定なしで通ることが
-この方式の価値なので。
+**`iogpu.wired_limit_mb` が `15360` のままになっている**(再起動で 0 に戻る)。
+**ストリーミングにこの設定は不要**なので 0 に戻し、その状態で測り直すこと(§5)。
