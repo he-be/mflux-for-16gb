@@ -7,6 +7,7 @@ from pathlib import Path
 import mlx.core as mx
 import mlx.nn as nn
 from memstat import MemStat
+from quantize_te_checkpoint import TextEncoderQuantizer
 
 from mflux.models.common.tokenizer import TokenizerLoader
 from mflux.models.common.weights.loading.weight_applier import WeightApplier
@@ -73,7 +74,9 @@ class Krea2TextEncoderBench:
         return encoder
 
     def _load(self, encoder: Krea2TextEncoder) -> int | None:
-        component = next(c for c in Krea2WeightDefinition.get_components() if c.name == "text_encoder")
+        # Cleared skip_quantization, so a pre-quantized encoder rebuilds its quantized
+        # structure from the stored scales. A bf16 checkpoint is unaffected.
+        component = TextEncoderQuantizer.loadable_component()
         start = time.perf_counter()
         weights = WeightLoader.load_single_local(component=component, root_path=self.model_path)
         self.timings["read"] = time.perf_counter() - start

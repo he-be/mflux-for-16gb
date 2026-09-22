@@ -31,7 +31,7 @@
 | `docs/16gb/runs/` | 実行ログ(swapwatch の CSV / JSON)と `images/` に出力画像 |
 | `.cursor/plans/` | 実装計画(RULE.md の規約) |
 | `tools/` | fork 固有のツール(`swapwatch.py`) |
-| `tools/bench/` | 段階ごとの計測スクリプト(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py` / `block_stream.py` / `bake_lora_checkpoint.py`) |
+| `tools/bench/` | 段階ごとの計測スクリプト(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py` / `block_stream.py` / `bake_lora_checkpoint.py` / `quantize_te_checkpoint.py`) |
 | `~/Library/Caches/mflux/16gb-bench/` | 段の間で受け渡す中間生成物(埋め込み・latent)。リポジトリには入れない |
 
 ## 索引
@@ -48,6 +48,7 @@
 - **[M3: q8 DiT を常駐させられるか(結論: 不合格)](measurements/2026-09-22-m3-dit-resident.md)**
 - [M4: VAE でデコード → 実画像 1 枚](measurements/2026-09-22-m4-vae-decode.md)
 - **[M5: ブロック単位ストリーミング(結論: 合格)](measurements/2026-09-22-m5-block-streaming.md)**
+- [M5b: text encoder を q8 にする(結論: 採用)](measurements/2026-09-22-m5b-text-encoder-q8.md)
 - [計画: ブロック単位ウェイトストリーミング](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)
 
 ## いま分かっていること(2026-09-22)
@@ -86,7 +87,7 @@
 
 | 段 | mx peak | 実 footprint | 時間 |
 |---|---|---|---|
-| text encoder | 8.19GB | **8.29GB** ← 最大 | 4 s |
+| text encoder(q8) | 4.47GB | **4.96GB** ← 最大 | 2 s |
 | LoRA 焼き込み(1 回だけ) | 1.89GB | 2.14GB | 13 s |
 | **DiT ストリーミング** | 3.21GB | 3.72GB | **119 s** |
 | VAE(タイル 256) | 2.98GB | 4.28GB | 5.6 s |
@@ -94,8 +95,8 @@
 q8 + 4step LoRA / 1024² / 4 ステップ / euler / guidance 1.0 / seed 42。
 画像: `docs/16gb/runs/images/`。
 
-**いま最大の消費は DiT ではなく text encoder の 8.29GB。**
-16GB 機を狙うなら次に削るのはここ。
+**どの段も 5GB を超えない。** text encoder を q8 にして 8.29 → 4.96GB にした(M5b)。
+1 回だけ必要な前処理: TE の量子化(1.19GB / 2.3s)と LoRA の焼き込み(1.89GB / 13s)。
 
 **まだやっていないこと**
 
