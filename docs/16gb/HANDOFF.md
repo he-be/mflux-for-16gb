@@ -310,6 +310,11 @@ I/O             : 71.8 ms / ブロック(M0 の実測 74 ms と一致)
 
 ## 6. 次にやること
 
+- **M11a: ANE を 2 台目の演算器として足せるかの probe**([計画](../../.cursor/plans/2026-09-22-krea2-ane-hybrid.md))。
+  GPU 単独の伸びしろは 1.27 倍で頭打ち(M9)。Irodori-TTS は M3 Pro で ANE + GPU の並走で 1.35 倍、Draw Things は
+  M5 で ANE+NAX hybrid を既定にしている。Krea 2 は CFG 分岐がないので **MLP の行列積を列で割って GPU と ANE に同時に
+  やらせる**形。机上で 7.9 → 5.5 s/step(ANE 1 基)、常駐 +5 GB。**先に `tools/bench/ane_probe.py` で ANE の実効 TOPS /
+  GPU 併走 / 常駐 / fp16 の数値を測り、合格基準を 1 つでも外したら閉じる。**
 - **M3 Pro を常駐アプリなしで再測定**(今回は作業中の機械で swapouts 8 ページ、clean でない)。
   同時に `sudo sysctl -w iogpu.wired_limit_mb=0` の宿題を消す。期待値 22.9 s/step / 5.0 GB / 0 ページ。
 - **M9f `powermetrics`**(要 sudo)。1280² の +3%/step が持続クロックかどうか。
