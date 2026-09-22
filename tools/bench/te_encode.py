@@ -5,6 +5,7 @@ import time
 from pathlib import Path
 
 import mlx.core as mx
+import mlx.nn as nn
 from memstat import MemStat
 
 from mflux.models.common.tokenizer import TokenizerLoader
@@ -26,9 +27,14 @@ DEFAULT_PROMPT = (
 
 
 class Krea2TextEncoderBench:
-    def __init__(self, model_path: Path, out_path: Path):
+    def __init__(self, model_path: Path, out_path: Path, quantize: int | None = None):
         self.model_path = model_path
         self.out_path = out_path
+        # The checkpoint stores the encoder unquantized: its definition sets
+        # skip_quantization=True on the grounds that quantizing it degrades conditioning.
+        # That is an upstream comment, not a measurement, and q8 is the bar this project
+        # already accepts for the DiT - so it is a flag, and the images decide.
+        self.quantize = quantize
         self.timings: dict[str, float] = {}
 
     def run(self, prompt: str) -> dict:
@@ -46,6 +52,7 @@ class Krea2TextEncoderBench:
             "model_path": str(self.model_path),
             "prompt": prompt,
             "stored_bits": bits,
+            "quantized_to": self.quantize,
             "embeds_shape": list(embeds.shape),
             "embeds_dtype": str(embeds.dtype).removeprefix("mlx.core."),
             "timings_s": {k: round(v, 3) for k, v in self.timings.items()},
@@ -84,7 +91,23 @@ class Krea2TextEncoderBench:
         mx.eval(encoder)
         mx.clear_cache()
         self.timings["materialize"] = time.perf_counter() - start
+
+        if self.quantize is not None:
+            start = time.perf_counter()
+            nn.quantize(encoder, group_size=64, bits=self.quantize, class_predicate=Krea2TextEncoderBench._quantizable)
+            mx.eval(encoder)
+            mx.clear_cache()
+            self.timings["quantize"] = time.perf_counter() - start
+            bits = self.quantize
         return bits
+
+    @staticmethod
+    def _quantizable(path: str, module) -> bool:
+        # mx.quantize needs the last dim to be a multiple of the group size.
+        if not hasattr(module, "to_quantized"):
+            return False
+        weight = getattr(module, "weight", None)
+        return weight is not None and weight.shape[-1] % 64 == 0
 
     def _encode(self, encoder: Krea2TextEncoder, prompt: str) -> mx.array:
         start = time.perf_counter()
@@ -136,9 +159,10 @@ def main() -> int:
     parser.add_argument("--prompt", default=DEFAULT_PROMPT, help="prompt to encode")
     parser.add_argument("--out", type=Path, required=True, help="where to write the embeds safetensors")
     parser.add_argument("--json", type=Path, default=None, help="also write the measurement to this JSON file")
+    parser.add_argument("--quantize", type=int, default=None, help="quantize the encoder to this many bits after loading")  # fmt: skip
     args = parser.parse_args()
 
-    bench = Krea2TextEncoderBench(model_path=args.model, out_path=args.out)
+    bench = Krea2TextEncoderBench(model_path=args.model, out_path=args.out, quantize=args.quantize)
     result = bench.run(args.prompt)
 
     if args.json is not None:
