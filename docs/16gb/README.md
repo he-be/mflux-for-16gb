@@ -31,7 +31,7 @@
 | `docs/16gb/runs/` | 実行ログ(swapwatch の CSV / JSON)と `images/` に出力画像 |
 | `.cursor/plans/` | 実装計画(RULE.md の規約) |
 | `tools/` | fork 固有のツール(`swapwatch.py`) |
-| `tools/bench/` | 段階ごとの計測スクリプト(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py` / `block_stream.py` / `bake_lora_checkpoint.py` / `quantize_te_checkpoint.py` / `matmul_probe.py` / `nax_probe.py` / `qmm_spy.py`) |
+| `tools/bench/` | 段階ごとの計測スクリプト(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py` / `block_stream.py` / `bake_lora_checkpoint.py` / `quantize_te_checkpoint.py` / `matmul_probe.py` / `nax_probe.py` / `qmm_spy.py` / `ceiling_probe.py` / `mps_probe.py`) |
 | `~/Library/Caches/mflux/16gb-bench/` | 段の間で受け渡す中間生成物(埋め込み・latent)。リポジトリには入れない |
 
 ## 索引
@@ -56,8 +56,10 @@
 - **[M8b: 次のブロックを計算の裏で読む(結論: 合格。13.1 → 9.4 s/step、出力は完全一致)](measurements/2026-09-22-m8b-prefetch.md)**
 - **[M8c / M8d: K 分割(不採用)と clear_cache の廃止(採用)。最終 9.26 s/step](measurements/2026-09-22-m8c-m8d-kslices-cache-limit.md)**
 - [M8f: M3 Pro での回帰(合格。29.6 → 23.0 s/step、footprint 4.66 GB)](measurements/2026-09-22-m8f-m3pro.md)
+- **[M9: この GPU の天井と MLX が届いていない場所(結論: 天井 19 TFLOPS、`mlp.down` の崖は MLX のカーネル。q4 も MPS も答えではない)](measurements/2026-09-22-m9-ceiling-probe.md)**
 - [計画: ブロック単位ウェイトストリーミング](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)
-- [計画: DiT を M6 mini で 2〜3 倍速くする](../../.cursor/plans/2026-09-22-krea2-dit-speed.md)
+- [計画: DiT を M6 mini で 2〜3 倍速くする](../../.cursor/plans/2026-09-22-krea2-dit-speed.md)(M8a〜f 済)
+- **[計画: DiT を天井(6 s/step)に近づける — 測定と改善](../../.cursor/plans/2026-09-22-krea2-dit-ceiling.md)** ← 次はこれ
 
 ## いま分かっていること(2026-09-22)
 
@@ -133,8 +135,13 @@ mflux 本体経由(`--block-streaming`)でも同じ: 1024² で footprint 5.21GB
   35.2 → **15.88 s/step**、M3 Pro が 29.6 → **22.96 s/step**、すべて clean。
   画像は機材差より小さい差。`mlp.down` の K 分割(M8c)は単体では速いが本番では
   プリフェッチと干渉して遅くなるので不採用。
-- **残り**: `powermetrics`(要 sudo)での持続クロック確認、K=16384 の半速カーネルを
-  MLX に報告、M3 Pro の `iogpu.wired_limit_mb=0` 再測定、前処理ツールの昇格。
+- **M9 済 — 天井を測った。** 密行列積の天井は MLX でも PyTorch MPS でも **19 TFLOPS**(M6 12 コアの実力)。
+  1 ステップ 112 TFLOP なので下限は約 6.2 s/step、いまの 9.26 s はその 1.5 倍。差の最大項は
+  `mlp.down`(16384→6144)の MLX カーネルが **MPS の半分の速さ**(9.1 vs 17.9 TFLOPS、0.32.2 でも同じ)
+  で走っていること(1.3 s/step)。q4 は崖の外で +7% しかなく、MPS(ComfyUI)は逆量子化を払って
+  同額かつ 16GB に載らない。**q8 のまま MLX で崖を消す**のが答え。
+- **残り**: [次の計画](../../.cursor/plans/2026-09-22-krea2-dit-ceiling.md)(M9a〜g)。`powermetrics`(要 sudo)、
+  K=16384 の件を MLX に報告(再現例は `ceiling_probe.py --only ksweep`)、M3 Pro の `iogpu.wired_limit_mb=0` 再測定、前処理ツールの昇格。
 
 ## 実行のしかた
 

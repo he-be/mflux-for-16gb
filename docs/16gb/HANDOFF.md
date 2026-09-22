@@ -1,8 +1,10 @@
 # 引き継ぎ(2026-09-22 時点)
 
 新しいセッションはこのファイルだけ読めば再開できる。次に読むのは
-[DiT を速くする計画](../../.cursor/plans/2026-09-22-krea2-dit-speed.md)
-(元の[ストリーミング計画](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)は M7 まで済)。
+[DiT を天井に近づける計画](../../.cursor/plans/2026-09-22-krea2-dit-ceiling.md)と
+その根拠の [M9](measurements/2026-09-22-m9-ceiling-probe.md)
+(前の[DiT を速くする計画](../../.cursor/plans/2026-09-22-krea2-dit-speed.md)は M8f まで済、
+元の[ストリーミング計画](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)は M7 まで済)。
 
 ## 1. やろうとしていること
 
@@ -259,7 +261,27 @@ I/O             : 71.8 ms / ブロック(M0 の実測 74 ms と一致)
 合成ブロックの scales が float32 だと別カーネルに落ちる(実ブロックを `--model` で読む)。
 単体で速い変更が本番で遅いことがある(M8c)。**本番の形(プリフェッチあり)で測ってから採用する。**
 
+### M9(2026-09-22 夕方): 天井を測った ← 済(測定のみ、`src/` は触っていない)
+
+「発売日の M6 で 9.26 s/step は遅すぎないか」に数字で答えた([M9](measurements/2026-09-22-m9-ceiling-probe.md))。
+
+- **天井は 19 TFLOPS。** MLX の密 bf16(4096³)19.2、PyTorch MPS 18.7〜19.0。MPS は Apple 自身の
+  カーネルで neural accelerator も使うので、これがシリコンの実力。Apple の「M5 比 +30%」と整合。
+- **1 ステップ 112 TFLOP → 下限 6.2 s。** 9.26 s はその 1.5 倍。うち **1.3 s は `mlp.down`(16384→6144)の
+  MLX カーネルが MPS の半分**(9.1 vs 17.9 TFLOPS)。密 bf16 も K ≥ 8192 で落ちるので MLX の GEMM 全般の
+  問題。0.32.2 でも直っていない。gs / dtype / M を変えても動かず、ビット数だけ効く(帯域律速)。
+- **q4 / q6 は答えではない。** 崖の外で q4 は +7%。崖は K 分割で消せるので q4 の取り分は 0.5 s/step。
+- **ComfyUI(MPS)も答えではない。** 逆量子化 11 ms / 100 MB を毎ステップ払って matmul 合計は同額、
+  attention は同速(17.2 vs 17.3)、ストリーミングがないので 16GB に載らない。
+- 到達点の見込み: 崖 −1.3 s、要素演算の融合 −0.5 s で **約 7.5 s/step**。それ以上は MLX 側。
+- 道具: `tools/bench/ceiling_probe.py`(MLX)、`tools/bench/mps_probe.py`(torch は使い捨て環境で)。
+- **mini の作業ツリーは HEAD とずれている**(`dcacf52` + 未コミット)。本番測定の前に揃える。
+
 ## 6. 次にやること
+
+**[DiT を天井に近づける計画](../../.cursor/plans/2026-09-22-krea2-dit-ceiling.md)の M9a〜g。**
+本命は M9c(`mlp.down` の崖: プリフェッチのスレッド化 / 干渉源の切り分け / 読みの位置替え / MLX へ報告)、
+次に M9d(RMSNorm の float32 往復をやめる、内側の block を `mx.compile`)。以下は従来の宿題。
 
 - **M3 Pro での `iogpu.wired_limit_mb=0` 再測定。** M6 の 2 本は前セッションが残した
   15360 の設定下。mini 側は既定 0 で通ったので、残っているのは M3 Pro だけ。
