@@ -102,15 +102,80 @@ for block in self.blocks:
 グラフが未評価のままウェイトを drop することになる。ブロックごとに同期が入るが、
 その代償はこの測定に含まれている(それでも +5.8%)。
 
-## 6. 残っている課題: LoRA
+## 6. LoRA: 事前に焼き込んだチェックポイントを作る → **実装して通した**
 
-`block_stream.py` はまだ LoRA を扱えない。選択肢は 2 つ:
+選択肢は 2 つあった:
 
-| | 実行時コスト | 備考 |
-|---|---|---|
-| **A: 事前に bake したチェックポイントを作る** | **ゼロ** | 1 回だけ 15.23 GB のピークを払う |
-| B: LoRA 層を常駐させ、bake せずに使う | **+11 s/step** | M3 の実測(41.9 対 30.9 s) |
+| | 実行時コスト |
+|---|---|
+| **A: 事前に bake したチェックポイントを作る** | **ゼロ** |
+| B: LoRA 層を常駐させ、bake せずに使う | **+11 s/step**(M3 の実測、41.9 対 30.9 s) |
 
-**A が正しい。** bake は q8 のウェイトに畳み込むだけなので、
-一度やってディスクに保存すれば、以後のストリーミングは LoRA なしと同じ速度で走る。
-M6 で実装する。
+A を `tools/bench/bake_lora_checkpoint.py` として実装した。
+
+### bake もストリーミングでやる
+
+素直に `LoRASaver.bake_and_strip_lora(transformer)` を呼ぶと**全体が実体化する**。
+`lora_saver.py:125` が層ごとに `mx.eval` するので、28 ブロック分が積み上がる。
+実測: footprint 13.10 GB、**1227 MB スワップして失敗**。
+
+`bake_and_strip_lora` は任意のモジュールを取るので、**ブロック単位で呼ぶ**:
+
+```
+ブロック i について: LoRA を焼く → eval → blocks_NN.safetensors に書く → 空配列に置換 → drop
+```
+
+| | |
+|---|---|
+| mx peak memory | **1.89 GB** |
+| peak footprint | **2.14 GB** |
+| 所要時間 | **13 秒**(28 ブロック + globals) |
+| verdict | **clean**(swapouts 0) |
+| 出力 | 956 テンソル(元と同数)、13 GB、1 ブロック 1 ファイル |
+
+**13.62 GB のモデルの LoRA 焼き込みを、2.14 GB で 13 秒で終わらせた。**
+
+### 焼き込んだチェックポイントをストリーミングする(= 目標構成)
+
+- 実行: `20260922-1048`、記録: `docs/16gb/runs/20260922-1048-m5-stream-baked.{csv,json}`
+
+```
+I/O per block     : 71.8 ms
+compute per block : 984.7 ms     ← LoRA なしの 983.7 ms と同じ
+compute / I/O     : 13.71
+mx peak memory    : 3.21 GB
+peak footprint    : 3.72 GB
+per step          : [29.47, 29.56, 30.10, 29.99] s
+verdict           : clean (swapouts 0)
+```
+
+**LoRA が付いても速度も常駐も一切変わらない。** 予測どおり、bake は実行時コストゼロ。
+
+### 正しさ: 常駐版と**バイト単位で一致**
+
+M3 の常駐版(LoRA を読み込み時に bake、1024²、seed 42)と比較:
+
+```
+latent  max abs diff : 0.000e+00   bit-identical: True
+PNG     sha256 一致   : 224664246568395d...  (cmp でバイト一致)
+```
+
+**常駐方式とストリーミング方式は、同じ画像を 1 バイトの違いもなく出す。**
+
+---
+
+## 7. パイプライン全体(目標構成、すべて `clean`)
+
+| 段 | mx peak | 実 footprint | 時間 | verdict |
+|---|---|---|---|---|
+| M2 text encoder | 8.19 GB | **8.29 GB** ← 最大 | 4 s | clean |
+| LoRA 焼き込み(1 回だけ) | 1.89 GB | 2.14 GB | 13 s | clean |
+| **M5 DiT ストリーミング** | 3.21 GB | 3.72 GB | **119 s**(4 × 29.8) | clean |
+| M4 VAE(タイル 256) | 2.98 GB | 4.28 GB | 5.6 s | clean |
+
+**18GB 機で目標構成がスワップなしで通る。**
+q8 + 4step LoRA / 1024² / 4 ステップ / euler / guidance 1.0 / seed 42。
+
+**いま最大の消費は DiT ではなく text encoder の 8.29 GB。**
+16GB 機を狙うなら次に削るのはここ(ただし TE の量子化は画質要件で禁止なので、
+別の手が要る)。
