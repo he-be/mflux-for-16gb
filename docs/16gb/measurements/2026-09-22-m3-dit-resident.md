@@ -16,7 +16,7 @@
 | 1 | そのまま | **SWAPPED** |
 | 2 | `--cache-limit-gb 1 --clear-cache-each-step` | **SWAPPED**(段 1 と同じ場所) |
 | 3a | `iogpu.wired_limit_mb=14336`(wire での固定なし) | **SWAPPED**(同じ場所) |
-| 3b | 上に加えて `--wired-limit-gb` | 未 |
+| 3b | 上に加えて `--wired-limit-gb 14` | **合格 (clean)** ← これが効いた |
 | 4 | `--width 768 --height 768` | **意味がない**(下の常駐下限の節) |
 
 ---
@@ -270,3 +270,66 @@ footprint が育つにつれて **OS が正しく回収している**。「13.62
 **以降、compressor の値を結論の根拠に使わない。** 根拠に使うのは相互に整合が
 取れている 4 つだけ: `mx.get_active_memory()` / `phys_footprint` /
 swapouts・swapins / file-backed。
+
+---
+
+## 段 3b: `mx.set_wired_limit` でウェイトを固定する → **合格 (clean)**
+
+- 実行: `20260922-0912`、記録: `docs/16gb/runs/20260922-0912-m3-loadonly-wired.csv`
+- `--no-lora --load-only --hold-seconds 10 --wired-limit-gb 14`
+- 前提: `iogpu.wired_limit_mb=14336`(これがないと MLX は 14 GB を wire できない)
+
+```
+mx peak memory    : 13.62 GB
+mx active memory  : 13.62 GB
+mx cache memory   : 0.00 GB
+materialize       : 2.10 s
+verdict           : clean   (swapouts 0、swap 増分 0)
+```
+
+| t | footprint | file-backed | swap 増分 | swapouts |
+|---|---|---|---|---|
+| 0.1 s | 0.01 GB | 3.03 GB | 0 | 0 |
+| 2.0 s | 4.41 GB | 5.49 GB | 0 | 0 |
+| 3.0 s | 10.25 GB | 4.82 GB | 0 | 0 |
+| 4.0 s | **13.33 GB** | 1.46 GB | 0 | 0 |
+| 4.8〜13.4 s | **13.33 GB(完全に平ら)** | 1.27 GB | **-16 MB** | **0** |
+
+**10 秒間、1 ページも掃き出さずに座っていられた。** swap はむしろ 16 MB 減った。
+
+### なぜ効いたのか
+
+wire ありと wire なしで、OS の逃げ方が変わる:
+
+| | wire なし(段 1〜3a) | wire あり(段 3b) |
+|---|---|---|
+| file-backed の山 | 6.71 GB → 2.25 GB | 5.49 GB → **1.27 GB** |
+| 匿名ページの圧縮 | 大量 | ほぼなし |
+| swapouts | 1394〜3169 MB | **0** |
+
+wire していないと、MLX の Metal バッファは OS から見てただの匿名メモリなので、
+**OS は場所を作るときにそれ自身を圧縮の候補にする**。13.62 GB を圧縮しようとして
+行き詰まり、最後にスワップへ逃げる。
+
+wire すると、そのバッファは回収対象から外れる。OS に残る手は**クリーンな
+ファイルバックのページを捨てること**だけになり、実際 5.49 → 1.27 GB まで
+ページキャッシュを手放して場所を作った。**捨てられるものを捨てるのが正解**であって、
+圧縮もスワップも必要なかった。
+
+### これが計画にとって意味すること
+
+計画は `mx.set_wired_limit` を「段階 3 = 最後の手段」に置いていた。**逆だった。**
+これは最後の手段ではなく、**18GB 機で q8 DiT を常駐させるための唯一の手段**。
+段 1・2・3a がすべて同じところで落ちていたのは、どれも wire していなかったから。
+
+必要な設定は 2 つで、両方要る:
+
+1. `sudo sysctl -w iogpu.wired_limit_mb=14336`(既定 0 のままでは MLX が wire できない。
+   再起動で消える)
+2. プロセス内で `mx.set_wired_limit(14 * 1e9)`
+
+### まだ確かめていないこと
+
+- **LoRA を足した 14.06 GB でも通るか**(いまのは 13.62 GB)
+- **4 ステップ回したときのアクティベーション込みで通るか**(いまは 1 ステップも
+  回していない)
