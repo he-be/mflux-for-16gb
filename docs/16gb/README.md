@@ -31,12 +31,14 @@
 | `docs/16gb/runs/` | 実行ログ(swapwatch の CSV / JSON)と `images/` に出力画像 |
 | `.cursor/plans/` | 実装計画(RULE.md の規約) |
 | `tools/` | fork 固有のツール(`swapwatch.py`) |
+| `tools/studio/` | ブラウザ UI(`server.py` / `index.html`)。標準ライブラリのみ |
 | `tools/bench/` | 段階ごとの計測スクリプト(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py` / `block_stream.py` / `bake_lora_checkpoint.py` / `quantize_te_checkpoint.py` / `matmul_probe.py` / `nax_probe.py` / `qmm_spy.py` / `ceiling_probe.py` / `mps_probe.py` / `block_budget.py` / `stream_ab.py` / `seqpatch.py`) |
 | `~/Library/Caches/mflux/16gb-bench/` | 段の間で受け渡す中間生成物(埋め込み・latent)。リポジトリには入れない |
 
 ## 索引
 
 - **[引き継ぎ(2026-09-22)](HANDOFF.md)** ← 新しいセッションはここから
+- **[studio — ブラウザから使う](STUDIO.md)** ← 日常の生成はここから
 
 - [Krea 2 を 16GB / 18GB で動かすための調査](research/krea2-low-memory-mac.md)
 - [Krea 2 Turbo 4-step 蒸留 LoRA の使い方](research/krea2-4step-lora.md)
@@ -59,6 +61,7 @@
 - **[M9: この GPU の天井と MLX が届いていない場所(結論: 天井 19 TFLOPS、`mlp.down` の崖は MLX のカーネル。q4 も MPS も答えではない)](measurements/2026-09-22-m9-ceiling-probe.md)**
 - [M9a/b: 本番の再現と 1 ブロックの予算(matmul 256 + sdpa 27 + 要素演算 34。compile は遅くなる、norm の bf16 化だけ −10 ms)](measurements/2026-09-22-m9b-block-budget.md)
 - **[M9c: `async_eval` が呼び出し側を止める。直接読み + K4 バッチ + bf16 norm で 9.01 → 7.90 s/step](measurements/2026-09-22-m9c-prefetch-interference.md)**
+- **[M10: ストリーミングに実行時 LoRA(結論: 合格。焼き込み不要で差し替え自由、+31%/step・+0.44GB・clean)](measurements/2026-09-22-m10-runtime-lora.md)**
 - [計画: ブロック単位ウェイトストリーミング](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)
 - [計画: DiT を M6 mini で 2〜3 倍速くする](../../.cursor/plans/2026-09-22-krea2-dit-speed.md)(M8a〜f 済)
 - **[計画: DiT を天井(6 s/step)に近づける — 測定と改善](../../.cursor/plans/2026-09-22-krea2-dit-ceiling.md)**(M9a〜e 済、M9f/g 残)

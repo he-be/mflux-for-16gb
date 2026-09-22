@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mflux studio</title>
+<style>
+  :root {
+    --bg: #101216; --panel: #171a20; --panel-2: #1d212a; --line: #2a2f3a;
+    --text: #e6e8ee; --dim: #9aa2b1; --accent: #6ea8fe; --ok: #5bd6a0; --warn: #f0b429; --bad: #f2777a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 14px/1.6 -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+  }
+  header {
+    display: flex; align-items: baseline; gap: 14px; padding: 12px 18px;
+    border-bottom: 1px solid var(--line); background: var(--panel); position: sticky; top: 0; z-index: 5;
+  }
+  header h1 { font-size: 15px; margin: 0; letter-spacing: .04em; }
+  header .where { color: var(--dim); font-size: 12px; }
+  main { display: grid; grid-template-columns: 340px 1fr; gap: 18px; padding: 18px; align-items: start; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+  .panel + .panel { margin-top: 14px; }
+  .panel h2 { font-size: 12px; color: var(--dim); margin: 0 0 10px; letter-spacing: .08em; font-weight: 600; }
+
+  label { display: block; font-size: 12px; color: var(--dim); margin: 10px 0 4px; }
+  textarea, input, select, button {
+    font: inherit; color: var(--text); background: var(--panel-2);
+    border: 1px solid var(--line); border-radius: 7px; padding: 8px 10px; width: 100%;
+  }
+  textarea { resize: vertical; min-height: 110px; line-height: 1.5; }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); }
+  .row { display: grid; gap: 8px; grid-template-columns: 1fr 1fr; }
+  .row-3 { display: grid; gap: 8px; grid-template-columns: 1fr 1fr 1fr; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .chip {
+    width: auto; padding: 5px 10px; font-size: 12px; cursor: pointer; color: var(--dim);
+  }
+  .chip.on { border-color: var(--accent); color: var(--text); background: #1f2a3d; }
+
+  button.primary {
+    margin-top: 14px; background: var(--accent); border-color: var(--accent); color: #0b1220;
+    font-weight: 700; cursor: pointer; padding: 11px;
+  }
+  button.primary:disabled { opacity: .45; cursor: default; }
+  button.ghost { width: auto; padding: 5px 10px; font-size: 12px; cursor: pointer; color: var(--dim); }
+  button.ghost:hover { color: var(--text); border-color: var(--accent); }
+
+  .lora { display: grid; grid-template-columns: 1fr 74px 30px; gap: 6px; margin-bottom: 6px; }
+  .lora button { padding: 0; cursor: pointer; color: var(--dim); }
+
+  .now { display: flex; gap: 14px; align-items: center; }
+  .now .label { font-size: 13px; }
+  .now .figures { margin-left: auto; color: var(--dim); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .bar { height: 6px; background: var(--panel-2); border-radius: 99px; overflow: hidden; margin-top: 10px; }
+  .bar > i { display: block; height: 100%; background: var(--accent); transition: width .3s ease; }
+  .prompt-line { color: var(--dim); font-size: 12px; margin-top: 8px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .queue li {
+    display: flex; gap: 10px; align-items: center; padding: 6px 0; border-top: 1px solid var(--line); font-size: 12px;
+  }
+  .queue { list-style: none; margin: 0; padding: 0; }
+  .queue .state { color: var(--dim); min-width: 62px; }
+  .queue .text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .state.done { color: var(--ok); } .state.error { color: var(--bad); } .state.running { color: var(--accent); }
+
+  .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; cursor: pointer; }
+  .card img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; background: var(--panel-2); }
+  .card .meta { padding: 7px 9px; font-size: 11px; color: var(--dim);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .empty { color: var(--dim); padding: 30px 0; text-align: center; }
+
+  dialog {
+    border: 1px solid var(--line); background: var(--panel); color: var(--text);
+    border-radius: 12px; padding: 0; max-width: min(94vw, 1100px); max-height: 92vh;
+  }
+  dialog::backdrop { background: #000a; }
+  dialog .body { display: grid; grid-template-columns: minmax(0,1fr) 260px; }
+  @media (max-width: 800px) { dialog .body { grid-template-columns: 1fr; } }
+  dialog img { display: block; width: 100%; max-height: 82vh; object-fit: contain; background: #000; }
+  dialog .side { padding: 14px; border-left: 1px solid var(--line); overflow: auto; }
+  dialog .side dt { font-size: 11px; color: var(--dim); margin-top: 8px; }
+  dialog .side dd { margin: 0; font-size: 13px; word-break: break-word; }
+  dialog .actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+  .err { color: var(--bad); font-size: 12px; white-space: pre-wrap; margin-top: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>mflux studio</h1>
+  <span class="where" id="where">…</span>
+</header>
+
+<main>
+  <section>
+    <div class="panel">
+      <h2>プロンプト</h2>
+      <textarea id="prompt" placeholder="a red apple on a wooden table, studio light"></textarea>
+
+      <label>サイズ</label>
+      <div class="chips" id="sizes"></div>
+      <div class="row" style="margin-top:6px">
+        <input id="width" type="number" step="64" min="256" max="2048">
+        <input id="height" type="number" step="64" min="256" max="2048">
+      </div>
+
+      <div class="row-3">
+        <div><label>ステップ</label><input id="steps" type="number" min="1" max="50"></div>
+        <div><label>guidance</label><input id="guidance" type="number" step="0.1" min="0"></div>
+        <div><label>枚数</label><input id="count" type="number" min="1" max="16" value="1"></div>
+      </div>
+      <div class="row">
+        <div><label>シード（空欄=ランダム）</label><input id="seed" placeholder="random"></div>
+        <div><label>スケジューラ</label>
+          <select id="scheduler"><option value="euler">euler</option><option value="er_sde">er_sde</option></select>
+        </div>
+      </div>
+
+      <label>LoRA</label>
+      <div id="loras"></div>
+      <button class="ghost" id="add-lora">＋ LoRA を追加</button>
+
+      <button class="primary" id="go">生成する（⌘Enter）</button>
+      <div class="err" id="form-error"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="panel" id="now-panel" hidden>
+      <h2>実行中</h2>
+      <div class="now">
+        <span class="label" id="now-label"></span>
+        <span class="figures" id="now-figures"></span>
+        <button class="ghost" id="cancel">中止</button>
+      </div>
+      <div class="bar"><i id="now-bar" style="width:0%"></i></div>
+      <div class="prompt-line" id="now-prompt"></div>
+    </div>
+
+    <div class="panel" id="queue-panel" hidden>
+      <h2>キュー / 履歴</h2>
+      <ul class="queue" id="queue"></ul>
+    </div>
+
+    <div class="panel">
+      <h2>ギャラリー</h2>
+      <div class="grid" id="gallery"></div>
+      <div class="empty" id="gallery-empty">まだ画像がありません。</div>
+    </div>
+  </section>
+</main>
+
+<dialog id="viewer">
+  <div class="body">
+    <div><img id="viewer-img" alt=""></div>
+    <div class="side">
+      <dl id="viewer-meta"></dl>
+      <div class="actions">
+        <button class="ghost" id="viewer-load">設定を読み込む</button>
+        <a class="ghost" id="viewer-download" download style="text-decoration:none;display:inline-block;border:1px solid var(--line);border-radius:7px;padding:5px 10px;font-size:12px;color:var(--dim)">保存</a>
+        <button class="ghost" id="viewer-delete">削除</button>
+        <button class="ghost" id="viewer-close">閉じる</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script>
+const SIZES = [[1024,1024,"1024²"],[1280,1280,"1280² 推奨"],[1024,1440,"縦 1024×1440"],[1440,1024,"横 1440×1024"],[768,768,"768²"]];
+const STAGES = {queued:"待機中", loading:"準備中", encoding:"プロンプト解析", sampling:"サンプリング",
+                decoding:"デコード", cancelling:"中止中", done:"完了", error:"エラー", cancelled:"中止"};
+const $ = id => document.getElementById(id);
+let lastRevision = -1, galleryKey = "", currentName = null;
+
+function drawSizes() {
+  $("sizes").innerHTML = "";
+  for (const [w, h, label] of SIZES) {
+    const chip = document.createElement("button");
+    chip.className = "chip";
+    chip.textContent = label;
+    chip.onclick = () => { $("width").value = w; $("height").value = h; markSizes(); };
+    $("sizes").appendChild(chip);
+  }
+}
+function markSizes() {
+  const w = +$("width").value, h = +$("height").value;
+  [...$("sizes").children].forEach((chip, i) => chip.classList.toggle("on", SIZES[i][0] === w && SIZES[i][1] === h));
+}
+
+function addLora(path = "", scale = 1.0) {
+  const row = document.createElement("div");
+  row.className = "lora";
+  row.innerHTML = `<input placeholder="org/repo:file.safetensors か ローカルパス"><input type="number" step="0.05" title="強さ"><button title="削除">✕</button>`;
+  row.children[0].value = path;
+  row.children[1].value = scale;
+  row.children[2].onclick = () => row.remove();
+  $("loras").appendChild(row);
+}
+function readLoras() {
+  return [...$("loras").children]
+    .map(row => ({path: row.children[0].value.trim(), scale: parseFloat(row.children[1].value) || 1.0}))
+    .filter(l => l.path);
+}
+
+async function generate() {
+  $("form-error").textContent = "";
+  const body = {
+    prompt: $("prompt").value, width: +$("width").value, height: +$("height").value,
+    steps: +$("steps").value, guidance: +$("guidance").value, scheduler: $("scheduler").value,
+    seed: $("seed").value.trim(), count: +$("count").value, loras: readLoras(),
+  };
+  const res = await fetch("/api/generate", {method: "POST", body: JSON.stringify(body)});
+  if (!res.ok) $("form-error").textContent = (await res.json()).error || "送信に失敗しました";
+  poll();
+}
+
+function render(state) {
+  const c = state.config;
+  $("where").textContent = `${c.host} · ${c.model.replace(/^.*\//, "")} · ${c.out_dir}`;
+  if ($("width").value === "") {
+    $("width").value = c.width; $("height").value = c.height;
+    $("steps").value = c.steps; $("guidance").value = c.guidance; $("scheduler").value = c.scheduler;
+    markSizes();
+  }
+
+  const running = state.jobs.find(j => j.state === "running");
+  $("now-panel").hidden = !running;
+  if (running) {
+    const total = running.steps || 1;
+    const frac = running.stage === "sampling" ? running.step / total : (running.stage === "decoding" ? 0.95 : 0.04);
+    $("now-bar").style.width = `${Math.round(frac * 100)}%`;
+    $("now-label").textContent = STAGES[running.stage] || running.stage;
+    const eta = running.rate && running.stage === "sampling" ? ` · 残り約 ${Math.round(running.rate * (total - running.step))} 秒` : "";
+    $("now-figures").textContent =
+      `${running.step}/${total} ステップ · ${running.elapsed ?? 0} 秒` +
+      (running.rate ? ` · ${running.rate}s/step` : "") + eta;
+    const note = running.stage === "loading" ? (running.log || []).slice(-1)[0] : null;
+    $("now-prompt").textContent = note || running.prompt;
+    $("cancel").onclick = () => fetch("/api/cancel", {method: "POST", body: JSON.stringify({id: running.id})});
+  }
+
+  const interesting = state.jobs.filter(j => j.state !== "done" || j.error);
+  $("queue-panel").hidden = interesting.length === 0;
+  $("queue").innerHTML = "";
+  for (const job of interesting) {
+    const li = document.createElement("li");
+    li.innerHTML = `<span class="state ${job.state}">${STAGES[job.stage] || job.state}</span><span class="text"></span>`;
+    li.children[1].textContent = job.error ? job.error.split("\n").slice(-1)[0] : job.prompt;
+    if (job.state === "queued") {
+      const stop = document.createElement("button");
+      stop.className = "ghost"; stop.textContent = "取消";
+      stop.onclick = () => fetch("/api/cancel", {method: "POST", body: JSON.stringify({id: job.id})});
+      li.appendChild(stop);
+    }
+    $("queue").appendChild(li);
+  }
+
+  const key = state.gallery.map(g => g.name).join(",");
+  if (key !== galleryKey) {
+    galleryKey = key;
+    $("gallery").innerHTML = "";
+    $("gallery-empty").hidden = state.gallery.length > 0;
+    for (const item of state.gallery) {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `<img loading="lazy" src="/images/${encodeURIComponent(item.name)}"><div class="meta"></div>`;
+      card.children[1].textContent = item.settings.prompt || item.name;
+      card.onclick = () => openViewer(item);
+      $("gallery").appendChild(card);
+    }
+  }
+}
+
+function openViewer(item) {
+  const s = item.settings || {};
+  currentName = item.name;
+  $("viewer-img").src = `/images/${encodeURIComponent(item.name)}`;
+  $("viewer-download").href = `/images/${encodeURIComponent(item.name)}`;
+  $("viewer-download").setAttribute("download", item.name);
+  const rows = [
+    ["プロンプト", s.prompt], ["サイズ", s.width ? `${s.width} × ${s.height}` : null],
+    ["ステップ", s.steps], ["シード", s.seed], ["guidance", s.guidance], ["スケジューラ", s.scheduler],
+    ["LoRA", (s.loras || []).map(l => `${l.path} @ ${l.scale}`).join("\n") || "なし"],
+    ["所要", s.elapsed_s ? `${s.elapsed_s} 秒${s.rate_s_per_step ? ` (${s.rate_s_per_step}s/step)` : ""}` : null],
+    ["生成した機械", s.host], ["ファイル", item.name],
+  ].filter(([, v]) => v !== null && v !== undefined);
+  $("viewer-meta").innerHTML = rows.map(([k]) => `<dt>${k}</dt><dd></dd>`).join("");
+  [...$("viewer-meta").querySelectorAll("dd")].forEach((dd, i) => dd.textContent = rows[i][1]);
+  $("viewer-load").onclick = () => {
+    if (s.prompt) $("prompt").value = s.prompt;
+    if (s.width) { $("width").value = s.width; $("height").value = s.height; markSizes(); }
+    if (s.steps) $("steps").value = s.steps;
+    if (s.guidance !== undefined) $("guidance").value = s.guidance;
+    if (s.scheduler) $("scheduler").value = s.scheduler;
+    $("seed").value = s.seed ?? "";
+    $("loras").innerHTML = "";
+    (s.loras || []).forEach(l => addLora(l.path, l.scale));
+    $("viewer").close();
+    $("prompt").focus();
+  };
+  $("viewer-delete").onclick = async () => {
+    await fetch("/api/delete", {method: "POST", body: JSON.stringify({name: currentName})});
+    galleryKey = ""; $("viewer").close(); poll();
+  };
+  $("viewer").showModal();
+}
+
+async function poll() {
+  try {
+    const state = await (await fetch("/api/state")).json();
+    render(state);
+    return state.jobs.some(j => j.state === "running" || j.state === "queued");
+  } catch { return false; }
+}
+
+async function loop() {
+  const busy = await poll();
+  setTimeout(loop, busy ? 600 : 2500);
+}
+
+drawSizes();
+addLora();
+$("go").onclick = generate;
+$("add-lora").onclick = () => addLora();
+$("viewer-close").onclick = () => $("viewer").close();
+["width", "height"].forEach(id => $(id).oninput = markSizes);
+document.addEventListener("keydown", e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === "Enter") { e.preventDefault(); generate(); }
+});
+loop();
+</script>
+</body>
+</html>

@@ -4,7 +4,9 @@ set shell := ["bash", "-euo", "pipefail", "-c"]
 
 python_version := "3.13"
 venv_dir := ".venv"
+
 # Ruff version derives from the pinned dev dependency in pyproject.toml (single source of truth)
+
 ruff_version := `sed -n 's/^    "ruff==\([0-9.]*\)",$/\1/p' pyproject.toml`
 
 # Show all recipes
@@ -122,6 +124,36 @@ ci-extract:
     uv run --no-sync python scripts/ci_extract_models.py
     @echo "✅ Extraction complete."
 
+# --- studio (fork-specific: the browser front end for low-memory Krea 2) ----------
+
+mini := "m6-tb"
+mini_ip := "169.254.24.129"
+studio_port := "8765"
+
+# Serve the studio from this Mac and open it
+studio port=studio_port:
+    @echo "🎨 Starting mflux studio on this machine..."
+    open "http://127.0.0.1:{{ port }}" &
+    uv run python tools/studio/server.py --port {{ port }}
+
+# Push this checkout to the M6 mini, start the studio there, and open it here
+studio-mini port=studio_port:
+    @echo "🚚 Syncing the checkout to {{ mini }}..."
+    rsync -a --delete --exclude .venv --exclude .git --exclude '*.pyc' src tools tests pyproject.toml uv.lock {{ mini }}:dev/mflux/
+    @just studio-mini-stop {{ port }}
+    @echo "🎨 Starting the studio on {{ mini }} (bound to the Thunderbolt bridge only)..."
+    ssh {{ mini }} "source ~/.local/bin/env 2>/dev/null; cd ~/dev/mflux && nohup uv run python tools/studio/server.py --host {{ mini_ip }} --port {{ port }} > /tmp/mflux-studio.log 2>&1 & sleep 4; cat /tmp/mflux-studio.log"
+    open "http://{{ mini_ip }}:{{ port }}"
+
+# Stop a studio running on the M6 mini
+studio-mini-stop port=studio_port:
+    @ssh {{ mini }} "pkill -f 'studio/server.py --host .* --port {{ port }}' || true"
+    @echo "🛑 No studio left running on {{ mini }}:{{ port }}"
+
+# Tail the studio log on the M6 mini
+studio-mini-log:
+    ssh {{ mini }} "tail -f /tmp/mflux-studio.log"
+
 # Remove the virtual environment
 clean:
     @echo "🧼 Cleaning up venv."
@@ -129,8 +161,8 @@ clean:
     @echo "✅ Cleaned up venv. Run 'just install' to re-generate."
 
 # --- private helpers ----------------------------------------------------------
-
 # 🖥️ mflux and MLX are known to be compatible with arm64/aarch64 Mac and Linux only
+
 # (host arch via uname, not just's build arch — an x86_64 just under Rosetta must not refuse)
 [private]
 expect-arm64:

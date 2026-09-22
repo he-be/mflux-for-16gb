@@ -1,6 +1,7 @@
 # 引き継ぎ(2026-09-22 時点)
 
-新しいセッションはこのファイルだけ読めば再開できる。次に読むのは
+新しいセッションはこのファイルだけ読めば再開できる。**日常の生成は
+[studio](STUDIO.md)(`just studio-mini`)から。** 次に読むのは
 [DiT を天井に近づける計画](../../.cursor/plans/2026-09-22-krea2-dit-ceiling.md)と
 その根拠の [M9](measurements/2026-09-22-m9-ceiling-probe.md)
 (前の[DiT を速くする計画](../../.cursor/plans/2026-09-22-krea2-dit-speed.md)は M8f まで済、
@@ -35,6 +36,8 @@ M3 Pro 18GB の MacBook Pro で **Krea 2 Turbo q8 + 4step 蒸留 LoRA** の画�
 | スワップ見張り | `tools/swapwatch.py` |
 | 計測スクリプト | `tools/bench/`(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py` / `block_stream.py` / `bake_lora_checkpoint.py` / `quantize_te_checkpoint.py` / `matmul_probe.py` / `nax_probe.py` / `qmm_spy.py`) |
 | 文書 | `docs/16gb/`(research / measurements / runs)、計画は `.cursor/plans/` |
+| ブラウザ UI | `tools/studio/`。`just studio-mini` / `just studio` / `just studio-mini-stop` |
+| 生成画像(studio) | 生成した機械の `~/Pictures/mflux-studio/`。設定は同名の `.studio.json` |
 
 ダウンロードは完了済み(q8 21GB + LoRA 438MB)。再取得は不要。LoRA は
 `lvladikov/Krea2-Turbo-Distill-4step-LoRA:krea2_turbo_4step_rank_64_lora_comfyui.safetensors`
@@ -382,6 +385,39 @@ I/O             : 71.8 ms / ブロック(M0 の実測 74 ms と一致)
 - **`just format` をリポジトリ全体にかけない。** ruff 0.16.3 は markdown 内の python
   コードブロックまで整形するので、`docs/16gb/` の既存メモに無関係な差分が出る。
   自分が触ったファイルだけを指定して整形する。
+
+## 7b. studio と実行時 LoRA(2026-09-22 夜)← 済
+
+**CLI を覚えなくても使えるようにした。** `just studio-mini` で mini に同期して studio を
+起動し、MBP のブラウザが開く。プロンプト・サイズ・シード・枚数・**LoRA** を入れて
+生成、進捗と ギャラリーつき。詳細は [studio](STUDIO.md)。
+
+- 依存は標準ライブラリのみ(`tools/studio/server.py` + `index.html`)。
+- **生成のたびに `mflux-generate-krea2` を 1 プロセス起動する。** ここは変えないこと。
+  この fork のメモリの根拠は全部そのコマンドで測ったもので、プロセスを使い回して
+  MLX のバッファを跨がせると測定が無効になる。
+- バインドは Thunderbolt bridge のアドレスだけ。`0.0.0.0` にすると LAN に出る。
+- **数字を採る実行は今までどおり swapwatch 越しに。** studio は日常用。
+- 第三者製 GUI(Mflux-ComfyUI / MLXBits Image Studio ほか)を使わない理由は
+  **どれも upstream を呼ぶので `--block-streaming` を知らない**こと。それだけ。
+
+**`--block-streaming` と LoRA が併用できるようになった**([M10](measurements/2026-09-22-m10-runtime-lora.md))。
+焼き込まず側道として当てる。焼き直し不要で UI から差し替えられる。
+
+| M6 mini 1024² | LoRA なし | LoRA あり(rank 64 / 456 キー) |
+|---|---|---|
+| 1 ステップ | 7.92 s | **10.32 s** (+30%) |
+| 実 footprint | 5.16 GB | **6.62 GB** |
+| swapouts | 0 | **0**(verdict `clean`) |
+
+- 踏んだもの: アダプタは層を 1 段包むので **checkpoint の `attn.wq.weight` が生きた
+  ブロックでは `attn.wq.linear.weight` に移る**(`Krea2BlockStream._position`)。
+  直接読みはテンソル名でバッファを引くので、付け替えを忘れると黙って別の場所へ書く。
+- `mlp.down` の K4 分割は **`isinstance(self.down, nn.QuantizedLinear)` で守られていた**ので、
+  包んだ途端に M9c で消した崖が戻る。分割は素の層に当て、アダプタを側道で足し戻す。
+- **宿題**: footprint の絶対値が M9c の 6.18 GB と食い違う(今日の LoRA なしは 5.16 GB)。
+  同一セッションの差(+1.46 GB)は信用してよいが絶対値は要再測定。style LoRA での
+  画質比較も未実施。
 
 ## 8. リポジトリの状態
 
