@@ -31,8 +31,11 @@ import numpy as np
 #       python tools/bench/ane_probe.py --model ~/Library/Caches/mflux/16gb-bench/krea2-lowram
 #   ... --only single --shapes gate,mlp --variants row
 #   ... --only actstats     # a real 1024^2 run
+#   ... --only coscan --gpu-kinds q8gate,sdpa --tenants gateup57:row,mlp57:row,dma:row,gate:row:cpu
+#                           # M11a-3: GPU kernels x ANE co-tenants, and the price of each pairing
+#   ... --only realco --cases base,gateup57,base
 #
-# See docs/16gb/measurements/2026-09-22-m11a-ane-probe.md.
+# See docs/16gb/measurements/2026-09-22-m11a-ane-probe.md and 2026-09-23-m11a3-ane-coscan.md.
 
 FEATURES, MLPDIM = 6144, 16384
 TOKENS = {"1024": 4126, "1280": 6430}
@@ -43,8 +46,55 @@ SHAPES = {
     "down": ("linear", MLPDIM, FEATURES),
     "mlp": ("mlp", FEATURES, MLPDIM),
     "mlp57": ("mlp", FEATURES, 9344),  # a = 0.57 of 16384, rounded to a multiple of 128
+    # M11a-3: the same share of columns without the down projection, so the ANE only ever
+    # multiplies with K=6144 and hands back silu(g)*u for its columns (the GPU adds them to
+    # its own before the down projection). mlp57's down (K=9344) was the shape the ANE was
+    # slowest at alone, and the co-tenant the GPU suffered most under.
+    "gateup57": ("gateup", FEATURES, 9344),
+    "gateup25": ("gateup", FEATURES, 4096),
+    # No matmul at all: y = 1.5x + 0.5 over a (m, 16384) fp16 tensor, 135 MB in and out. A
+    # co-tenant that moves bytes and does no arithmetic, to tell traffic from compute.
+    "dma": ("dma", MLPDIM, MLPDIM),
 }
 VARIANTS = ("fp16", "row", "g64", "a8")
+
+
+class Units:
+    @staticmethod
+    def get(name: str):
+        import coremltools as ct
+
+        return {
+            "all": ct.ComputeUnit.ALL,
+            "ne": ct.ComputeUnit.CPU_AND_NE,
+            "gpu": ct.ComputeUnit.CPU_AND_GPU,
+            "cpu": ct.ComputeUnit.CPU_ONLY,
+        }[name]
+
+
+class ComputePlan:
+    # Which device Core ML will put each op on, from the compiled model's compute plan.
+    @staticmethod
+    def summary(path: str, units: str) -> dict:
+        try:
+            from coremltools.models.compute_plan import MLComputePlan
+
+            p = MLComputePlan.load_from_path(path=path, compute_units=Units.get(units))
+            devices: dict[str, int] = {}
+            cores = None
+            for fn in p.model_structure.program.functions.values():
+                for op in fn.block.operations:
+                    usage = p.get_compute_device_usage_for_mlprogram_operation(op)
+                    if usage is None:
+                        continue
+                    dev = usage.preferred_compute_device
+                    key = type(dev).__name__.replace("ML", "").replace("ComputeDevice", "")
+                    devices[f"{op.operator_name}->{key}"] = devices.get(f"{op.operator_name}->{key}", 0) + 1
+                    cores = getattr(dev, "total_core_count", cores)
+            return {"ops": devices, "ane_cores": cores}
+        except Exception as e:  # noqa: BLE001
+            return {"error": str(e)[:200]}
+
 
 _LIBC = ctypes.CDLL("/usr/lib/libSystem.B.dylib")
 
@@ -159,8 +209,12 @@ class Converter:
         def prog(x):
             if kind == "linear":
                 return linear(x, const({"wq": "attn.wq", "gate": "mlp.gate", "down": "mlp.down"}[shape]), name="y")
+            if kind == "dma":
+                return mb.add(x=mb.mul(x=x, y=np.float16(1.5)), y=np.float16(0.5), name="y")
             g = linear(x, const("mlp.gate", n))
             u = linear(x, const("mlp.up", n))
+            if kind == "gateup":
+                return mb.mul(x=mb.silu(x=g), y=u, name="y")
             h = mb.mul(x=mb.silu(x=g), y=u)
             return linear(h, const("mlp.down", n), name="y")
 
@@ -183,9 +237,10 @@ class Converter:
             info["io"] = f"fp32 (fp16 I/O refused: {str(e).splitlines()[0][:120]})"
             model = ct.convert(prog, **kwargs)
         if variant == "a8":
-            from coremltools.optimize.coreml import (
+            # coremltools 9 keeps activation quantization under .experimental
+            from coremltools.optimize.coreml import OptimizationConfig
+            from coremltools.optimize.coreml.experimental import (
                 OpActivationLinearQuantizerConfig,
-                OptimizationConfig,
                 linear_quantize_activations,
             )
 
@@ -213,7 +268,7 @@ class WorkerLoop:
         os.environ.setdefault("OMP_NUM_THREADS", "1")
         import coremltools as ct
 
-        unit = {"all": ct.ComputeUnit.ALL, "ne": ct.ComputeUnit.CPU_AND_NE, "gpu": ct.ComputeUnit.CPU_AND_GPU}[units]
+        unit = Units.get(units)
         shm_x, shm_y = shared_memory.SharedMemory(name=x_name), shared_memory.SharedMemory(name=y_name)
         models: list = []
         shape = {}
@@ -225,24 +280,7 @@ class WorkerLoop:
             return model.predict({"x": x})["y"]
 
         def plan(path: str) -> dict:
-            try:
-                from coremltools.models.compute_plan import MLComputePlan
-
-                p = MLComputePlan.load_from_path(path=path, compute_units=unit)
-                devices: dict[str, int] = {}
-                cores = None
-                for fn in p.model_structure.program.functions.values():
-                    for op in fn.block.operations:
-                        usage = p.get_compute_device_usage_for_mlprogram_operation(op)
-                        if usage is None:
-                            continue
-                        dev = usage.preferred_compute_device
-                        key = type(dev).__name__.replace("ML", "").replace("ComputeDevice", "")
-                        devices[f"{op.operator_name}->{key}"] = devices.get(f"{op.operator_name}->{key}", 0) + 1
-                        cores = getattr(dev, "total_core_count", cores)
-                return {"ops": devices, "ane_cores": cores}
-            except Exception as e:  # noqa: BLE001
-                return {"error": str(e)[:200]}
+            return ComputePlan.summary(path, units)
 
         try:
             while True:
@@ -296,10 +334,14 @@ class WorkerLoop:
                         )
                     elif kind == "step":
                         # One production-shaped call: read x out of shared memory, write y back.
+                        # With a row range, only those rows (a package whose M is the range's
+                        # length; ane_block.py pipelines a block's tokens through it in chunks).
+                        rows = slice(msg[1], msg[2]) if len(msg) > 2 else slice(None)
                         t0 = time.perf_counter()
-                        out = predict(models[0], view(shm_x, shape["in"]))
+                        out = predict(models[0], view(shm_x, shape["in"])[rows])
                         t1 = time.perf_counter()
-                        np.copyto(view(shm_y, shape["out"]), out.reshape(shape["out"]), casting="same_kind")
+                        target = view(shm_y, shape["out"])[rows]
+                        np.copyto(target, out.reshape(target.shape), casting="same_kind")
                         conn.send(("ok", {"predict_s": t1 - t0, "copy_out_s": time.perf_counter() - t1}))
                     else:
                         conn.send(("err", f"unknown message {kind!r}"))
@@ -374,19 +416,44 @@ class Worker:
 
 
 class GpuLoad:
-    # The 6144->16384 q8 matmul in a loop, one epoch-stamped TFLOPS line per window, so a
-    # parent can read off what the GPU did while the ANE was busy.
+    # One GPU kernel in a loop, one epoch-stamped TFLOPS line per window, so a parent can read
+    # off what the GPU did while the ANE was busy. The kinds differ in how much they lean on
+    # the memory system: q8gate is the production 6144->16384 qmm, q8down the K=16384 one that
+    # already sits on MLX's cache cliff, dense a 4096^3 bf16 gemm (the 19 TFLOPS ceiling), and
+    # sdpa the attention (compute-bound, small operands).
+    KINDS = ("q8gate", "q8down", "dense", "sdpa")
+
     @staticmethod
-    def run(seconds: float, m: int) -> None:
+    def run(seconds: float, m: int, kind: str = "q8gate") -> None:
         import mlx.core as mx
 
-        x = mx.random.normal((1, m, FEATURES)).astype(mx.bfloat16)
-        q = mx.quantize(mx.random.normal((MLPDIM, FEATURES)).astype(mx.bfloat16), group_size=64, bits=8)
-        mx.eval(x, *q)
-        flops = 2 * m * FEATURES * MLPDIM
+        if kind in ("q8gate", "q8down"):
+            k, n = (FEATURES, MLPDIM) if kind == "q8gate" else (MLPDIM, FEATURES)
+            x = mx.random.normal((1, m, k)).astype(mx.bfloat16)
+            q = mx.quantize(mx.random.normal((n, k)).astype(mx.bfloat16), group_size=64, bits=8)
+            mx.eval(x, *q)
+            flops = 2 * m * k * n
 
-        def step():
-            return mx.quantized_matmul(x, *q, transpose=True, group_size=64, bits=8)
+            def step():
+                return mx.quantized_matmul(x, *q, transpose=True, group_size=64, bits=8)
+
+        elif kind == "dense":
+            a = mx.random.normal((4096, 4096)).astype(mx.bfloat16)
+            b = mx.random.normal((4096, 4096)).astype(mx.bfloat16)
+            mx.eval(a, b)
+            flops = 2 * 4096**3
+
+            def step():
+                return a @ b
+
+        else:
+            q = mx.random.normal((1, 48, m, 128)).astype(mx.bfloat16)
+            kv = mx.random.normal((1, 12, m, 128)).astype(mx.bfloat16)
+            mx.eval(q, kv)
+            flops = 4 * 48 * m * m * 128
+
+            def step():
+                return mx.fast.scaled_dot_product_attention(q, kv, kv, scale=128**-0.5)
 
         for _ in range(3):
             mx.eval(step())
@@ -401,8 +468,19 @@ class GpuLoad:
             print(f"window {t0:.3f} {t1:.3f} {8 * flops / (t1 - t0) / 1e12:.2f}", flush=True)
 
     @staticmethod
-    def start(seconds: float, m: int) -> subprocess.Popen:
-        cmd = [sys.executable, __file__, "--only", "gpu-load", "--seconds", str(seconds), "--m", str(m)]
+    def start(seconds: float, m: int, kind: str = "q8gate") -> subprocess.Popen:
+        cmd = [
+            sys.executable,
+            __file__,
+            "--only",
+            "gpu-load",
+            "--seconds",
+            str(seconds),
+            "--m",
+            str(m),
+            "--gpu-kind",
+            kind,
+        ]
         return subprocess.Popen(cmd, stdout=subprocess.PIPE, text=True, env={**os.environ, "PYTHONUNBUFFERED": "1"})
 
     @staticmethod
@@ -428,31 +506,162 @@ class AneLoad:
     # GpuLoad's mirror. Hammer one package and print epoch-stamped windows, so a parent that is
     # busy with something else can read off what the ANE managed while it was.
     @staticmethod
-    def run(path: Path, seconds: float, in_shape: tuple, units: str, flops: float) -> None:
+    def run(path: Path, seconds: float, in_shape: tuple, units: str, flops: float, duty: float = 1.0) -> None:
         import coremltools as ct
 
-        unit = {"all": ct.ComputeUnit.ALL, "ne": ct.ComputeUnit.CPU_AND_NE, "gpu": ct.ComputeUnit.CPU_AND_GPU}[units]
-        model = ct.models.CompiledMLModel(str(path), compute_units=unit)
+        model = ct.models.CompiledMLModel(str(path), compute_units=Units.get(units))
+        print(f"plan {json.dumps(ComputePlan.summary(str(path), units))}", flush=True)
         x = (np.random.normal(size=in_shape) * 0.5).astype(np.float16)
         for _ in range(3):
             model.predict({"x": x})
         print(f"ready {time.time():.3f}", flush=True)
         end = time.time() + seconds
         while time.time() < end:
+            # duty < 1: sleep after each burst so the ANE is busy that fraction of the time; the
+            # window spans the sleep, so its TOPS is the time-averaged rate the GPU lived with.
             t0 = time.time()
             for _ in range(4):
                 model.predict({"x": x})
+            busy = time.time() - t0
+            if duty < 1.0:
+                time.sleep(busy * (1.0 - duty) / duty)
             t1 = time.time()
             print(f"window {t0:.3f} {t1:.3f} {4 * flops / (t1 - t0) / 1e12:.2f}", flush=True)
 
     @staticmethod
-    def start(args, shape: str, variant: str, m: int, seconds: float) -> subprocess.Popen:
+    def start(args, shape: str, variant: str, m: int, seconds: float, units: str | None = None, duty: float = 1.0):
         cmd = [
             sys.executable, __file__, "--only", "ane-load", "--seconds", str(seconds), "--shapes", shape,
-            "--variants", variant, "--m", str(m), "--layout", args.layout, "--units", args.units,
-            "--cache", str(args.cache),
+            "--variants", variant, "--m", str(m), "--layout", args.layout, "--units", units or args.units,
+            "--cache", str(args.cache), "--duty", str(duty),
         ]  # fmt: skip
         return subprocess.Popen(cmd, stdout=subprocess.PIPE, text=True, env={**os.environ, "PYTHONUNBUFFERED": "1"})
+
+    @staticmethod
+    def follow(proc: subprocess.Popen) -> "AneTail":
+        return AneTail(proc)
+
+
+class AneTail:
+    # Reads an AneLoad child's stdout on a thread, so a parent can wait for "ready", run
+    # something on the GPU meanwhile, and afterwards average the windows inside an interval.
+    def __init__(self, proc: subprocess.Popen):
+        self.proc = proc
+        self.rows: list[tuple[float, float, float]] = []
+        self.ready: float | None = None
+        self.plan: dict | None = None
+        self._event = threading.Event()
+        self._thread = threading.Thread(target=self._pump, daemon=True)
+        self._thread.start()
+
+    def _pump(self) -> None:
+        for line in self.proc.stdout:
+            if line.startswith("window "):
+                _, a, b, t = line.split()
+                self.rows.append((float(a), float(b), float(t)))
+            elif line.startswith("ready "):
+                self.ready = float(line.split()[1])
+                self._event.set()
+            elif line.startswith("plan "):
+                self.plan = json.loads(line[5:])
+        self._event.set()
+
+    def wait_ready(self, timeout: float) -> bool:
+        self._event.wait(timeout)
+        return self.ready is not None
+
+    def stop(self) -> None:
+        self.proc.terminate()
+        self._thread.join(timeout=10)
+
+    def mean_within(self, start: float, end: float) -> float | None:
+        return GpuLoad.mean_within(self.rows, start, end)
+
+
+class CoScan:
+    # M11a-3: the mechanism behind the co-run slowdown, and where its exchange rate turns
+    # favourable. A grid of GPU kernels (GpuLoad.KINDS) against ANE co-tenants that differ in
+    # what they stress - matmul with and without the down projection, pure DMA, the same
+    # package on the CPU only - each optionally at a duty cycle below 1. Every cell reports
+    # both sides' throughput in the overlap, and the price: GPU TFLOPS lost per ANE TOPS
+    # delivered. Below 1.0 the pair does more arithmetic than the GPU alone.
+    @staticmethod
+    def parse_tenant(text: str) -> tuple[str, str, str, float, int]:
+        # shape:variant[:units[:duty[:processes]]]; two processes is the second Neural Engine
+        parts = text.split(":")
+        shape, variant = parts[0], parts[1] if len(parts) > 1 else "row"
+        units = parts[2] if len(parts) > 2 and parts[2] else "all"
+        duty = float(parts[3]) if len(parts) > 3 and parts[3] else 1.0
+        procs = int(parts[4]) if len(parts) > 4 else 1
+        return shape, variant, units, duty, procs
+
+    @staticmethod
+    def run(args) -> None:
+        print("\n== coscan: GPU kernels x ANE co-tenants, both throughputs inside the overlap ==")
+        results: dict = {"gpu": {}}
+        m = args.m[0]
+        converter = Converter(args.cache, args.layout)
+        tenants = [CoScan.parse_tenant(t) for t in args.tenants.split(",") if t]
+        for kind in args.gpu_kinds.split(","):
+            alone = GpuLoad.windows(GpuLoad.start(8.0, m, kind))
+            gpu_alone = GpuLoad.mean_within(alone, 0, float("inf")) or float("nan")
+            results["gpu"][kind] = {"alone_tflops": gpu_alone, "tenants": {}}
+            print(f"\n  GPU {kind}: alone {gpu_alone:6.2f} TFLOPS")
+            for shape, variant, units, duty, procs in tenants:
+                key = f"{shape}:{variant}:{units}:{duty:g}" + (f"x{procs}" if procs > 1 else "")
+                path = converter.path(shape, m, variant)
+                if not path.exists():
+                    print(f"    {key:28s} SKIPPED: {path.name} is not converted")
+                    continue
+                tails = [
+                    AneLoad.follow(AneLoad.start(args, shape, variant, m, args.overlap + 90.0, units, duty))
+                    for _ in range(procs)
+                ]
+                entry: dict = {}
+                try:
+                    if not all(t.wait_ready(400.0) for t in tails):
+                        entry["error"] = "co-tenant never became ready"
+                    else:
+                        time.sleep(4.0)  # a few windows of the ANE alone, then the GPU joins
+                        gpu = GpuLoad.start(args.overlap, m, kind)
+                        t_start = time.time()
+                        rows = GpuLoad.windows(gpu)
+                        t_end = time.time()
+                        ready = max(t.ready for t in tails)
+
+                        def total(a: float, b: float) -> float | None:
+                            parts = [t.mean_within(a, b) for t in tails]
+                            return sum(p for p in parts if p) if any(parts) else None
+
+                        # trim the first second: the GPU child spends it building operands
+                        entry["ane_alone_tops"] = total(ready, t_start)
+                        entry["ane_with_gpu_tops"] = total(t_start + 1.5, t_end)
+                        entry["gpu_with_ane_tflops"] = GpuLoad.mean_within(rows, t_start + 1.5, t_end)
+                        entry["plan"] = tails[0].plan
+                        entry["package_mb"] = sum(f.stat().st_size for f in path.rglob("*") if f.is_file()) / 1e6
+                finally:
+                    for t in tails:
+                        t.stop()
+                results["gpu"][kind]["tenants"][key] = entry
+                if "error" in entry or entry.get("gpu_with_ane_tflops") is None:
+                    print(f"    {key:28s} FAILED: {entry.get('error', 'no GPU windows in the overlap')}")
+                    continue
+                g, a = entry["gpu_with_ane_tflops"], entry["ane_with_gpu_tops"] or 0.0
+                lost = gpu_alone - g
+                entry["price_tflops_per_tops"] = lost / a if a else None
+                entry["combined"] = g + a
+                devices = ",".join(k.split("->")[1] for k in ((entry["plan"] or {}).get("ops") or {}))
+                price = f"{lost / a:5.2f}" if a else "  n/a"
+                print(
+                    f"    {key:28s} GPU {gpu_alone:6.2f} -> {g:6.2f} ({g / gpu_alone * 100 - 100:+4.0f}%)  "
+                    f"ANE {entry['ane_alone_tops'] or 0:6.2f} -> {a:6.2f}  "
+                    f"sum {g + a:6.2f}  price {price}  [{devices}]",
+                    flush=True,
+                )
+        if args.json:
+            args.json.parent.mkdir(parents=True, exist_ok=True)
+            args.json.write_text(json.dumps(results, indent=2, default=str))
+            print(f"wrote {args.json}")
 
 
 class RealCo:
@@ -642,12 +851,14 @@ class AneProbe:
     @staticmethod
     def flops(shape: str, m: int) -> float:
         kind, k, n = SHAPES[shape]
-        return 2.0 * m * k * n * (3 if kind == "mlp" else 1)
+        return 2.0 * m * k * n * {"mlp": 3, "gateup": 2, "dma": 0.001}.get(kind, 1)
 
     @staticmethod
     def io_shapes(shape: str, m: int, layout: str) -> tuple[tuple, tuple]:
         kind, k, n = SHAPES[shape]
         n_out = k if kind == "mlp" else n
+        if kind == "dma":
+            k = n
         if layout == "conv":
             return (1, k, 1, m), (1, n_out, 1, m)
         return (m, k), (m, n_out)
@@ -1007,7 +1218,16 @@ def main() -> None:
     parser.add_argument("--variants", default="row,g64,fp16")
     parser.add_argument("--m", default="4126,6430", help="token counts (1024^2 = 4126, 1280^2 = 6430)")
     parser.add_argument("--layout", default="linear", choices=("linear", "conv"))
-    parser.add_argument("--units", default="all", choices=("all", "ne", "gpu"))
+    parser.add_argument("--units", default="all", choices=("all", "ne", "gpu", "cpu"))
+    parser.add_argument("--gpu-kind", default="q8gate", choices=GpuLoad.KINDS, help="gpu-load only")
+    parser.add_argument("--duty", type=float, default=1.0, help="ane-load only: busy fraction of wall time")
+    parser.add_argument("--gpu-kinds", default="q8gate,sdpa,dense", help="coscan: GPU kernels to run")
+    parser.add_argument(
+        "--tenants",
+        default="gate:row,gateup57:row,mlp57:row,dma:fp16,gate:row:cpu",
+        help="coscan: shape:variant[:units[:duty]] per co-tenant",
+    )
+    parser.add_argument("--overlap", type=float, default=14.0, help="coscan: seconds the GPU runs beside each tenant")
     parser.add_argument("--iters", type=int, default=10)
     parser.add_argument("--seconds", type=float, default=10.0, help="gpu-load only")
     parser.add_argument("--steps", type=int, default=4)
@@ -1018,15 +1238,18 @@ def main() -> None:
     args.shapes = [s for s in args.shapes.split(",") if s]
     args.variants = [v for v in args.variants.split(",") if v]
     if args.only == "gpu-load":
-        GpuLoad.run(args.seconds, int(args.m))
+        GpuLoad.run(args.seconds, int(args.m), args.gpu_kind)
         return
     if args.only == "ane-load":
         shape, variant, m = args.shapes[0], args.variants[0], int(args.m)
         in_shape, _ = AneProbe.io_shapes(shape, m, args.layout)
         path = Converter(args.cache, args.layout).path(shape, m, variant)
-        AneLoad.run(path, args.seconds, in_shape, args.units, AneProbe.flops(shape, m))
+        AneLoad.run(path, args.seconds, in_shape, args.units, AneProbe.flops(shape, m), args.duty)
         return
     args.m = [int(v) for v in args.m.split(",") if v]
+    if args.only == "coscan":
+        CoScan.run(args)
+        return
     if args.only == "actstats":
         ActStats.run(args)
         return

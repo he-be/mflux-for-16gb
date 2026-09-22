@@ -1,0 +1,61 @@
+{
+  "gpu": {
+    "q8gate": {
+      "alone_tflops": 16.980476190476192,
+      "tenants": {
+        "gateup57:row:all:1": {
+          "ane_alone_tops": 15.121875,
+          "ane_with_gpu_tops": 10.528529411764707,
+          "gpu_with_ane_tflops": 13.733076923076924,
+          "plan": {
+            "ops": {
+              "ios18.linear->NeuralEngine": 2,
+              "ios18.silu->NeuralEngine": 1,
+              "ios18.mul->NeuralEngine": 1
+            },
+            "ane_cores": 32
+          },
+          "package_mb": 114.877847,
+          "price_tflops_per_tops": 0.3084380676916365,
+          "combined": 24.26160633484163
+        },
+        "gateup57:a8:all:1": {
+          "ane_alone_tops": 19.241999999999997,
+          "ane_with_gpu_tops": 14.231632653061226,
+          "gpu_with_ane_tflops": 12.924000000000001,
+          "plan": {
+            "ops": {
+              "ios18.quantize->NeuralEngine": 3,
+              "ios18.dequantize->NeuralEngine": 3,
+              "ios18.linear->NeuralEngine": 2,
+              "ios18.silu->NeuralEngine": 1,
+              "ios18.mul->NeuralEngine": 1
+            },
+            "ane_cores": 32
+          },
+          "package_mb": 114.879797,
+          "price_tflops_per_tops": 0.2850323845032385,
+          "combined": 27.155632653061225
+        },
+        "gateup57:a8:all:1x2": {
+          "ane_alone_tops": 25.391025641025642,
+          "ane_with_gpu_tops": 17.893620689655172,
+          "gpu_with_ane_tflops": 10.844285714285714,
+          "plan": {
+            "ops": {
+              "ios18.quantize->NeuralEngine": 3,
+              "ios18.dequantize->NeuralEngine": 3,
+              "ios18.linear->NeuralEngine": 2,
+              "ios18.silu->NeuralEngine": 1,
+              "ios18.mul->NeuralEngine": 1
+            },
+            "ane_cores": 32
+          },
+          "package_mb": 114.879797,
+          "price_tflops_per_tops": 0.3429261513148085,
+          "combined": 28.737906403940887
+        }
+      }
+    }
+  }
+}

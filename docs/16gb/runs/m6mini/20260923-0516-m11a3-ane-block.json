@@ -1,0 +1,46 @@
+{
+  "alone4": {
+    "block_ms": 296.821729124531,
+    "block_ms_min": 293.412332997832,
+    "iters": 8,
+    "max_abs_vs_alone4": 0.0,
+    "mean_abs_vs_alone4": 0.0
+  },
+  "alone1": {
+    "block_ms": 318.1846614988899,
+    "block_ms_min": 316.61937500030035,
+    "iters": 8,
+    "max_abs_vs_alone4": 8.0,
+    "mean_abs_vs_alone4": 0.04609813913702965
+  },
+  "ane57": {
+    "block_ms": 265.9662709984332,
+    "block_ms_min": 262.34841699624667,
+    "iters": 8,
+    "send_ms": 125.53280737483874,
+    "wait_ms": 101.46650000024238,
+    "predict_ms": 98.24244287483452,
+    "max_abs_vs_alone4": 10.0,
+    "mean_abs_vs_alone4": 0.2334708720445633
+  },
+  "ane57:2": {
+    "block_ms": 265.413458250805,
+    "block_ms_min": 261.67150000401307,
+    "iters": 8,
+    "send_ms": 125.90593762524804,
+    "wait_ms": 100.78365099798248,
+    "predict_ms": 97.20321362510731,
+    "max_abs_vs_alone4": 10.0,
+    "mean_abs_vs_alone4": 0.2346189022064209
+  },
+  "ane25": {
+    "block_ms": 304.5332346273426,
+    "block_ms_min": 296.2032499999623,
+    "iters": 8,
+    "send_ms": 126.05704687393882,
+    "wait_ms": 50.275031250748725,
+    "predict_ms": 47.52838012336724,
+    "max_abs_vs_alone4": 8.0,
+    "mean_abs_vs_alone4": 0.15303558111190796
+  }
+}

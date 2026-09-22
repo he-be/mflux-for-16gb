@@ -1,0 +1,87 @@
+{
+  "gpu": {
+    "q8gate": {
+      "alone_tflops": 14.089411764705883,
+      "tenants": {
+        "gateup57:row:all:0.75": {
+          "ane_alone_tops": 8.79888888888889,
+          "ane_with_gpu_tops": 7.798076923076923,
+          "gpu_with_ane_tflops": 12.908,
+          "plan": {
+            "ops": {
+              "ios18.linear->NeuralEngine": 2,
+              "ios18.silu->NeuralEngine": 1,
+              "ios18.mul->NeuralEngine": 1
+            },
+            "ane_cores": 32
+          },
+          "package_mb": 114.877847,
+          "price_tflops_per_tops": 0.1515003989265251,
+          "combined": 20.70607692307692
+        },
+        "gateup57:row:all:0.5": {
+          "ane_alone_tops": 5.895,
+          "ane_with_gpu_tops": 5.149375,
+          "gpu_with_ane_tflops": 13.470769230769232,
+          "plan": {
+            "ops": {
+              "ios18.linear->NeuralEngine": 2,
+              "ios18.silu->NeuralEngine": 1,
+              "ios18.mul->NeuralEngine": 1
+            },
+            "ane_cores": 32
+          },
+          "package_mb": 114.877847,
+          "price_tflops_per_tops": 0.12013934388865655,
+          "combined": 18.62014423076923
+        },
+        "gateup57:row:all:0.25": {
+          "ane_alone_tops": 3.0366666666666666,
+          "ane_with_gpu_tops": 2.62625,
+          "gpu_with_ane_tflops": 14.21642857142857,
+          "plan": {
+            "ops": {
+              "ios18.linear->NeuralEngine": 2,
+              "ios18.silu->NeuralEngine": 1,
+              "ios18.mul->NeuralEngine": 1
+            },
+            "ane_cores": 32
+          },
+          "package_mb": 114.877847,
+          "price_tflops_per_tops": -0.048364324311351924,
+          "combined": 16.84267857142857
+        },
+        "mlp57:row:all:0.5": {
+          "ane_alone_tops": 6.4275,
+          "ane_with_gpu_tops": 4.679,
+          "gpu_with_ane_tflops": 11.476190476190476,
+          "plan": {
+            "ops": {
+              "ios18.linear->NeuralEngine": 3,
+              "ios18.silu->NeuralEngine": 1,
+              "ios18.mul->NeuralEngine": 1
+            },
+            "ane_cores": 32
+          },
+          "package_mb": 172.312899,
+          "price_tflops_per_tops": 0.5584999548013264,
+          "combined": 16.155190476190477
+        },
+        "gate:row:all:0.5": {
+          "ane_alone_tops": 5.08,
+          "ane_with_gpu_tops": 4.62235294117647,
+          "gpu_with_ane_tflops": 13.668148148148148,
+          "plan": {
+            "ops": {
+              "ios18.linear->NeuralEngine": 1
+            },
+            "ane_cores": 32
+          },
+          "package_mb": 100.730641,
+          "price_tflops_per_tops": 0.09113618581676616,
+          "combined": 18.290501089324618
+        }
+      }
+    }
+  }
+}

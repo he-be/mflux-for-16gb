@@ -1,0 +1,116 @@
+{
+  "args": {
+    "model": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram",
+    "cache": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe",
+    "only": "convert,single",
+    "shapes": [
+      "gateup57"
+    ],
+    "variants": [
+      "row",
+      "a8"
+    ],
+    "m": [
+      2063
+    ],
+    "layout": "linear",
+    "units": "all",
+    "gpu_kind": "q8gate",
+    "duty": 1.0,
+    "gpu_kinds": "q8gate,sdpa,dense",
+    "tenants": "gate:row,gateup57:row,mlp57:row,dma:fp16,gate:row:cpu",
+    "overlap": 14.0,
+    "iters": 6,
+    "seconds": 10.0,
+    "steps": 4,
+    "cases": "base,mlp57,wq,base",
+    "width": 1024,
+    "json": "/tmp/m11a3/single-m2063.json"
+  },
+  "host": {
+    "machdep.cpu.brand_string": "Apple M6",
+    "hw.memsize": "17179869184",
+    "kern.osproductversion": "27.0"
+  },
+  "convert": {
+    "gateup57-m2063-row": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/gateup57-m2063-row-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.09056283300014911,
+      "compile_s": 0.02355333299783524,
+      "package_mb": 114.877847
+    },
+    "gateup57-m2063-a8": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/gateup57-m2063-a8-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 7.132301583995286,
+      "compile_s": 0.016910500002268236,
+      "package_mb": 114.879799
+    }
+  },
+  "single": {
+    "gateup57-m2063-row": {
+      "first_load_s": 2.5775570839978172,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 2,
+          "ios18.silu->NeuralEngine": 1,
+          "ios18.mul->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-23 05:18:54.277 Df ANECompilerService[7849:2cc1b] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-23 05:18:54.338 Df ANECompilerService[7849:2cc1b] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-23 05:18:54.426 Df aned[5661:2c9e0] [com.apple.xpc:connection] [0x700007c8f08cdc0] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-23 05:18:54.426 Df ANECompilerService[7849:2cc1b] [com.apple.xpc:connection] [0x700007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-23 05:18:54.433 Df aned[5661:2c9e0] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 31.35866666707443,
+      "tops": 15.107258739715968,
+      "worker_footprint_mb": 578.684104,
+      "second_load_s": 0.020742250002513174
+    },
+    "gateup57-m2063-a8": {
+      "first_load_s": 3.2930656660028035,
+      "plan": {
+        "ops": {
+          "ios18.quantize->NeuralEngine": 3,
+          "ios18.dequantize->NeuralEngine": 3,
+          "ios18.linear->NeuralEngine": 2,
+          "ios18.silu->NeuralEngine": 1,
+          "ios18.mul->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-23 05:19:04.713 Df ANECompilerService[7849:2c650] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-23 05:19:04.770 Df ANECompilerService[7849:2c650] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-23 05:19:04.939 Df aned[5661:2c9e0] [com.apple.xpc:connection] [0x700007c8f08cb40] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-23 05:19:04.939 Df ANECompilerService[7849:2c650] [com.apple.xpc:connection] [0xb00007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-23 05:19:04.946 Df aned[5661:2c9e0] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 23.838437499459058,
+      "tops": 19.873093237874766,
+      "worker_footprint_mb": 579.192032,
+      "second_load_s": 0.02138750000449363
+    }
+  },
+  "ane_cores": 32
+}

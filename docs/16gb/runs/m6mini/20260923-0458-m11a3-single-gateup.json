@@ -1,0 +1,123 @@
+{
+  "args": {
+    "model": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram",
+    "cache": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe",
+    "only": "convert,single",
+    "shapes": [
+      "gateup57",
+      "gateup25",
+      "dma"
+    ],
+    "variants": [
+      "row"
+    ],
+    "m": [
+      4126
+    ],
+    "layout": "linear",
+    "units": "all",
+    "gpu_kind": "q8gate",
+    "duty": 1.0,
+    "gpu_kinds": "q8gate,sdpa,dense",
+    "tenants": "gate:row,gateup57:row,mlp57:row,dma:fp16,gate:row:cpu",
+    "overlap": 14.0,
+    "iters": 6,
+    "seconds": 10.0,
+    "steps": 4,
+    "cases": "base,mlp57,wq,base",
+    "width": 1024,
+    "json": "/tmp/m11a3/single-new.json"
+  },
+  "host": {
+    "machdep.cpu.brand_string": "Apple M6",
+    "hw.memsize": "17179869184",
+    "kern.osproductversion": "27.0"
+  },
+  "convert": {
+    "gateup57-m4126-row": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/gateup57-m4126-row-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.09346399999776622,
+      "compile_s": 0.028899625001940876,
+      "package_mb": 114.877847
+    },
+    "gateup25-m4126-row": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/gateup25-m4126-row-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.057433292000496294,
+      "compile_s": 0.013037874996371102,
+      "package_mb": 50.358934
+    },
+    "dma-m4126-row": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/dma-m4126-row-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.03525299999455456,
+      "compile_s": 0.013261166001029778,
+      "package_mb": 0.001176
+    }
+  },
+  "single": {
+    "gateup57-m4126-row": {
+      "first_load_s": 3.2835715420005727,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 2,
+          "ios18.silu->NeuralEngine": 1,
+          "ios18.mul->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-23 04:58:31.289 Df ANECompilerService[7849:1dbaa] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-23 04:58:31.348 Df ANECompilerService[7849:1dbaa] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-23 04:58:31.439 Df aned[5661:2a59f] [com.apple.xpc:connection] [0x900007c8f08cb40] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-23 04:58:31.439 Df ANECompilerService[7849:1dbaa] [com.apple.xpc:connection] [0x500007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-23 04:58:31.446 Df aned[5661:2a59f] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 60.41265966632636,
+      "tops": 15.683583331328206,
+      "worker_footprint_mb": 898.893264,
+      "second_load_s": 0.022079582995502278
+    },
+    "gateup25-m4126-row": {
+      "first_load_s": 1.4397103750015958,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 2,
+          "ios18.silu->NeuralEngine": 1,
+          "ios18.mul->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": null,
+      "ms": 32.31668050041966,
+      "tops": 12.852086070244948,
+      "worker_footprint_mb": 700.220712,
+      "second_load_s": 0.01892995800153585
+    },
+    "dma-m4126-row": {
+      "first_load_s": 1.6655868340021698,
+      "plan": {
+        "ops": {
+          "ios18.mul->NeuralEngine": 1,
+          "ios18.add->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": null,
+      "ms": 39.433659666732034,
+      "tops": 0.0561735685105783,
+      "worker_footprint_mb": 1604.847512,
+      "second_load_s": 0.018630584003403783
+    }
+  },
+  "ane_cores": 32
+}
