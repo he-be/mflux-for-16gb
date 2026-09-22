@@ -2,10 +2,13 @@ import json
 
 import mlx.core as mx
 import pytest
+from mlx import nn
 from mlx.utils import tree_flatten, tree_unflatten
 
 from mflux.models.common.config import ModelConfig
 from mflux.models.krea2.krea2_initializer import Krea2Initializer
+from mflux.models.krea2.model.krea2_transformer.common import Krea2RMSNorm
+from mflux.models.krea2.model.krea2_transformer.feed_forward import Krea2SwiGLU
 from mflux.models.krea2.model.krea2_transformer.transformer import Krea2Transformer
 from mflux.models.krea2.weights.krea2_weight_stream import Krea2BlockStream, Krea2StreamedBlock
 
@@ -75,8 +78,56 @@ def test_streamed_forward_matches_the_resident_one_bit_for_bit(tmp_path):
     stream.attach(streamed)
 
     assert all(isinstance(block, Krea2StreamedBlock) for block in streamed.blocks)
+    # Two passes: the second one binds block 0 from the buffers the last block of the first
+    # pass read into, and every block from the alternate buffer set.
     assert mx.array_equal(streamed(hidden, timestep, context), expected)
-    assert stream.summary()["block_calls"] == len(resident.blocks)
+    assert mx.array_equal(streamed(hidden, timestep, context), expected)
+    assert stream.summary()["block_calls"] == 2 * len(resident.blocks)
+    assert stream.summary()["direct"]
+
+
+def test_attach_hands_the_streaming_speedups_to_every_block(tmp_path):
+    transformer = _StreamFixture.transformer()
+    mx.eval(transformer.parameters())
+    _StreamFixture.write_checkpoint(transformer, tmp_path / "transformer")
+    stream = Krea2BlockStream(Krea2BlockStream.locate(tmp_path))
+
+    stream.attach(transformer, down_splits=4, native_norm=True)
+
+    for wrapper in transformer.blocks:
+        assert wrapper.block.mlp.down_splits == 4
+        norms = [m for m in wrapper.block.modules() if isinstance(m, Krea2RMSNorm)]
+        assert len(norms) == 4 and all(n.native_dtype for n in norms)
+
+
+def test_down_projection_in_slices_matches_the_whole_one():
+    mlp = Krea2SwiGLU(features=64, multiplier=2)
+    mx.eval(mlp.parameters())
+    nn.quantize(mlp, group_size=64, bits=8)
+    x = mx.random.normal((1, 8, 64), key=mx.random.key(0))
+    whole = mlp(x)
+    mlp.down_splits = 2
+
+    sliced = mlp(x)
+
+    assert sliced.shape == whole.shape
+    assert mx.abs(sliced - whole).max().item() < 1e-3 * mx.abs(whole).max().item()
+    mlp.release_down_planes()
+    assert mlp._down_planes is None
+
+
+def test_native_dtype_norm_stays_within_bf16_rounding_of_the_float32_one():
+    norm = Krea2RMSNorm(32)
+    norm.scale = mx.random.normal((32,), key=mx.random.key(1)) * 0.5
+    x = mx.random.normal((4, 32), key=mx.random.key(2)).astype(mx.bfloat16)
+    reference = norm(x).astype(mx.float32)
+    norm.native_dtype = True
+
+    out = norm(x).astype(mx.float32)
+
+    assert out.dtype == mx.float32 and norm(x).dtype == mx.bfloat16
+    relative = mx.abs(out - reference) / mx.maximum(mx.abs(reference), 1e-2)
+    assert relative.max().item() < 2**-6
 
 
 def test_locate_prefers_the_transformer_subdir_over_the_root(tmp_path):

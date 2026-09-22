@@ -1,21 +1,28 @@
 import json
+import os
+import struct
+import threading
 import time
 from collections import defaultdict
 from pathlib import Path
 
 import mlx.core as mx
+import numpy as np
 from mlx.utils import tree_flatten, tree_unflatten
+
+from mflux.models.krea2.model.krea2_transformer.common import Krea2RMSNorm
 
 # Streams the DiT's transformer blocks from disk instead of holding them in memory.
 # Measured on an 18 GB M3 Pro: holding the q8 blocks demands 15.96 GB and thrashes,
 # streaming them one at a time demands 3.72 GB and does not swap, at +5.8% per step.
 # See docs/16gb/measurements/2026-09-22-m5-block-streaming.md.
 #
-# The next block is read while the current one computes: the compute is dispatched
-# with mx.async_eval and the read of block i+1 runs on the CPU until it is done. On the
-# M6 mini the block reads in 137 ms and computes for 320 ms, and with the two overlapped
-# a block costs 328 ms instead of 456. One extra block (461 MB) is resident for it.
-# See docs/16gb/measurements/2026-09-22-m8b-prefetch.md.
+# The next block is read while the current one computes. A Python thread preads the file
+# bytes straight into MLX arrays that were allocated up front (two block-shaped sets, used
+# alternately), and it is started before the compute is dispatched: mx.async_eval blocks its
+# caller for 100-250 ms, and the main thread must stay inside MLX calls or the GPU stops
+# being fed. Reading through mx.load on the main thread instead cost the K-split of the down
+# projection its whole gain (M8c). See docs/16gb/measurements/2026-09-22-m9c-prefetch-interference.md.
 
 
 class Krea2StreamedBlock:
@@ -31,15 +38,19 @@ class Krea2StreamedBlock:
         bound = time.perf_counter()
 
         out = self.block(hidden_states, tvec, freqs, mask)
-        # Dispatch the compute, then read the next block while the GPU is busy. The eval of
-        # the output is still forced per block: MLX is lazy, and without it the weights would
-        # still be needed after the drop below, and dropping them would free nothing.
+        nxt = (self.index + 1) % len(self.stream.by_block)
+        reader = self.stream.start_read(nxt)
+        # The eval of the output is forced per block: MLX is lazy, and without it the weights
+        # would still be needed after the drop below, and dropping them would free nothing.
         mx.async_eval(out)
-        prefetched = self.stream.prefetch((self.index + 1) % len(self.stream.by_block))
+        prefetched = 0.0 if reader is not None else self.stream.prefetch(nxt)
         mx.eval(out)
         computed = time.perf_counter()
+        if reader is not None:
+            prefetched = self.stream.finish_read(reader)
 
         self.block.update(self.stream.read(self.index))
+        self.block.mlp.release_down_planes()
         self.stream.record(
             self.index,
             io=bound - start,
@@ -59,6 +70,16 @@ class Krea2BlockStream:
     # more than about two blocks' worth of dropped buffers and activations.
     CACHE_LIMIT_BYTES = 2 << 30
     INDEX_FILE = "model.safetensors.index.json"
+    # safetensors dtype -> (numpy view dtype, mlx dtype). bf16 has no numpy dtype: it is
+    # allocated as uint16 and viewed as bf16, and the two share one buffer.
+    DTYPES = {
+        "BF16": (np.uint16, mx.bfloat16),
+        "F16": (np.float16, mx.float16),
+        "F32": (np.float32, mx.float32),
+        "U32": (np.uint32, mx.uint32),
+        "I32": (np.int32, mx.int32),
+        "U8": (np.uint8, mx.uint8),
+    }
 
     def __init__(self, root: Path):
         self.root = root
@@ -71,6 +92,17 @@ class Krea2BlockStream:
                 self.by_block[int(key.split(".")[1])][shard].append(key)
         if not self.by_block:
             raise ValueError(f"No transformer blocks in the weight index at {root / Krea2BlockStream.INDEX_FILE}.")
+        self.headers = {
+            shard: Krea2BlockStream._header(root / shard) for shard in {s for by in self.by_block.values() for s in by}
+        }
+        self.pool: list[tuple[dict, dict[str, memoryview]]] = []
+        self.turn = 0
+
+    @staticmethod
+    def _header(path: Path) -> tuple[int, dict]:
+        with open(path, "rb") as f:
+            (size,) = struct.unpack("<Q", f.read(8))
+            return 8 + size, json.loads(f.read(size))
 
     @staticmethod
     def locate(model_path: Path) -> Path:
@@ -88,7 +120,7 @@ class Krea2BlockStream:
             f"blocks.*, and {model_path} has none. Write one with tools/bench/bake_lora_checkpoint.py."
         )
 
-    def attach(self, transformer) -> None:
+    def attach(self, transformer, down_splits: int = 1, native_norm: bool = False) -> None:
         if len(self.by_block) != len(transformer.blocks):
             raise ValueError(
                 f"The checkpoint at {self.root} holds {len(self.by_block)} blocks but this transformer "
@@ -100,7 +132,18 @@ class Krea2BlockStream:
             mx.eval(getattr(transformer, name).parameters())
         mx.clear_cache()
         mx.set_cache_limit(Krea2BlockStream.CACHE_LIMIT_BYTES)
+        for block in transformer.blocks:
+            if down_splits > 1:
+                block.mlp.down_splits = down_splits
+            if native_norm:
+                for module in block.modules():
+                    if isinstance(module, Krea2RMSNorm):
+                        module.native_dtype = True
+        if self._direct_readable():
+            self.pool = [self._allocate() for _ in range(2)]
         transformer.blocks = [Krea2StreamedBlock(i, b, self) for i, b in enumerate(transformer.blocks)]
+
+    # -- reading ------------------------------------------------------------------------------
 
     def read(self, index: int) -> dict:
         # Fresh lazy handles every call. Reusing one loaded tree keeps the evaluated arrays
@@ -113,9 +156,8 @@ class Krea2BlockStream:
         return tree_unflatten(flat)
 
     def prefetch(self, index: int) -> float:
-        # Reads and materializes a block now, to be taken by the next call. The evaluated
-        # arrays live only in this dict and in the block that takes them, so they are freed
-        # once that block rebinds its lazy handles.
+        # The fallback when the checkpoint cannot be read directly: reads and materializes a
+        # block through mx.load on the calling thread.
         start = time.perf_counter()
         tree = self.read(index)
         mx.eval([array for _, array in tree_flatten(tree)])
@@ -125,6 +167,81 @@ class Krea2BlockStream:
     def take(self, index: int) -> dict:
         tree = self.ready.pop(index, None)
         return tree if tree is not None else self.read(index)
+
+    def _layout(self, index: int) -> list[tuple[str, str, int, int, str, tuple]]:
+        # (name within the block, shard, byte offset, byte count, dtype, shape) per tensor.
+        prefix = f"blocks.{index}."
+        rows = []
+        for shard, keys in self.by_block[index].items():
+            base, header = self.headers[shard]
+            for key in keys:
+                meta = header[key]
+                lo, hi = meta["data_offsets"]
+                rows.append((key[len(prefix) :], shard, base + lo, hi - lo, meta["dtype"], tuple(meta["shape"])))
+        return sorted(rows)
+
+    def _direct_readable(self) -> bool:
+        # Every block must have the same tensors, dtypes and shapes as block 0, in dtypes
+        # numpy can view; otherwise the mx.load path is used.
+        first = [(name, dtype, shape) for name, _, _, _, dtype, shape in self._layout(0)]
+        if any(dtype not in Krea2BlockStream.DTYPES for _, dtype, _ in first):
+            return False
+        return all([(n, d, s) for n, _, _, _, d, s in self._layout(i)] == first for i in self.by_block)
+
+    def _allocate(self) -> tuple[dict, dict[str, memoryview]]:
+        flat, views = [], {}
+        for name, _, _, _, dtype, shape in self._layout(0):
+            np_dtype, mx_dtype = Krea2BlockStream.DTYPES[dtype]
+            raw = mx.zeros(shape, dtype=mx.uint16 if mx_dtype is mx.bfloat16 else mx_dtype)
+            array = raw.view(mx.bfloat16) if mx_dtype is mx.bfloat16 else raw
+            mx.eval(raw, array)
+            view = np.frombuffer(raw, dtype=np_dtype)
+            view.flags.writeable = True
+            views[name] = memoryview(view).cast("B")
+            flat.append((name, array))
+        return tree_unflatten(flat), views
+
+    def start_read(self, index: int):
+        if not self.pool:
+            return None
+        tree, views = self.pool[self.turn]
+        self.turn ^= 1
+        result: dict = {}
+        thread = threading.Thread(target=lambda: result.update(seconds=self._fill(index, views)), daemon=True)
+        thread.start()
+        return index, tree, thread, result
+
+    def finish_read(self, reader) -> float:
+        index, tree, thread, result = reader
+        thread.join()
+        if "seconds" not in result:
+            # The thread failed; the block will be read lazily at its bind instead.
+            return 0.0
+        self.ready[index] = tree
+        return result["seconds"]
+
+    def _fill(self, index: int, views: dict[str, memoryview]) -> float:
+        # Runs on the reader thread. Only file descriptors and memoryviews: no MLX calls.
+        start = time.perf_counter()
+        fds: dict[str, int] = {}
+        try:
+            for name, shard, offset, nbytes, _, _ in self._layout(index):
+                fd = fds.get(shard)
+                if fd is None:
+                    fd = fds[shard] = os.open(self.root / shard, os.O_RDONLY)
+                target = views[name]
+                done = 0
+                while done < nbytes:
+                    n = os.preadv(fd, [target[done:nbytes]], offset + done)
+                    if n <= 0:
+                        raise OSError(f"Short read of {name} in {shard} at byte {offset + done}.")
+                    done += n
+        finally:
+            for fd in fds.values():
+                os.close(fd)
+        return time.perf_counter() - start
+
+    # -- bookkeeping --------------------------------------------------------------------------
 
     def record(self, index: int, io: float, compute: float, drop: float, prefetch: float = 0.0) -> None:
         self.stats.append({"block": index, "io_s": io, "compute_s": compute, "drop_s": drop, "prefetch_s": prefetch})
@@ -141,6 +258,7 @@ class Krea2BlockStream:
             "root": str(self.root),
             "blocks": blocks,
             "block_calls": len(self.stats),
+            "direct": bool(self.pool),
             "io_ms_mean": round(io * 1000, 1),
             "compute_ms_mean": round(compute * 1000, 1),
             "drop_ms_mean": round(drop * 1000, 1),
@@ -152,9 +270,10 @@ class Krea2BlockStream:
         s = self.summary()
         if not s:
             return "Block streaming: nothing streamed yet."
+        how = "read straight into its buffers by a thread" if s["direct"] else "read through mx.load"
         return (
             f"Block streaming: {s['blocks']} blocks from {s['root']}, "
             f"bind {s['io_ms_mean']} ms + compute {s['compute_ms_mean']} ms + drop {s['drop_ms_mean']} ms "
-            f"per block, next block read in {s['prefetch_ms_mean']} ms under the compute "
+            f"per block, next block {how} in {s['prefetch_ms_mean']} ms under the compute "
             f"(compute/read {s['ratio_compute_over_prefetch']})"
         )

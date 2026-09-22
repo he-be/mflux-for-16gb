@@ -24,6 +24,13 @@ from mflux.models.qwen.model.qwen_vae.qwen_vae import QwenVAE
 
 
 class Krea2StagedLoader:
+    # Two block-level speedups that change the numbers slightly (accumulation order, one bf16
+    # rounding of the norm weights), so they ride only with block streaming, whose images are
+    # judged against each other and not against the resident references. M6 mini, 1024^2:
+    # 9.0-9.5 -> 8.5-8.6 s a step. See docs/16gb/measurements/2026-09-22-m9c-prefetch-interference.md.
+    DOWN_SPLITS = 4
+    NATIVE_NORM = True
+
     def __init__(self, model_path: str, model_config: ModelConfig, quantize: int | None = None):
         root = PathResolution.resolve(
             path=model_path,
@@ -57,7 +64,7 @@ class Krea2StagedLoader:
         stream = Krea2BlockStream(Krea2BlockStream.locate(self.root))
         transformer = Krea2Transformer(**(self.model_config.transformer_overrides or {}))
         self._apply(transformer, self._component("transformer"), materialize=False)
-        stream.attach(transformer)
+        stream.attach(transformer, down_splits=self.DOWN_SPLITS, native_norm=self.NATIVE_NORM)
         self.stream = stream
         return transformer
 

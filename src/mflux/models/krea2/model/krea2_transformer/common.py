@@ -7,11 +7,19 @@ class Krea2RMSNorm(nn.Module):
         super().__init__()
         self.scale = mx.zeros((dim,))
         self.eps = eps
+        # False normalizes in float32 and casts back. True hands the kernel the input as is:
+        # mx.fast.rms_norm accumulates in float32 either way, so what changes is only that
+        # (1 + scale) is rounded to the input dtype first (at most 0.39% on the Krea 2
+        # checkpoint), and the two casts of the 50 MB residual stream go away (-10 ms a block
+        # on an M6). Only the block-streaming path sets this; the resident path keeps its
+        # reference images. See docs/16gb/measurements/2026-09-22-m9b-block-budget.md, section 5.
+        self.native_dtype = False
 
     def __call__(self, x: mx.array) -> mx.array:
-        dtype = x.dtype
-        weight = (self.scale.astype(mx.float32) + 1.0).astype(mx.float32)
-        return mx.fast.rms_norm(x.astype(mx.float32), weight, self.eps).astype(dtype)
+        weight = self.scale.astype(mx.float32) + 1.0
+        if self.native_dtype:
+            return mx.fast.rms_norm(x, weight.astype(x.dtype), self.eps)
+        return mx.fast.rms_norm(x.astype(mx.float32), weight, self.eps).astype(x.dtype)
 
 
 class Krea2QKNorm(nn.Module):

@@ -31,7 +31,7 @@
 | `docs/16gb/runs/` | 実行ログ(swapwatch の CSV / JSON)と `images/` に出力画像 |
 | `.cursor/plans/` | 実装計画(RULE.md の規約) |
 | `tools/` | fork 固有のツール(`swapwatch.py`) |
-| `tools/bench/` | 段階ごとの計測スクリプト(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py` / `block_stream.py` / `bake_lora_checkpoint.py` / `quantize_te_checkpoint.py` / `matmul_probe.py` / `nax_probe.py` / `qmm_spy.py` / `ceiling_probe.py` / `mps_probe.py`) |
+| `tools/bench/` | 段階ごとの計測スクリプト(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py` / `block_stream.py` / `bake_lora_checkpoint.py` / `quantize_te_checkpoint.py` / `matmul_probe.py` / `nax_probe.py` / `qmm_spy.py` / `ceiling_probe.py` / `mps_probe.py` / `block_budget.py` / `stream_ab.py` / `seqpatch.py`) |
 | `~/Library/Caches/mflux/16gb-bench/` | 段の間で受け渡す中間生成物(埋め込み・latent)。リポジトリには入れない |
 
 ## 索引
@@ -57,9 +57,11 @@
 - **[M8c / M8d: K 分割(不採用)と clear_cache の廃止(採用)。最終 9.26 s/step](measurements/2026-09-22-m8c-m8d-kslices-cache-limit.md)**
 - [M8f: M3 Pro での回帰(合格。29.6 → 23.0 s/step、footprint 4.66 GB)](measurements/2026-09-22-m8f-m3pro.md)
 - **[M9: この GPU の天井と MLX が届いていない場所(結論: 天井 19 TFLOPS、`mlp.down` の崖は MLX のカーネル。q4 も MPS も答えではない)](measurements/2026-09-22-m9-ceiling-probe.md)**
+- [M9a/b: 本番の再現と 1 ブロックの予算(matmul 256 + sdpa 27 + 要素演算 34。compile は遅くなる、norm の bf16 化だけ −10 ms)](measurements/2026-09-22-m9b-block-budget.md)
+- **[M9c: `async_eval` が呼び出し側を止める。直接読み + K4 バッチ + bf16 norm で 9.01 → 7.90 s/step](measurements/2026-09-22-m9c-prefetch-interference.md)**
 - [計画: ブロック単位ウェイトストリーミング](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)
 - [計画: DiT を M6 mini で 2〜3 倍速くする](../../.cursor/plans/2026-09-22-krea2-dit-speed.md)(M8a〜f 済)
-- **[計画: DiT を天井(6 s/step)に近づける — 測定と改善](../../.cursor/plans/2026-09-22-krea2-dit-ceiling.md)** ← 次はこれ
+- **[計画: DiT を天井(6 s/step)に近づける — 測定と改善](../../.cursor/plans/2026-09-22-krea2-dit-ceiling.md)**(M9a〜e 済、M9f/g 残)
 
 ## いま分かっていること(2026-09-22)
 
@@ -109,7 +111,8 @@ q8 + 4step LoRA / 1024² / 4 ステップ / euler / guidance 1.0 / seed 42。
 1 回だけ必要な前処理: TE の量子化(1.19GB / 2.3s)と LoRA の焼き込み(1.89GB / 13s)。
 
 mflux 本体経由(`--block-streaming`)でも同じ: 1024² で footprint 5.21GB / 29.60 s/step、
-1280² で 6.89GB / 48.91 s/step、どちらも swapouts 0(M6)。
+1280² で 6.89GB / 48.91 s/step、どちらも swapouts 0(M6)。**最新(M9c)は M6 mini で 1024² 7.90 s/step /
+6.18 GB、1280² 14.36 s/step / 6.53 GB、M3 Pro で 1024² 22.89 s/step / 5.04 GB。**
 
 - **M6 合格 — mflux 本体に入った。** `--block-streaming` 1 本で、`tools/bench/` の
   4 プロセス分割版と同じ数字が出る(29.60 s/step、計算 ÷ I/O 13.59、I/O 71.9 ms)。
@@ -140,8 +143,15 @@ mflux 本体経由(`--block-streaming`)でも同じ: 1024² で footprint 5.21GB
   `mlp.down`(16384→6144)の MLX カーネルが **MPS の半分の速さ**(9.1 vs 17.9 TFLOPS、0.32.2 でも同じ)
   で走っていること(1.3 s/step)。q4 は崖の外で +7% しかなく、MPS(ComfyUI)は逆量子化を払って
   同額かつ 16GB に載らない。**q8 のまま MLX で崖を消す**のが答え。
-- **残り**: [次の計画](../../.cursor/plans/2026-09-22-krea2-dit-ceiling.md)(M9a〜g)。`powermetrics`(要 sudo)、
-  K=16384 の件を MLX に報告(再現例は `ceiling_probe.py --only ksweep`)、M3 Pro の `iogpu.wired_limit_mb=0` 再測定、前処理ツールの昇格。
+- **M9c 済 — 1024² が 9.01 → 7.90 s/step、1280² が 15.88 → 14.36、どちらも clean。** M8c で K 分割が
+  本番で負けた理由は **`mx.async_eval` が呼び出し側を 100〜250 ms 止める**ことで、主スレッドがその間に
+  ディスクを読むと GPU に仕事が届かなくなる。直したのは 3 つ: 次ブロックを **`async_eval` の前に起動した
+  スレッドが、先行確保した 2 組の MLX バッファへ `preadv` で直接読む**、`mlp.down` を **K4 のバッチ qmm 1 本**
+  にする(92 → 51 ms)、RMSNorm の float32 往復をやめる(−10 ms)。後の 2 つは `--block-streaming` だけが
+  有効にする。footprint は 2 組のバッファ分 +0.9 GB(1024² 6.18 GB、1280² 6.53 GB)。画像は目視で同一、
+  ピクセル差の平均 2.4〜2.6(M8 の bf16 化 4.7 より小さい)。M3 Pro は 22.89 s/step で ±0。
+- **残り**: `powermetrics`(要 sudo)、K=16384 の件を MLX に報告(再現例は `ceiling_probe.py --only ksweep`)、
+  M3 Pro を常駐アプリなしで再測定(今回は swapouts 8 ページで clean でない)+ `iogpu.wired_limit_mb=0`、前処理ツールの昇格。
 
 ## 実行のしかた
 

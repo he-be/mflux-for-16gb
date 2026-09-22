@@ -277,11 +277,43 @@ I/O             : 71.8 ms / ブロック(M0 の実測 74 ms と一致)
 - 道具: `tools/bench/ceiling_probe.py`(MLX)、`tools/bench/mps_probe.py`(torch は使い捨て環境で)。
 - **mini の作業ツリーは HEAD とずれている**(`dcacf52` + 未コミット)。本番測定の前に揃える。
 
+### M9a〜e(2026-09-22 夜): 崖を消した ← 済
+
+| | M8d | **M9c** | footprint | verdict |
+|---|---|---|---|---|
+| M6 mini 1024² | 9.01 s/step(同日再測定) | **7.90**(計算 281.5 ms) | 6.18 GB | clean |
+| M6 mini 1280² | 15.88 | **14.36**(計算 512.3) | 6.53 GB | clean |
+| M3 Pro 1024² | 22.96 | 22.89(±0) | 5.04 GB | 8 ページ(作業機、要再測定) |
+
+- **M8c の敗因は `mx.async_eval` が呼び出し側を 100〜250 ms 止めること**([M9c](measurements/2026-09-22-m9c-prefetch-interference.md))。
+  主スレッドがその間に `mx.load` で読むと GPU に仕事が届かず、ops の多い K 分割ほど損をしていた。
+  キャッシュでも帯域でもなかった(純 memcpy を裏で回しても +5〜10 ms)。
+- 直したのは 3 つ(`krea2_weight_stream.py` / `feed_forward.py` / `common.py` / `krea2_staged_loader.py`):
+  **`async_eval` の前に起動したスレッドが、先行確保した 2 組の MLX バッファに `preadv` で直接読む**
+  (MLX のバッファは `np.frombuffer` で書ける)、`mlp.down` を **K4 のバッチ qmm 1 本**(92 → 51 ms)、
+  **RMSNorm の float32 往復をやめる**(−10 ms)。後の 2 つは `Krea2StagedLoader.DOWN_SPLITS / NATIVE_NORM`
+  で `--block-streaming` だけが有効にする。常駐モードは不変で、既存テストのビット一致も保たれる。
+- 効かなかったもの(記録済み、再試行不要): `mx.compile`(ブロック全体でも部分でも遅くなる。`fast.rms_norm`
+  を含むと +25 ms)、`mx.depends` による直列化(GPU のバリアにならない)、実データ依存による直列化
+  (ブロック内では並行ペナルティが起きていない)、`MLX_BFS_MAX_WIDTH` / `MLX_MAX_OPS_PER_BUFFER`、
+  `F_NOCACHE`(読みが 1.9 GB/s に落ちる)、MLX 0.32.2(崖は同じ)。
+- 1 ブロックの予算([M9b](measurements/2026-09-22-m9b-block-budget.md)): matmul 単体和 256 + sdpa 27 +
+  要素演算 34 = 317。M8 の「鎖の隙間 40 ms」は合成鎖の artefact。残る伸びしろは MLX の q8 カーネルが
+  天井(19 TFLOPS)より 1 割遅い分と、要素演算 34 ms のうち融合できなかった 24 ms。
+- 画像: 同一機材で M9a vs M9c の平均差 2.59 / 255(1024²)、2.44(1280²)。M8 の bf16 化(4.70)より小さい。
+  目視で同一(`images/20260922-1745-m9a-vs-m9c-crop.png`)。
+- 道具: `tools/bench/block_budget.py`(1 ブロックの予算と候補の当て込み)、`tools/bench/stream_ab.py`
+  (本番形の A/B。`--config main:1`、`pingpong:4bn` など)、`tools/bench/seqpatch.py`(A/B 用の monkeypatch)。
+
 ## 6. 次にやること
 
-**[DiT を天井に近づける計画](../../.cursor/plans/2026-09-22-krea2-dit-ceiling.md)の M9a〜g。**
-本命は M9c(`mlp.down` の崖: プリフェッチのスレッド化 / 干渉源の切り分け / 読みの位置替え / MLX へ報告)、
-次に M9d(RMSNorm の float32 往復をやめる、内側の block を `mx.compile`)。以下は従来の宿題。
+- **M3 Pro を常駐アプリなしで再測定**(今回は作業中の機械で swapouts 8 ページ、clean でない)。
+  同時に `sudo sysctl -w iogpu.wired_limit_mb=0` の宿題を消す。期待値 22.9 s/step / 5.0 GB / 0 ページ。
+- **M9f `powermetrics`**(要 sudo)。1280² の +3%/step が持続クロックかどうか。
+- **MLX に報告**: K ≥ 8192 で q8 も密 bf16 も半速になる件。表は [M9](measurements/2026-09-22-m9-ceiling-probe.md) §1〜2、
+  再現例は `tools/bench/ceiling_probe.py --only ksweep`、MPS 比較は `tools/bench/mps_probe.py`。
+  直れば `DOWN_SPLITS` を 1 に戻せる。
+- 以下は従来の宿題。
 
 - **M3 Pro での `iogpu.wired_limit_mb=0` 再測定。** M6 の 2 本は前セッションが残した
   15360 の設定下。mini 側は既定 0 で通ったので、残っているのは M3 Pro だけ。
@@ -387,6 +419,20 @@ fast テストは 1504 件すべて緑。
 | `tools/bench/qmm_spy.py` | 新規。実際の生成が出す `quantized_matmul` の形を全部記録する |
 
 **`src/` は 1 行も触っていない。** M7 は計測だけ。
+
+### M9 で足したもの・変えたもの
+
+| ファイル | |
+|---|---|
+| `models/krea2/weights/krea2_weight_stream.py` | 直接読み(2 組のバッファ、`start_read` / `finish_read`、スレッドは async_eval の前)。`attach(down_splits, native_norm)`。mx.load 経路はフォールバックとして残る |
+| `models/krea2/model/krea2_transformer/feed_forward.py` | `Krea2SwiGLU.down_splits`(既定 1)、`release_down_planes()` |
+| `models/krea2/model/krea2_transformer/common.py` | `Krea2RMSNorm.native_dtype`(既定 False) |
+| `models/krea2/krea2_staged_loader.py` | `DOWN_SPLITS = 4`、`NATIVE_NORM = True` を attach に渡す |
+| `tests/test_krea2_block_streaming.py` | 8 件(ビット一致は 2 パスに、フラグの伝播、K 分割の一致、norm の丸め) |
+| `tools/bench/ceiling_probe.py` / `mps_probe.py` / `block_budget.py` / `stream_ab.py` / `seqpatch.py` | 計測 |
+| `docs/16gb/measurements/2026-09-22-m9*.md`、`runs/m6mini/*m9*`、`runs/m3pro/*m9g*`、`images/*m9*` | 記録 |
+
+fast テスト 1507 件は緑。
 
 ### 実行中の一時設定
 
