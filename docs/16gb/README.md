@@ -53,6 +53,7 @@
 - **[M7: M6 mac mini 16GB の実機(結論: 合格。neural accelerator も効いている)](measurements/2026-09-22-m7-m6-mac-mini.md)**
 - **[M8: DiT 1 ブロックの時間の内訳(結論: 遅さの正体は活性の float32)](measurements/2026-09-22-m8-block-profile.md)**
 - **[M8a: DiT の活性を bf16 にする(結論: 合格。21.2 → 13.1 s/step、画像は同等)](measurements/2026-09-22-m8a-bf16-activations.md)**
+- **[M8b: 次のブロックを計算の裏で読む(結論: 合格。13.1 → 9.4 s/step、出力は完全一致)](measurements/2026-09-22-m8b-prefetch.md)**
 - [計画: ブロック単位ウェイトストリーミング](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)
 - [計画: DiT を M6 mini で 2〜3 倍速くする](../../.cursor/plans/2026-09-22-krea2-dit-speed.md)
 

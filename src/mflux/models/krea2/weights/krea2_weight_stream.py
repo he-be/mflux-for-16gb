@@ -4,14 +4,18 @@ from collections import defaultdict
 from pathlib import Path
 
 import mlx.core as mx
-from mlx.utils import tree_unflatten
+from mlx.utils import tree_flatten, tree_unflatten
 
 # Streams the DiT's transformer blocks from disk instead of holding them in memory.
 # Measured on an 18 GB M3 Pro: holding the q8 blocks demands 15.96 GB and thrashes,
 # streaming them one at a time demands 3.72 GB and does not swap, at +5.8% per step.
-# The block is 461.3 MB and reads in 72 ms while it computes for 985 ms, so the I/O
-# hides inside the compute with a factor of 13.6 to spare.
 # See docs/16gb/measurements/2026-09-22-m5-block-streaming.md.
+#
+# The next block is read while the current one computes: the compute is dispatched
+# with mx.async_eval and the read of block i+1 runs on the CPU until it is done. On the
+# M6 mini the block reads in 137 ms and computes for 320 ms, and with the two overlapped
+# a block costs 328 ms instead of 456. One extra block (461 MB) is resident for it.
+# See docs/16gb/measurements/2026-09-22-m8b-prefetch.md.
 
 
 class Krea2StreamedBlock:
@@ -22,20 +26,28 @@ class Krea2StreamedBlock:
 
     def __call__(self, hidden_states: mx.array, tvec: mx.array, freqs: mx.array, mask) -> mx.array:
         start = time.perf_counter()
-        self.block.update(self.stream.read(self.index))
+        self.block.update(self.stream.take(self.index))
         mx.eval(self.block.parameters())
         bound = time.perf_counter()
 
         out = self.block(hidden_states, tvec, freqs, mask)
-        # MLX is lazy: without this the weights would still be needed after the drop below,
-        # and dropping them would free nothing. The forced sync per block is the cost of
-        # streaming, and it is already inside the measured 29.8 s/step.
+        # Dispatch the compute, then read the next block while the GPU is busy. The eval of
+        # the output is still forced per block: MLX is lazy, and without it the weights would
+        # still be needed after the drop below, and dropping them would free nothing.
+        mx.async_eval(out)
+        prefetched = self.stream.prefetch((self.index + 1) % len(self.stream.by_block))
         mx.eval(out)
         computed = time.perf_counter()
 
         self.block.update(self.stream.read(self.index))
         mx.clear_cache()
-        self.stream.record(self.index, io=bound - start, compute=computed - bound, drop=time.perf_counter() - computed)
+        self.stream.record(
+            self.index,
+            io=bound - start,
+            compute=computed - bound,
+            drop=time.perf_counter() - computed,
+            prefetch=prefetched,
+        )
         return out
 
 
@@ -47,6 +59,7 @@ class Krea2BlockStream:
     def __init__(self, root: Path):
         self.root = root
         self.stats: list[dict] = []
+        self.ready: dict[int, dict] = {}
         weight_map = json.loads((root / Krea2BlockStream.INDEX_FILE).read_text())["weight_map"]
         self.by_block: dict[int, dict[str, list[str]]] = defaultdict(lambda: defaultdict(list))
         for key, shard in weight_map.items():
@@ -94,8 +107,22 @@ class Krea2BlockStream:
             flat.extend((key[len(prefix) :], data[key]) for key in keys)
         return tree_unflatten(flat)
 
-    def record(self, index: int, io: float, compute: float, drop: float) -> None:
-        self.stats.append({"block": index, "io_s": io, "compute_s": compute, "drop_s": drop})
+    def prefetch(self, index: int) -> float:
+        # Reads and materializes a block now, to be taken by the next call. The evaluated
+        # arrays live only in this dict and in the block that takes them, so they are freed
+        # once that block rebinds its lazy handles.
+        start = time.perf_counter()
+        tree = self.read(index)
+        mx.eval([array for _, array in tree_flatten(tree)])
+        self.ready[index] = tree
+        return time.perf_counter() - start
+
+    def take(self, index: int) -> dict:
+        tree = self.ready.pop(index, None)
+        return tree if tree is not None else self.read(index)
+
+    def record(self, index: int, io: float, compute: float, drop: float, prefetch: float = 0.0) -> None:
+        self.stats.append({"block": index, "io_s": io, "compute_s": compute, "drop_s": drop, "prefetch_s": prefetch})
 
     def summary(self) -> dict:
         if not self.stats:
@@ -104,6 +131,7 @@ class Krea2BlockStream:
         io = sum(s["io_s"] for s in self.stats) / len(self.stats)
         compute = sum(s["compute_s"] for s in self.stats) / len(self.stats)
         drop = sum(s["drop_s"] for s in self.stats) / len(self.stats)
+        prefetch = sum(s["prefetch_s"] for s in self.stats) / len(self.stats)
         return {
             "root": str(self.root),
             "blocks": blocks,
@@ -111,7 +139,8 @@ class Krea2BlockStream:
             "io_ms_mean": round(io * 1000, 1),
             "compute_ms_mean": round(compute * 1000, 1),
             "drop_ms_mean": round(drop * 1000, 1),
-            "ratio_compute_over_io": round(compute / io, 2) if io else None,
+            "prefetch_ms_mean": round(prefetch * 1000, 1),
+            "ratio_compute_over_prefetch": round(compute / prefetch, 2) if prefetch else None,
         }
 
     def report(self) -> str:
@@ -120,6 +149,7 @@ class Krea2BlockStream:
             return "Block streaming: nothing streamed yet."
         return (
             f"Block streaming: {s['blocks']} blocks from {s['root']}, "
-            f"I/O {s['io_ms_mean']} ms + compute {s['compute_ms_mean']} ms + drop {s['drop_ms_mean']} ms "
-            f"per block (compute/IO {s['ratio_compute_over_io']})"
+            f"bind {s['io_ms_mean']} ms + compute {s['compute_ms_mean']} ms + drop {s['drop_ms_mean']} ms "
+            f"per block, next block read in {s['prefetch_ms_mean']} ms under the compute "
+            f"(compute/read {s['ratio_compute_over_prefetch']})"
         )
