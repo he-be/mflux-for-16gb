@@ -8,6 +8,7 @@ from mflux.models.common.tokenizer import TokenizerLoader
 from mflux.models.common.weights.loading.loaded_weights import LoadedWeights
 from mflux.models.common.weights.loading.weight_applier import WeightApplier
 from mflux.models.common.weights.loading.weight_loader import WeightLoader
+from mflux.models.krea2.krea2_staged_loader import Krea2StagedLoader
 from mflux.models.krea2.model.krea2_text_encoder.text_encoder import Krea2TextEncoder
 from mflux.models.krea2.model.krea2_transformer.transformer import Krea2Transformer
 from mflux.models.krea2.weights.krea2_lora_mapping import Krea2LoRAMapping
@@ -25,9 +26,14 @@ class Krea2Initializer:
         lora_paths: list[str] | None = None,
         lora_scales: list[float] | None = None,
         bake_lora: bool = True,
+        block_streaming: bool = False,
     ) -> None:
         path = model_path if model_path else model_config.model_name
         Krea2Initializer._init_config(model, model_config)
+        if block_streaming:
+            Krea2Initializer._init_staged(model, path, model_config, quantize, lora_paths)
+            Krea2Initializer._init_tokenizers(model, path)
+            return
         weights = Krea2Initializer._load_weights(path, model_config)
         Krea2Initializer._init_tokenizers(model, path)
         Krea2Initializer._init_models(model, model_config)
@@ -36,6 +42,29 @@ class Krea2Initializer:
         del weights
         mx.eval(model)
         mx.clear_cache()
+
+    @staticmethod
+    def _init_staged(
+        model,
+        path: str,
+        model_config: ModelConfig,
+        quantize: int | None,
+        lora_paths: list[str] | None,
+    ) -> None:
+        # Nothing is built here. Each component is built, used and released inside
+        # generate_image, because all three at once is 22.2 GB and this mode exists for
+        # machines that cannot hold that.
+        if lora_paths:
+            raise ValueError(
+                "Block streaming cannot apply a LoRA at load time: the blocks live on disk and are "
+                "bound one at a time. Fold the LoRA into the checkpoint first with "
+                "tools/bench/bake_lora_checkpoint.py, then point --model-path at the result."
+            )
+        model.staged_loader = Krea2StagedLoader(model_path=path, model_config=model_config, quantize=quantize)
+        model.text_encoder = None
+        model.transformer = None
+        model.vae = None
+        model.bits = None
 
     @staticmethod
     def _init_tokenizers(model, model_path: str) -> None:

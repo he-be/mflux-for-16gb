@@ -173,6 +173,59 @@ M5 は **mflux 本体を 1 行も変えずに** `transformer.blocks` を差し�
 
 VAE のタイルは **256** を既定にする(実 footprint 14.15 → 4.28 GB、代償 0.9 秒)。
 
+## M6 の具体設計(2026-09-22 追記)
+
+`tools/bench/` の 4 プロセス版を本体に入れる。**追加する概念は 2 つだけ。**
+
+### (a) 低メモリ用スナップショットは「ふつうの mflux スナップショット」
+
+```
+krea2-lowram/
+  transformer/   blocks_00..27.safetensors + globals.safetensors + index  ← bake 済み
+  text_encoder/  q8(quantize_te_checkpoint.py の出力)
+  vae/           q8 スナップショットから
+  tokenizer/
+```
+
+新しいローダ形式は要らない。`Krea2WeightDefinition._select_transformer_variant` が
+`transformer/` を見つけ、`_try_load_mflux_format` が mflux メタデータ付きの
+per-block シャードをそのまま読む。**`--model-path` 1 本で 3 コンポーネントが揃う。**
+ストリーミングを切っても(常駐で)読める同じディレクトリになる。
+
+### (b) 2 つの新しいクラス
+
+| | |
+|---|---|
+| `weights/krea2_weight_stream.py` | `Krea2BlockStream`(index を読み、`transformer.blocks` をラッパに差し替える)と `Krea2StreamedBlock`(bind → forward → `mx.eval` → drop)。`tools/bench/block_stream.py` の移植 |
+| `krea2_staged_loader.py` | `Krea2StagedLoader.build("text_encoder" / "transformer" / "vae")`。1 個ずつ作って返すだけ。破棄は呼び出し側 |
+
+`Krea2` 側は **3 か所を `with self._component(...)` で囲むだけ**。常駐モードでは
+この context manager は素通り(既存の挙動は 1 バイトも変わらない)。
+
+```python
+with self._component("text_encoder"):
+    embeds, neg_embeds = self._encode_prompts(...)
+    mx.eval(embeds)          # TE を手放す前に評価する。しないと graph が weights を掴んだまま
+with self._component("transformer") as transformer:
+    ...  # ループ
+with self._component("vae"):
+    decoded = self._decode_latents(...)
+```
+
+### フラグ
+
+`--block-streaming`(krea2 の parser だけに足す)。効果は 3 つ:
+
+1. 段階ロード + ブロックストリーミング
+2. `--vae-tile-size` 未指定なら **256** を既定にする
+3. `mx.compile` を切る(ラッパの中で I/O と `mx.eval` をするので compile できない)
+
+`--low-ram` には手を触れない。**あれは `mx.set_cache_limit(1GB)` を入れるが、
+M3 でループ中 9 倍悪化した手**なので、ストリーミングの合格判定には使わない。
+
+`--lora-paths` との併用はエラーにする。実行時 LoRA は M3 で +11 s/step と測れており、
+採用したのは事前焼き込み。`tools/bench/bake_lora_checkpoint.py` を案内する。
+
 ### M7. 実運用
 
 - q8 + 4step LoRA、1024²、seed 42、swapwatch 下。2 回実行して画像一致。

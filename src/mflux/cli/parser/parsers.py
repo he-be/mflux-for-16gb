@@ -246,6 +246,9 @@ class CommandLineParser(argparse.ArgumentParser):
         self.add_argument("--pid-decode", action=argparse.BooleanOptionalAction, default=False, help="Decode with NVIDIA PiD's pixel-diffusion super-resolving decoder instead of the standard VAE. First run downloads two separate Hugging Face checkpoints (~8GB total); google/gemma-2-2b-it is gated and requires accepting its license + `hf auth login`.")
         self.add_argument("--pid-degrade-sigma", type=float, default=0.0, help="With --pid-decode, deliberately noise the latent to this flow-matching sigma before decoding (0.0-0.8). PiD's LQ gate was distilled on latents noised at sigma~U[0.0, 0.8]; a fully clean latent (the default, sigma=0.0) is the input it saw least during training, which can show up as over-textured detail invented on smooth areas like skin. Try 0.2 if you see that. Ignored without --pid-decode.")
 
+    def add_block_streaming_arguments(self) -> None:
+        self.add_argument("--block-streaming", action="store_true", help="Load one component at a time and stream the transformer blocks from disk instead of holding them in memory. Cuts peak memory from 15.96 GB to 3.72 GB at 1024x1024 (measured, Krea 2 q8 on an 18 GB M3 Pro) for about +6%% per step, which is what makes the model run without swapping on 16-18 GB machines. Needs a sharded checkpoint whose index names blocks.*, and implies --vae-tile-size 256 unless you set one.")
+
     def add_output_arguments(self) -> None:
         self.add_argument("--metadata", action="store_true", help="Export image metadata as a JSON file.")
         self.add_argument("--no-metadata", action="store_true", help="Do not embed generation metadata (EXIF UserComment and friends) in the output image. Independent of --metadata, which additionally writes a JSON sidecar.")

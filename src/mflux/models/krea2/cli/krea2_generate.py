@@ -34,6 +34,7 @@ def build_parser() -> CommandLineParser:
     parser.add_image_generator_arguments(supports_metadata_config=True, supports_dimension_scale_factor=True)
     parser.add_image_to_image_arguments(required=False)
     parser.add_pid_decode_arguments()
+    parser.add_block_streaming_arguments()
     parser.add_output_arguments()
     return parser
 
@@ -43,12 +44,19 @@ def main():
     parser = build_parser()
     args = parser.parse_args()
 
+    # Tiling is not optional under block streaming: the VAE's real footprint at 1024^2 is
+    # 14.15 GB untiled and 4.28 GB at tile 256, which would undo everything streaming buys.
+    # The tile size changes the output, so it is pinned rather than left to vary.
+    if args.block_streaming and args.vae_tile_size is None:
+        args.vae_tile_size = 256
+
     # 1. Load the model (--model accepts only krea-2 aliases; anything else errors so a
     # foreign name is never silently run as Krea-2-Turbo)
     model = Krea2(
         model_config=ConfigResolution.resolve_restricted(args.model, "krea-2", model_path=args.model_path),
         quantize=args.quantize,
         model_path=args.model_path,
+        block_streaming=args.block_streaming,
         **lora_init_kwargs_from_args(args),
     )
 
@@ -96,6 +104,8 @@ def main():
     finally:
         if memory_saver:
             print(memory_saver.memory_stats())
+        if model.staged_loader is not None and model.staged_loader.stream is not None:
+            print(model.staged_loader.stream.report())
 
 
 if __name__ == "__main__":
