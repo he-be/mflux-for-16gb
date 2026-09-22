@@ -100,6 +100,7 @@ class Krea2DitBench:
             "model_path": str(self.model_path),
             "stored_bits": bits,
             "lora": None if self.args.no_lora else self.args.lora_path,
+            "baked": not self.args.no_bake_lora,
             "limits": {
                 "cache_limit_gb": self.args.cache_limit_gb,
                 "wired_limit_gb": self.args.wired_limit_gb,
@@ -164,7 +165,7 @@ class Krea2DitBench:
                 transformer=transformer,
                 lora_paths=[self.args.lora_path],
                 lora_scales=[self.args.lora_scale],
-                bake_lora=True,
+                bake_lora=not self.args.no_bake_lora,
             )
             mx.eval(transformer)
             mx.clear_cache()
@@ -272,7 +273,12 @@ def main() -> int:
         help="4-step distill LoRA (repo:file or a local path)",
     )
     parser.add_argument("--lora-scale", type=float, default=1.0)
-    parser.add_argument("--no-lora", action="store_true", help="skip the LoRA (isolates its 0.44 GB from the result)")
+    parser.add_argument("--no-lora", action="store_true", help="skip the LoRA entirely")
+    parser.add_argument(
+        "--no-bake-lora",
+        action="store_true",
+        help="keep the LoRA as separate layers: +0.44 GB resident, but no dequantize spike while baking",
+    )
     parser.add_argument("--compile", action="store_true", help="wrap the step in mx.compile, as mflux does")
     parser.add_argument("--cache-limit-gb", type=float, default=None, help="ladder step 2: cap MLX's buffer cache")
     parser.add_argument("--clear-cache-each-step", action="store_true", help="ladder step 2: clear the cache per step")

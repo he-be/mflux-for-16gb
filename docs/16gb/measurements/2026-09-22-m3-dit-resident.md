@@ -333,3 +333,55 @@ wire すると、そのバッファは回収対象から外れる。OS に残る
 - **LoRA を足した 14.06 GB でも通るか**(いまのは 13.62 GB)
 - **4 ステップ回したときのアクティベーション込みで通るか**(いまは 1 ステップも
   回していない)
+
+---
+
+## LoRA を足す → **惜しい (SWAPPED 82 MB)**、ただし数字の理解が変わった
+
+- 実行: `20260922-0913`、`--load-only --hold-seconds 10 --wired-limit-gb 14.5`
+- 記録: `docs/16gb/runs/20260922-0913-m3-loadonly-lora-wired.csv`
+
+```
+materialize       : 2.10 s
+lora (bake 込み)  : 6.69 s
+mx peak memory    : 15.23 GB   ← bake 中の一時ピーク
+mx active memory  : 13.62 GB   ← bake 後の常駐
+verdict           : SWAPPED (82 MB / 5008 ページ、swap 増分 70 MB)
+peak footprint    : 14.35 GB
+```
+
+### 計画の前提が 1 つ間違っていた
+
+**「DiT + 4step LoRA = 14.06 GB が常駐する」は誤り。**
+
+LoRA は q8 のウェイトに**焼き込まれる**ので、bake 後の常駐は **13.62 GB のまま**。
+0.44 GB は足されない。足されるのは常駐ではなく、**bake 中の一時ピーク**:
+
+| | |
+|---|---|
+| bake 前・後の常駐 | 13.62 GB |
+| **bake 中のピーク** | **15.23 GB**(+1.61 GB) |
+
+つまり通すべき山は 14.06 GB ではなく **15.23 GB** で、しかもそれは一瞬だけ。
+`iogpu.wired_limit_mb=14336`(= 14336 MiB = **15.03 GB**)をわずかに超えている。
+
+なお `iogpu.wired_limit_mb` の単位は **MiB** だと確認できた:
+14336 MiB = 15,032,385,536 B で、`max_recommended_working_set_size` の実測値と
+1 バイトまで一致する。
+
+### 落ち方は段違いに軽い
+
+| | swapouts |
+|---|---|
+| 段 1(wire なし) | 1394 MB |
+| 段 3a(wire なし、working set 拡大) | 3169 MB |
+| **LoRA + wire あり** | **82 MB** |
+
+wire が効いている状態で、bake の一時ピークだけが 15.03 GB の枠をはみ出している。
+
+### 次に試すこと
+
+1. **`--no-bake-lora` 相当**。LoRA を焼き込まず別レイヤのまま持つと、常駐は
+   13.62 + 0.44 = 14.06 GB に増えるが、**bake の 15.23 GB のピークが消える**。
+   15.03 GB の枠に収まる見込み。
+2. それでも駄目なら `iogpu.wired_limit_mb` をもう一段上げる。
