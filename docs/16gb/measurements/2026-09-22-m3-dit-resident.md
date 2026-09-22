@@ -385,3 +385,33 @@ wire が効いている状態で、bake の一時ピークだけが 15.03 GB の
    13.62 + 0.44 = 14.06 GB に増えるが、**bake の 15.23 GB のピークが消える**。
    15.03 GB の枠に収まる見込み。
 2. それでも駄目なら `iogpu.wired_limit_mb` をもう一段上げる。
+
+---
+
+## `--no-bake-lora` → **合格 (clean)**。常駐 14.06 GB が座れた
+
+- 実行: `20260922-0914`、`--load-only --hold-seconds 10 --no-bake-lora --wired-limit-gb 14.5`
+- 記録: `docs/16gb/runs/20260922-0914-m3-loadonly-nobake.csv`
+
+```
+materialize       : 2.20 s
+lora              : 2.79 s   (bake ありは 6.69 s)
+mx peak memory    : 14.06 GB
+mx active memory  : 14.06 GB   ← ピークと常駐が同じ = 一時的な山がない
+mx cache memory   : 0.00 GB
+verdict           : clean   (swapouts 0、swap 増分 0)
+```
+
+**13.62 + 0.44 = 14.06 GB ちょうど。** bake しないと LoRA は別レイヤのまま残るので
+常駐は 0.44 GB 増えるが、**dequantize の山 (15.23 GB) が完全に消える**ため、
+15.03 GB の wire 枠に収まった。
+
+| | 常駐 | ピーク | 判定 |
+|---|---|---|---|
+| bake あり | 13.62 GB | **15.23 GB** | SWAPPED (82 MB) |
+| **bake なし** | **14.06 GB** | **14.06 GB** | **clean** |
+
+**q8 では bake してよい、という従来の作法はこのマシンでは逆になる。**
+画質は変わらない(bake は数学的に同じ演算を事前に畳むだけ)。違うのは速度で、
+別レイヤのままだと推論のたびに LoRA の行列積が余分に走る。その代償が
+どれくらいかは、次のステップ実測で分かる。
