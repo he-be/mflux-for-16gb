@@ -48,6 +48,8 @@ class LoRALinear(nn.Module):
         )
 
     def __call__(self, x):
-        base_out = self.linear(x)
-        lora_out = mx.matmul(mx.matmul(x, self.lora_A), self.lora_B)
-        return base_out + self.scale * lora_out
+        # The scalar rides the rank-r intermediate, not the full-size product: scaling after
+        # lora_B walks an output as wide as the base layer's, which on Krea 2's 16384-wide
+        # mlp is 135 MB a layer. Same value, and measured at -34.5 ms on a 275 ms block
+        # (docs/16gb/measurements/2026-09-22-m10b-lora-budget.md).
+        return self.linear(x) + mx.matmul(self.scale * mx.matmul(x, self.lora_A), self.lora_B)

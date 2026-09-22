@@ -31,7 +31,8 @@ class FusedLoRALinear(nn.Module):
         lora_out = mx.zeros_like(base_out)
         for lora in self.loras:
             if isinstance(lora, LoRALinear):
-                lora_out += lora.scale * mx.matmul(mx.matmul(x, lora.lora_A), lora.lora_B)
+                # Scaled on the rank-r intermediate, as in LoRALinear.__call__.
+                lora_out += mx.matmul(lora.scale * mx.matmul(x, lora.lora_A), lora.lora_B)
             elif isinstance(lora, LoKrLinear):
                 lora_out += lora.scale * lora.delta_matmul(x)
 
