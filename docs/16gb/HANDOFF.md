@@ -26,9 +26,9 @@ M3 Pro 18GB の MacBook Pro で **Krea 2 Turbo q8 + 4step 蒸留 LoRA** の画�
 | ブランチ | `feat/krea2-block-streaming` |
 | q8 ウェイト | `~/.cache/huggingface/hub/models--mflux-community--krea-2-turbo-mflux-q8/snapshots/ad5c0b1784c486bd45c2ced8a9f10aa45293a7c8/` |
 | 4step LoRA | `~/Library/Caches/mflux/loras/krea2_turbo_4step_rank_64_lora_comfyui.safetensors` |
-| 中間生成物 | `~/Library/Caches/mflux/16gb-bench/`(埋め込み・latent・**焼き込み済みチェックポイント 13GB**。リポジトリ外) |
+| 中間生成物 | `~/Library/Caches/mflux/16gb-bench/`(埋め込み・latent・**q8 TE 4.3GB** と**焼き込み済み DiT 13GB**。リポジトリ外) |
 | スワップ見張り | `tools/swapwatch.py` |
-| 計測スクリプト | `tools/bench/`(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py` / `block_stream.py` / `bake_lora_checkpoint.py`) |
+| 計測スクリプト | `tools/bench/`(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py` / `block_stream.py` / `bake_lora_checkpoint.py` / `quantize_te_checkpoint.py`) |
 | 文書 | `docs/16gb/`(research / measurements / runs)、計画は `.cursor/plans/` |
 
 ダウンロードは完了済み(q8 21GB + LoRA 438MB)。再取得は不要。LoRA は
@@ -132,12 +132,20 @@ TE だけのプロセス: MLX ピーク **8.19 GB**、footprint ピーク 8.11�
 
 方法は**ブロック単位ストリーミング**(M5)。常駐方式(M3)は不可能だった。
 
+**生成のたびに走る段**(どの段も 5 GB を超えない):
+
 | 段 | mx peak | 実 footprint | 時間 | verdict |
 |---|---|---|---|---|
-| M2 text encoder | 8.19 GB | **8.29 GB** ← 最大 | 4 s | **clean** |
-| LoRA 焼き込み(1 回だけ) | 1.89 GB | 2.14 GB | 13 s | **clean** |
-| **M5 DiT ストリーミング** | 3.21 GB | 3.72 GB | **119 s**(4 × 29.8) | **clean** |
-| M4 VAE(タイル 256) | 2.98 GB | 4.28 GB | 5.6 s | **clean** |
+| text encoder (q8) | 4.47 GB | **4.96 GB** ← 最大 | 2 s | **clean** |
+| **DiT ストリーミング** | 3.21 GB | 3.72 GB | **119 s**(4 × 29.8) | **clean** |
+| VAE(タイル 256) | 2.98 GB | 4.28 GB | 5.6 s | **clean** |
+
+**1 回だけ必要な前処理**(結果は `~/Library/Caches/mflux/16gb-bench/` に置いてある):
+
+| | mx peak | 時間 | 出力 |
+|---|---|---|---|
+| TE の量子化 `quantize_te_checkpoint.py` | 1.19 GB | 2.3 s | `krea2-te-q8/` 4.27 GB |
+| LoRA の焼き込み `bake_lora_checkpoint.py` | 1.89 GB | 13 s | `krea2-q8-4step-baked/` 13 GB |
 
 q8 + 4step LoRA / 1024² / 4 ステップ / euler / guidance 1.0 / seed 42。
 出力は `docs/16gb/runs/images/`。**常駐版とバイト単位で一致**している。
@@ -151,6 +159,7 @@ q8 + 4step LoRA / 1024² / 4 ステップ / euler / guidance 1.0 / seed 42。
 | M3 DiT 常駐 | **不合格**。要求 15.96 GB。4 ステップは完走するがスワップする |
 | M4 VAE | **合格 clean**。タイル 256 |
 | M5 ストリーミング | **合格 clean**。要求 3.72 GB、比 13.65、ビット一致 |
+| M5b TE を q8 に | **採用**。8.29 → 4.96 GB。画像は目視で同じ、描き込みは同等 |
 
 ### M3(常駐)がなぜ駄目だったか
 
@@ -212,6 +221,12 @@ I/O             : 71.8 ms / ブロック(M0 の実測 74 ms と一致)
 - **`bake_and_strip_lora` を transformer 全体に呼ばないこと。**
   `lora_saver.py:125` が層ごとに eval するので全部実体化する(実測 13.10 GB、失敗)。
   ブロック単位で呼ぶ。
+- **`nn.quantize` はルートモジュール自身を置換できない。** 部分モジュールを直接渡すと
+  その中の子だけが量子化され、渡したモジュール自身は素通りする(`embed_tokens` が
+  bf16 のまま残って気づいた)。**評価前にモデル全体を 1 回で量子化する。**
+- **TE を q8 で読むには `skip_quantization=False` が要る。** 定義が True のままだと
+  量子化構造を作らずに packed な q8 テンソルを update することになる。
+  `TextEncoderQuantizer.loadable_component()` がこれをやっている。
 - **VAE は DiT を破棄してから構築すること。** VAE は `mx.get_peak_memory()` が
   4.40 GB でも実 footprint は(タイル 512 で)14.15 GB ある。
 - VAE のタイルは **256** を既定に。ただし**タイルサイズを変えると出力が変わる**ので、
@@ -221,10 +236,15 @@ I/O             : 71.8 ms / ブロック(M0 の実測 74 ms と一致)
 
 2 回実行して画像一致、1280²(LoRA の学習 σ と一致する解像度)。
 
-### その先(16GB 機を狙うなら)
+### その先
 
-**いま最大の消費は DiT ではなく text encoder の 8.29 GB。** 次に削るならここ。
-ただし TE の量子化は画質要件で禁止なので、別の手が要る。
+**どの段も 5 GB を超えていないので、16GB 機には十分な余裕がある。**
+次の削りどころを探すより、M6 / M7 を通して実機で確認する方が先。
+
+**TE の q8 について**: 「TE の量子化は禁止」と書いてあったのは
+**エージェントが根拠なく足した行**で、ユーザの要件ではなかった(`b01d4d7`)。
+実測したら常駐が半分になり、画像は目視で同じだった。
+[記録](measurements/2026-09-22-m5b-text-encoder-q8.md)
 
 ## 6. 測定の作法(踏んだ地雷)
 
