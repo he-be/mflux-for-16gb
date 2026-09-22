@@ -9,7 +9,7 @@
 - 外部の根拠: `~/dev/Irodori-TTS`(`docs/note-mac.md`、`docs/experiments/17-m1-ane-factors.md`、`irodori_tts/ane_worker.py`)、
   Draw Things の ANE 記事(§7)
 - 管理先: fork [`he-be/mflux-for-16gb`](https://github.com/he-be/mflux-for-16gb)(upstream へ PR は出さない)
-- 状態: **未着手。M11a の probe から。**
+- 状態: **M11a 着手中。`tools/bench/ane_probe.py` は書けたが mini では未実行。** 再開手順は §8。
 
 ## 0. 前提(動かせない要件)
 
@@ -166,3 +166,19 @@ M10 の LoRA は gate / up / down の side path。ANE の列に対応する delt
 - [Draw Things: Metal FlashAttention v2.5 w/ Neural Accelerators](https://releases.drawthings.ai/p/metal-flashattention-v25-w-neural)(GPU 側の neural accelerator。NAX はこれ)
 - [Apple: M6 と M5 Ultra](https://www.apple.com/newsroom/2026/08/apple-introduces-m6-and-m5-ultra-for-a-big-leap-in-performance-and-ai-compute/)(デュアル 16 コア Neural Engine、ピーク 2 倍)
 - [M6 vs M5: Dual Neural Engine](https://www.ithinkdiff.com/m6-chip-vs-m5-chip-2nm-design-12-cores-and-dual-neural-engine/)
+
+## 8. 再開手順(2026-09-22 中断時点)
+
+1. mini への経路: Thunderbolt bridge(`m6-tb`)が落ちていたので **`ssh m6-lan`**(192.168.0.64)を使う。
+   `just studio-mini` の rsync は `m6-tb` 前提なので、手で同期する:
+   `rsync -a --exclude .venv --exclude .git --exclude '*.pyc' src tools pyproject.toml uv.lock m6-lan:dev/mflux/`
+2. mini は Python 3.14 / coremltools 9.0 が `uv run --with coremltools` で入る(確認済み、importOK)。
+   studio(pid 6282、19 MB、idle)が動いているが GPU は使っていないので止めなくてよい。
+3. 最初の煙試験(mini で):
+   `source ~/.local/bin/env; cd ~/dev/mflux && uv run --with coremltools python tools/bench/ane_probe.py --only convert,single --shapes gate --variants row --m 4126`
+   - まず `Block0` の key 名(`attn.wq.weight` 等)が `Krea2BlockStream.read(0)` の flatten と合うか。合わなければ `Block0.weights` を直す。
+   - `ct.convert` の fp16 I/O が MIL Program 入力で通るか(通らなければ fp32 I/O に落ちて `io` に理由が出る)。
+   - `[linear->NeuralEngine x1]` が出るか。出なければ `--layout conv` を試す。
+4. 全部: `--only convert,single,dual,concurrent,handoff,numerics --json docs/16gb/runs/m6mini/<ts>-m11a-ane-probe.json`
+   → 続けて `--only actstats --json docs/16gb/runs/m6mini/<ts>-m11a-actstats.json`(実走 1 枚、約 40 s)。
+5. 記録は `docs/16gb/measurements/2026-09-22-m11a-ane-probe.md`(M9 の書式)。合格基準は §5 M11a。
