@@ -1,0 +1,27 @@
+=== alone ===
+{'device_name': 'Apple M6', 'max_recommended_working_set_size': 12713115648, 'memory_size': 17179869184, 'architecture': 'applegpu_g18g', 'max_buffer_length': 9534832640, 'resource_limit': 499000} mlx 0.32.0 tokens=4126 steps=2
+
+  config                         compute  prefetch    bind   drop   step (28 blocks)
+  page cache purge between configs: no
+  main:1                           323.3     140.4     0.0    0.2            9.06 s
+  main:1                           338.7     140.4     0.0    0.2            9.49 s
+
+peak memory 1.64 GB
+=== with ANE mlp57 hammering ===
+{'device_name': 'Apple M6', 'max_recommended_working_set_size': 12713115648, 'memory_size': 17179869184, 'architecture': 'applegpu_g18g', 'max_buffer_length': 9534832640, 'resource_limit': 499000} mlx 0.32.0 tokens=4126 steps=2
+
+  config                         compute  prefetch    bind   drop   step (28 blocks)
+  page cache purge between configs: no
+  main:1                           724.9     140.5     0.0    0.2           20.30 s
+  main:1                           722.1     140.4     0.0    0.2           20.22 s
+
+peak memory 1.64 GB
+=== alone again ===
+{'device_name': 'Apple M6', 'max_recommended_working_set_size': 12713115648, 'memory_size': 17179869184, 'architecture': 'applegpu_g18g', 'max_buffer_length': 9534832640, 'resource_limit': 499000} mlx 0.32.0 tokens=4126 steps=2
+
+  config                         compute  prefetch    bind   drop   step (28 blocks)
+  page cache purge between configs: no
+  main:1                           345.1     140.2     0.0    0.2            9.67 s
+  main:1                           342.6     140.3     0.0    0.2            9.60 s
+
+peak memory 1.64 GB

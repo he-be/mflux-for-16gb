@@ -2,6 +2,7 @@ import argparse
 import ctypes
 import json
 import os
+import re
 import subprocess
 import sys
 import threading
@@ -421,6 +422,134 @@ class GpuLoad:
 
 
 # -- weights and the reference path ----------------------------------------------------------
+
+
+class AneLoad:
+    # GpuLoad's mirror. Hammer one package and print epoch-stamped windows, so a parent that is
+    # busy with something else can read off what the ANE managed while it was.
+    @staticmethod
+    def run(path: Path, seconds: float, in_shape: tuple, units: str, flops: float) -> None:
+        import coremltools as ct
+
+        unit = {"all": ct.ComputeUnit.ALL, "ne": ct.ComputeUnit.CPU_AND_NE, "gpu": ct.ComputeUnit.CPU_AND_GPU}[units]
+        model = ct.models.CompiledMLModel(str(path), compute_units=unit)
+        x = (np.random.normal(size=in_shape) * 0.5).astype(np.float16)
+        for _ in range(3):
+            model.predict({"x": x})
+        print(f"ready {time.time():.3f}", flush=True)
+        end = time.time() + seconds
+        while time.time() < end:
+            t0 = time.time()
+            for _ in range(4):
+                model.predict({"x": x})
+            t1 = time.time()
+            print(f"window {t0:.3f} {t1:.3f} {4 * flops / (t1 - t0) / 1e12:.2f}", flush=True)
+
+    @staticmethod
+    def start(args, shape: str, variant: str, m: int, seconds: float) -> subprocess.Popen:
+        cmd = [
+            sys.executable, __file__, "--only", "ane-load", "--seconds", str(seconds), "--shapes", shape,
+            "--variants", variant, "--m", str(m), "--layout", args.layout, "--units", args.units,
+            "--cache", str(args.cache),
+        ]  # fmt: skip
+        return subprocess.Popen(cmd, stdout=subprocess.PIPE, text=True, env={**os.environ, "PYTHONUNBUFFERED": "1"})
+
+
+class RealCo:
+    # M11a decided on a co-tenant that was a back-to-back quantized_matmul over resident random
+    # weights at full duty - the most hostile neighbour there is, and not what the DiT does.
+    # This runs the real generation instead, with and without the ANE hammering the shape it
+    # would own, and reads s/step off the same tqdm line the other measurements quote.
+    #
+    # Two co-tenants at the same duty and different working sets (mlp57 172 MB, wq 38 MB)
+    # separate a shared-cache story from a power/clock one without needing sudo.
+    STEP = re.compile(r"([0-9.]+)s/it")
+    PROMPT = (
+        "a photograph of a weathered brass diving helmet on a workshop bench, "
+        "morning light through a dusty window, shallow depth of field"
+    )
+
+    # Swapouts say whether the machine gave up; pageins say whether the streamed block weights
+    # stopped coming out of the page cache, which is the thing a resident co-tenant would break.
+    COUNTERS = ("Swapouts", "Pageins")
+
+    @staticmethod
+    def vm_counters() -> dict[str, int]:
+        out = subprocess.run(["/usr/bin/vm_stat"], capture_output=True, text=True).stdout
+        found = {}
+        for name in RealCo.COUNTERS:
+            hit = re.search(rf"{name}:\s+(\d+)", out)
+            found[name.lower()] = int(hit.group(1)) if hit else -1
+        return found
+
+    @staticmethod
+    def generate(args, tag: str) -> dict:
+        out = args.cache / f"realco-{tag}.png"
+        cmd = [
+            sys.executable, "-c", "from mflux.models.krea2.cli import krea2_generate; krea2_generate.main()",
+            "--model", str(args.model), "--base-model", "krea-2", "--block-streaming", "--prompt", RealCo.PROMPT,
+            "--seed", "42", "--steps", str(args.steps), "--scheduler", "euler", "--guidance", "1.0",
+            "--width", str(args.width), "--height", str(args.width), "--no-metadata", "--output", str(out),
+        ]  # fmt: skip
+        before = RealCo.vm_counters()
+        start = time.time()
+        proc = subprocess.run(cmd, capture_output=True, text=True)
+        end = time.time()
+        after = RealCo.vm_counters()
+        hits = RealCo.STEP.findall(proc.stderr)
+        return {
+            "s_per_step": float(hits[-1]) if hits else float("nan"),
+            "wall_s": end - start,
+            "start": start,
+            "end": end,
+            "swapouts_delta": after["swapouts"] - before["swapouts"],
+            "pagein_mb": (after["pageins"] - before["pageins"]) * 16384 / 1e6,
+            "rc": proc.returncode,
+            "stderr_tail": proc.stderr.strip().splitlines()[-3:] if proc.returncode else [],
+        }
+
+    @staticmethod
+    def run(args) -> None:
+        print("\n== realco: a real generation, alone and with the ANE hammering beside it ==")
+        results: dict = {}
+        # baselines are interleaved so drift can be bounded: "base,wq,base,mlp57,base"
+        seen: dict = {}
+        cases = []
+        for name in args.cases.split(","):
+            tag = name if name not in seen else f"{name}{seen[name] + 1}"
+            seen[name] = seen.get(name, 0) + 1
+            cases.append((tag, None if name == "base" else (name, "row")))
+        for tag, co in cases:
+            proc = None
+            if co is not None:
+                shape, variant = co
+                path = Converter(args.cache, args.layout).path(shape, 4126, variant)
+                if not path.exists():
+                    print(f"  {tag:12s} SKIPPED: {path.name} is not converted")
+                    continue
+                proc = AneLoad.start(args, shape, variant, 4126, 900.0)
+                time.sleep(12.0)  # load, warm up, reach steady state before the generation starts
+            entry = RealCo.generate(args, tag)
+            if proc is not None:
+                entry["ane_footprint_mb"] = Footprint.mb(proc.pid)
+                proc.terminate()
+                rows = GpuLoad.windows(proc)
+                entry["ane_tops_during"] = GpuLoad.mean_within(rows, entry["start"], entry["end"])
+                entry["ane_windows"] = len(rows)
+                entry["ane_package_mb"] = sum(f.stat().st_size for f in path.rglob("*")) / 1e6
+            results[tag] = entry
+            bases = [v["s_per_step"] for k, v in results.items() if k.startswith("base")]
+            base = min(bases) if bases else None
+            delta = f"  ({entry['s_per_step'] / base * 100 - 100:+.1f}%)" if base and co is not None else ""
+            ane = f"  ANE {entry['ane_tops_during']:.2f} TOPS" if entry.get("ane_tops_during") else ""
+            swap = f"  swapouts +{entry['swapouts_delta']}" if entry["swapouts_delta"] else ""
+            swap += f"  pagein {entry['pagein_mb']:.0f} MB"
+            fail = f"  rc={entry['rc']} {entry['stderr_tail']}" if entry["rc"] else ""
+            print(f"  {tag:12s} {entry['s_per_step']:6.2f} s/step{delta}{ane}{swap}{fail}", flush=True)
+        if args.json:
+            args.json.parent.mkdir(parents=True, exist_ok=True)
+            args.json.write_text(json.dumps(results, indent=2, default=str))
+            print(f"wrote {args.json}")
 
 
 class Block0:
@@ -881,6 +1010,9 @@ def main() -> None:
     parser.add_argument("--units", default="all", choices=("all", "ne", "gpu"))
     parser.add_argument("--iters", type=int, default=10)
     parser.add_argument("--seconds", type=float, default=10.0, help="gpu-load only")
+    parser.add_argument("--steps", type=int, default=4)
+    parser.add_argument("--cases", default="base,mlp57,wq,base", help="realco only")
+    parser.add_argument("--width", type=int, default=1024)
     parser.add_argument("--json", type=Path, default=None)
     args = parser.parse_args()
     args.shapes = [s for s in args.shapes.split(",") if s]
@@ -888,9 +1020,18 @@ def main() -> None:
     if args.only == "gpu-load":
         GpuLoad.run(args.seconds, int(args.m))
         return
+    if args.only == "ane-load":
+        shape, variant, m = args.shapes[0], args.variants[0], int(args.m)
+        in_shape, _ = AneProbe.io_shapes(shape, m, args.layout)
+        path = Converter(args.cache, args.layout).path(shape, m, variant)
+        AneLoad.run(path, args.seconds, in_shape, args.units, AneProbe.flops(shape, m))
+        return
     args.m = [int(v) for v in args.m.split(",") if v]
     if args.only == "actstats":
         ActStats.run(args)
+        return
+    if args.only == "realco":
+        RealCo.run(args)
         return
     probe = AneProbe(args)
     print(json.dumps(probe.results["host"]))

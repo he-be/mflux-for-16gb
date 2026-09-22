@@ -66,7 +66,7 @@
 - [計画: ブロック単位ウェイトストリーミング](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)
 - [計画: DiT を M6 mini で 2〜3 倍速くする](../../.cursor/plans/2026-09-22-krea2-dit-speed.md)(M8a〜f 済)
 - **[計画: DiT を天井(6 s/step)に近づける — 測定と改善](../../.cursor/plans/2026-09-22-krea2-dit-ceiling.md)**(M9a〜e 済、M9f/g 残)
-- **[M11a: ANE を 2 台目の演算器にできるか(結論: できない。併走すると GPU が 16.90 → 6.78 TFLOPS)](measurements/2026-09-22-m11a-ane-probe.md)**
+- **[M11a: ANE を 2 台目の演算器にできるか(結論: できない。本番の横で回すと 7.84 → 19.0 s/step)](measurements/2026-09-22-m11a-ane-probe.md)**
 - [計画: DiT に ANE を 2 台目の演算器として足す — probe と MLP の列分割](../../.cursor/plans/2026-09-22-krea2-ane-hybrid.md)(**M11a 不合格で終了**。M11b/c には進まない)
 
 ## いま分かっていること(2026-09-22)
