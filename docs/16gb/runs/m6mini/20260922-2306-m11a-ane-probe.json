@@ -1,0 +1,1253 @@
+{
+  "args": {
+    "model": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram",
+    "cache": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe",
+    "only": "convert,single,dual,concurrent,handoff,numerics",
+    "shapes": [
+      "wq",
+      "gate",
+      "down",
+      "mlp",
+      "mlp57"
+    ],
+    "variants": [
+      "row",
+      "g64",
+      "fp16"
+    ],
+    "m": [
+      4126,
+      6430
+    ],
+    "layout": "linear",
+    "units": "all",
+    "iters": 10,
+    "seconds": 10.0,
+    "json": "docs/16gb/runs/m6mini/20260922-2306-m11a-ane-probe.json"
+  },
+  "host": {
+    "machdep.cpu.brand_string": "Apple M6",
+    "hw.memsize": "17179869184",
+    "kern.osproductversion": "27.0"
+  },
+  "convert": {
+    "wq-m4126-row": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/wq-m4126-row-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.06367387500358745,
+      "compile_s": 0.022356374996888917,
+      "package_mb": 37.775112
+    },
+    "wq-m4126-g64": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/wq-m4126-g64-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.05263333399489056,
+      "compile_s": 0.012740624995785765,
+      "package_mb": 38.942473
+    },
+    "wq-m4126-fp16": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/wq-m4126-fp16-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.12796391699521337,
+      "compile_s": 0.0124710829986725,
+      "package_mb": 75.511283
+    },
+    "wq-m6430-row": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/wq-m6430-row-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.0466870420059422,
+      "compile_s": 0.012632584002858493,
+      "package_mb": 37.775112
+    },
+    "wq-m6430-g64": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/wq-m6430-g64-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.047921916004270315,
+      "compile_s": 0.012543249998998363,
+      "package_mb": 38.942473
+    },
+    "wq-m6430-fp16": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/wq-m6430-fp16-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.12558812499628402,
+      "compile_s": 0.012547624995931983,
+      "package_mb": 75.511283
+    },
+    "gate-m4126-row": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/gate-m4126-row-linear.mlmodelc",
+      "cached": true
+    },
+    "gate-m4126-g64": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/gate-m4126-g64-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.06745112500357209,
+      "compile_s": 0.012616875006642658,
+      "package_mb": 103.843602
+    },
+    "gate-m4126-fp16": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/gate-m4126-fp16-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.2837273750046734,
+      "compile_s": 0.012497374998929445,
+      "package_mb": 201.36089
+    },
+    "gate-m6430-row": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/gate-m6430-row-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.07303129099454964,
+      "compile_s": 0.012489916000049561,
+      "package_mb": 100.730641
+    },
+    "gate-m6430-g64": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/gate-m6430-g64-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.08998595800221665,
+      "compile_s": 0.012488000000303145,
+      "package_mb": 103.843602
+    },
+    "gate-m6430-fp16": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/gate-m6430-fp16-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.2798340420049499,
+      "compile_s": 0.016897250003239606,
+      "package_mb": 201.36089
+    },
+    "down-m4126-row": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/down-m4126-row-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.0656095419981284,
+      "compile_s": 0.013271625000925269,
+      "package_mb": 100.689678
+    },
+    "down-m4126-g64": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/down-m4126-g64-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.06993670799420215,
+      "compile_s": 0.012755875002767425,
+      "package_mb": 103.82312
+    },
+    "down-m4126-fp16": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/down-m4126-fp16-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.2828735829971265,
+      "compile_s": 0.012555834000522736,
+      "package_mb": 201.340408
+    },
+    "down-m6430-row": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/down-m6430-row-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.06629316700127674,
+      "compile_s": 0.012579707996337675,
+      "package_mb": 100.689678
+    },
+    "down-m6430-g64": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/down-m6430-g64-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.08494029100256739,
+      "compile_s": 0.012553583001135848,
+      "package_mb": 103.82312
+    },
+    "down-m6430-fp16": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/down-m6430-fp16-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.312226041998656,
+      "compile_s": 0.01255933300126344,
+      "package_mb": 201.340408
+    },
+    "mlp-m4126-row": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/mlp-m4126-row-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.19613595799455652,
+      "compile_s": 0.01687533299991628,
+      "package_mb": 302.116436
+    },
+    "mlp-m4126-g64": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/mlp-m4126-g64-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.24456700000155251,
+      "compile_s": 0.01274987500073621,
+      "package_mb": 311.4758
+    },
+    "mlp-m4126-fp16": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/mlp-m4126-fp16-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.9626537920048577,
+      "compile_s": 0.02009058399562491,
+      "package_mb": 604.027706
+    },
+    "mlp-m6430-row": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/mlp-m6430-row-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.198960084002465,
+      "compile_s": 0.013005332999455277,
+      "package_mb": 302.116436
+    },
+    "mlp-m6430-g64": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/mlp-m6430-g64-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.2804277089962852,
+      "compile_s": 0.012825625002733432,
+      "package_mb": 311.4758
+    },
+    "mlp-m6430-fp16": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/mlp-m6430-fp16-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.9559398749988759,
+      "compile_s": 0.012799459000234492,
+      "package_mb": 604.027706
+    },
+    "mlp57-m4126-row": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/mlp57-m4126-row-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.1303259580017766,
+      "compile_s": 0.01454633400135208,
+      "package_mb": 172.312899
+    },
+    "mlp57-m4126-g64": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/mlp57-m4126-g64-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.1224865000040154,
+      "compile_s": 0.01290408299973933,
+      "package_mb": 177.645383
+    },
+    "mlp57-m4126-fp16": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/mlp57-m4126-fp16-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.5405947079998441,
+      "compile_s": 0.012435791999450885,
+      "package_mb": 344.491054
+    },
+    "mlp57-m6430-row": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/mlp57-m6430-row-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.11928025000088383,
+      "compile_s": 0.012795208996976726,
+      "package_mb": 172.312899
+    },
+    "mlp57-m6430-g64": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/mlp57-m6430-g64-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.17930704099853756,
+      "compile_s": 0.01267691700195428,
+      "package_mb": 177.645383
+    },
+    "mlp57-m6430-fp16": {
+      "path": "/Users/mh/Library/Caches/mflux/16gb-bench/krea2-lowram/ane/probe/mlp57-m6430-fp16-linear.mlmodelc",
+      "io": "fp16",
+      "convert_s": 0.5305346250024741,
+      "compile_s": 0.01280770800076425,
+      "package_mb": 344.491054
+    }
+  },
+  "single": {
+    "wq-m4126-row": {
+      "first_load_s": 1.29791620800097,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": null,
+      "ms": 28.9553791997605,
+      "tops": 10.758020722953495,
+      "worker_footprint_mb": 795.903344,
+      "second_load_s": 0.01979087499785237
+    },
+    "wq-m4126-g64": {
+      "first_load_s": 0.07826700000441633,
+      "plan": {
+        "ops": {
+          "ios18.linear->GPU": 1
+        },
+        "ane_cores": null
+      },
+      "log": null,
+      "ms": 34.8648957995465,
+      "tops": 8.934561894662302,
+      "worker_footprint_mb": 819.709392,
+      "second_load_s": 0.027009874997020233
+    },
+    "wq-m4126-fp16": {
+      "first_load_s": 1.4371515000020736,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": null,
+      "ms": 47.57987499979208,
+      "tops": 6.546939635157957,
+      "worker_footprint_mb": 783.762848,
+      "second_load_s": 0.020416958002897445
+    },
+    "wq-m6430-row": {
+      "first_load_s": 1.2026827500012587,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": null,
+      "ms": 45.63639999978477,
+      "tops": 10.63731462083533,
+      "worker_footprint_mb": 1080.034864,
+      "second_load_s": 0.020180917003017385
+    },
+    "wq-m6430-g64": {
+      "first_load_s": 0.0628167919931002,
+      "plan": {
+        "ops": {
+          "ios18.linear->GPU": 1
+        },
+        "ane_cores": null
+      },
+      "log": null,
+      "ms": 52.5176167000609,
+      "tops": 9.24354103371635,
+      "worker_footprint_mb": 1102.30084,
+      "second_load_s": 0.026660832998459227
+    },
+    "wq-m6430-fp16": {
+      "first_load_s": 1.428522417001659,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": null,
+      "ms": 75.6360625004163,
+      "tops": 6.418218094805347,
+      "worker_footprint_mb": 1117.750904,
+      "second_load_s": 0.02039291699475143
+    },
+    "gate-m4126-row": {
+      "first_load_s": 0.02178204200026812,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": null,
+      "ms": 63.57580420008162,
+      "tops": 13.065875124092157,
+      "worker_footprint_mb": 1178.420832,
+      "second_load_s": 0.020274292000976857
+    },
+    "gate-m4126-g64": {
+      "first_load_s": 0.1110043329972541,
+      "plan": {
+        "ops": {
+          "ios18.linear->GPU": 1
+        },
+        "ane_cores": null
+      },
+      "log": null,
+      "ms": 83.95151250006165,
+      "tops": 9.894681987908081,
+      "worker_footprint_mb": 1256.867616,
+      "second_load_s": 0.0341885839952738
+    },
+    "gate-m4126-fp16": {
+      "first_load_s": 3.955628625000827,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:07:49.833 Df ANECompilerService[7849:1bc47] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:07:49.924 Df ANECompilerService[7849:1bc47] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:07:49.948 Df aned[5661:1bb24] [com.apple.xpc:connection] [0x900007c8f08cb40] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:07:49.948 Df ANECompilerService[7849:1bc47] [com.apple.xpc:connection] [0x700007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:07:49.953 Df aned[5661:1bd07] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 112.65352089976659,
+      "tops": 7.373702232805412,
+      "worker_footprint_mb": 1281.705712,
+      "second_load_s": 0.021811708000313956
+    },
+    "gate-m6430-row": {
+      "first_load_s": 3.1094778749975376,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:08:01.291 Df ANECompilerService[7849:1bbdf] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:08:01.344 Df ANECompilerService[7849:1bbdf] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:08:01.482 Df aned[5661:1bb24] [com.apple.xpc:connection] [0x700007c8f08d040] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:08:01.482 Df ANECompilerService[7849:1bbdf] [com.apple.xpc:connection] [0x100007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:08:01.490 Df aned[5661:1bb24] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 98.66320000000997,
+      "tops": 13.120697347743324,
+      "worker_footprint_mb": 1722.04236,
+      "second_load_s": 0.02056599999923492
+    },
+    "gate-m6430-g64": {
+      "first_load_s": 0.1086658750064089,
+      "plan": {
+        "ops": {
+          "ios18.linear->GPU": 1
+        },
+        "ane_cores": null
+      },
+      "log": null,
+      "ms": 127.71630409988575,
+      "tops": 10.135980646195023,
+      "worker_footprint_mb": 1747.585136,
+      "second_load_s": 0.03425687499839114
+    },
+    "gate-m6430-fp16": {
+      "first_load_s": 3.9852221670007566,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:08:17.907 Df ANECompilerService[7849:1be52] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:08:17.996 Df ANECompilerService[7849:1be52] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:08:18.037 Df aned[5661:1bb24] [com.apple.xpc:connection] [0x500007c8f08d040] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:08:18.037 Df ANECompilerService[7849:1be52] [com.apple.xpc:connection] [0x300007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:08:18.146 Df aned[5661:1bd07] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 180.20767499983776,
+      "tops": 7.183545243348628,
+      "worker_footprint_mb": 1743.751232,
+      "second_load_s": 0.022270125002251007
+    },
+    "down-m4126-row": {
+      "first_load_s": 3.8431261670048116,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:08:31.662 Df ANECompilerService[7849:1be52] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:08:31.748 Df ANECompilerService[7849:1be52] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:08:31.887 Df aned[5661:1be54] [com.apple.xpc:connection] [0xd00007c8f08cb40] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:08:31.887 Df ANECompilerService[7849:1be52] [com.apple.xpc:connection] [0x300007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:08:31.894 Df aned[5661:1be54] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 227.54979580058716,
+      "tops": 3.650513135682878,
+      "worker_footprint_mb": 1281.885912,
+      "second_load_s": 0.02017308299400611
+    },
+    "down-m4126-g64": {
+      "first_load_s": 0.10888995799905388,
+      "plan": {
+        "ops": {
+          "ios18.linear->GPU": 1
+        },
+        "ane_cores": null
+      },
+      "log": null,
+      "ms": 122.80293330040877,
+      "tops": 6.764280756714099,
+      "worker_footprint_mb": 1307.314,
+      "second_load_s": 0.03330366599402623
+    },
+    "down-m4126-fp16": {
+      "first_load_s": 3.740721415997541,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:08:49.353 Df ANECompilerService[7849:1bf7f] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:08:49.446 Df ANECompilerService[7849:1bf7f] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:08:49.455 Df aned[5661:1be54] [com.apple.xpc:connection] [0x300007c8f08cb40] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:08:49.455 Df ANECompilerService[7849:1bf7f] [com.apple.xpc:connection] [0xb00007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:08:49.472 Df aned[5661:1bea8] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 225.81447909979033,
+      "tops": 3.678566236777557,
+      "worker_footprint_mb": 1247.135424,
+      "second_load_s": 0.022026457998435944
+    },
+    "down-m6430-row": {
+      "first_load_s": 3.9191363330028253,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:09:03.938 Df ANECompilerService[7849:1c010] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:09:04.022 Df ANECompilerService[7849:1c010] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:09:04.161 Df aned[5661:1bfda] [com.apple.xpc:connection] [0x900007c8f08cb40] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:09:04.161 Df ANECompilerService[7849:1c010] [com.apple.xpc:connection] [0x500007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:09:04.168 Df aned[5661:1be54] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 982.4007374998473,
+      "tops": 1.3177209026272754,
+      "worker_footprint_mb": 1800.865904,
+      "second_load_s": 0.021137999996426515
+    },
+    "down-m6430-g64": {
+      "first_load_s": 0.1083900830053608,
+      "plan": {
+        "ops": {
+          "ios18.linear->GPU": 1
+        },
+        "ane_cores": null
+      },
+      "log": null,
+      "ms": 181.7146250003134,
+      "tops": 7.123972473639738,
+      "worker_footprint_mb": 1826.293968,
+      "second_load_s": 0.03361733399651712
+    },
+    "down-m6430-fp16": {
+      "first_load_s": 3.770512167000561,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:09:32.883 Df ANECompilerService[7849:1c010] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:09:32.972 Df ANECompilerService[7849:1c010] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:09:33.013 Df aned[5661:1bea8] [com.apple.xpc:connection] [0x900007c8f08d040] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:09:33.013 Df ANECompilerService[7849:1c010] [com.apple.xpc:connection] [0xb00007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:09:33.119 Df aned[5661:1c071] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 982.0230791003269,
+      "tops": 1.3182276609486347,
+      "worker_footprint_mb": 1743.685696,
+      "second_load_s": 0.021356709003157448
+    },
+    "mlp-m4126-row": {
+      "first_load_s": 96.39385258399852,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 3,
+          "ios18.silu->NeuralEngine": 1,
+          "ios18.mul->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:13:01.972 Df ANECompilerService[7849:1c2ed] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:13:02.098 Df ANECompilerService[7849:1c2ed] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:13:02.133 Df aned[5661:1c150] [com.apple.xpc:connection] [0x300007c8f08d040] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:13:02.133 Df ANECompilerService[7849:1c2ed] [com.apple.xpc:connection] [0xd00007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:13:02.173 Df aned[5661:1c316] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 264.96615419964655,
+      "tops": 9.405052367172578,
+      "worker_footprint_mb": 808.535408,
+      "second_load_s": 0.02239970899972832
+    },
+    "mlp-m4126-g64": {
+      "first_load_s": 2.3313750840025023,
+      "plan": {
+        "ops": {
+          "ios18.linear->GPU": 3,
+          "ios18.silu->NeuralEngine": 1,
+          "ios18.mul->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 46,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:13:13.691 Df ANECompilerService[7849:1c2ed] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:13:13.693 Df ANECompilerService[7849:1c2ed] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:13:13.700 Df aned[5661:1c482] [com.apple.xpc:connection] [0x900007c8f08d040] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:13:13.700 Df ANECompilerService[7849:1c2ed] [com.apple.xpc:connection] [0x700007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:13:13.759 Df aned[5661:1c482] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 2, output buffer count: 1"
+        ]
+      },
+      "ms": 444.31009580002865,
+      "tops": 5.608741685891349,
+      "worker_footprint_mb": 1247.20096,
+      "second_load_s": 0.05167595800594427
+    },
+    "mlp-m4126-fp16": {
+      "first_load_s": 251.1378905829988,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 3,
+          "ios18.silu->NeuralEngine": 1,
+          "ios18.mul->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:21:45.122 Df ANECompilerService[7849:1c88a] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:21:45.326 Df ANECompilerService[7849:1c88a] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:21:45.387 Df aned[5661:1c482] [com.apple.xpc:connection] [0x300007c8f08cb40] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:21:45.387 Df ANECompilerService[7849:1c88a] [com.apple.xpc:connection] [0x700007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:21:45.432 Df aned[5661:1c51d] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 372.1122500006459,
+      "tops": 6.696959199197755,
+      "worker_footprint_mb": 856.835536,
+      "second_load_s": 0.02616883299924666
+    },
+    "mlp-m6430-row": {
+      "first_load_s": 97.01412516600249,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 3,
+          "ios18.silu->NeuralEngine": 1,
+          "ios18.mul->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 52,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:25:07.643 Df ANECompilerService[7849:1cc50] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:25:07.767 Df ANECompilerService[7849:1cc50] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:25:07.796 Df aned[5661:1c51d] [com.apple.xpc:connection] [0xb00007c8f08cb40] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:25:07.796 Df ANECompilerService[7849:1cc50] [com.apple.xpc:connection] [0x300007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:25:07.836 Df aned[5661:1cc52] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 412.61158749985043,
+      "tops": 9.412217391207918,
+      "worker_footprint_mb": 1063.683608,
+      "second_load_s": 0.024088999998639338
+    },
+    "mlp-m6430-g64": {
+      "first_load_s": 3.4482190420021652,
+      "plan": {
+        "ops": {
+          "ios18.linear->GPU": 3,
+          "ios18.silu->NeuralEngine": 1,
+          "ios18.mul->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 48,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:25:23.552 Df ANECompilerService[7849:1cc50] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:25:23.553 Df ANECompilerService[7849:1cc50] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:25:23.560 Df aned[5661:1cfa0] [com.apple.xpc:connection] [0x100007c8f08d040] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:25:23.560 Df ANECompilerService[7849:1cc50] [com.apple.xpc:connection] [0x900007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:25:23.622 Df aned[5661:1cfa0] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 2, output buffer count: 1"
+        ]
+      },
+      "ms": 653.3577959002287,
+      "tops": 5.94404778522463,
+      "worker_footprint_mb": 1729.349504,
+      "second_load_s": 0.05091874999925494
+    },
+    "mlp-m6430-fp16": {
+      "first_load_s": 20.190639374995953,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 3,
+          "ios18.silu->NeuralEngine": 1,
+          "ios18.mul->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:26:16.559 Df ANECompilerService[7849:1d0a7] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:26:16.837 Df ANECompilerService[7849:1d0a7] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:26:17.200 Df aned[5661:1d062] [com.apple.xpc:connection] [0xd00007c8f08cb40] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:26:17.200 Df ANECompilerService[7849:1d0a7] [com.apple.xpc:connection] [0xb00007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:26:17.247 Df aned[5661:1d0ee] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 582.301350000489,
+      "tops": 6.669381686435621,
+      "worker_footprint_mb": 1040.270896,
+      "second_load_s": 0.02698795899777906
+    },
+    "mlp57-m4126-row": {
+      "first_load_s": 63.163610333002,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 3,
+          "ios18.silu->NeuralEngine": 1,
+          "ios18.mul->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:28:35.140 Df ANECompilerService[7849:1d27f] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:28:35.225 Df ANECompilerService[7849:1d27f] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:28:35.244 Df aned[5661:1d157] [com.apple.xpc:connection] [0x100007c8f08cb40] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:28:35.244 Df ANECompilerService[7849:1d27f] [com.apple.xpc:connection] [0x100007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:28:35.284 Df aned[5661:1d2a7] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 92.38983340037521,
+      "tops": 15.382974737675283,
+      "worker_footprint_mb": 765.494688,
+      "second_load_s": 0.021859917003894225
+    },
+    "mlp57-m4126-g64": {
+      "first_load_s": 1.386977416004811,
+      "plan": {
+        "ops": {
+          "ios18.linear->GPU": 3,
+          "ios18.silu->NeuralEngine": 1,
+          "ios18.mul->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": null,
+      "ms": 282.9255958000431,
+      "tops": 5.023336503709092,
+      "worker_footprint_mb": 1027.769976,
+      "second_load_s": 0.0397082080016844
+    },
+    "mlp57-m4126-fp16": {
+      "first_load_s": 127.45357316599984,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 3,
+          "ios18.silu->NeuralEngine": 1,
+          "ios18.mul->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:33:03.236 Df ANECompilerService[7849:1d3dd] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:33:03.379 Df ANECompilerService[7849:1d3dd] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:33:03.388 Df aned[5661:1d45a] [com.apple.xpc:connection] [0x700007c8f08d040] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:33:03.388 Df ANECompilerService[7849:1d3dd] [com.apple.xpc:connection] [0x100007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:33:03.448 Df aned[5661:1d66a] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 217.0341457996983,
+      "tops": 6.548418765992976,
+      "worker_footprint_mb": 771.27824,
+      "second_load_s": 0.02300341700174613
+    },
+    "mlp57-m6430-row": {
+      "first_load_s": 63.53785720900487,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 3,
+          "ios18.silu->NeuralEngine": 1,
+          "ios18.mul->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:35:17.016 Df ANECompilerService[7849:1d668] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:35:17.101 Df ANECompilerService[7849:1d668] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:35:17.119 Df aned[5661:1d66a] [com.apple.xpc:connection] [0x700007c8f08cb40] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:35:17.119 Df ANECompilerService[7849:1d668] [com.apple.xpc:connection] [0xd00007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:35:17.157 Df aned[5661:1d993] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 142.7207417000318,
+      "tops": 15.518836803238857,
+      "worker_footprint_mb": 1100.072568,
+      "second_load_s": 0.021288290998199955
+    },
+    "mlp57-m6430-g64": {
+      "first_load_s": 2.031767583997862,
+      "plan": {
+        "ops": {
+          "ios18.linear->GPU": 3,
+          "ios18.silu->NeuralEngine": 1,
+          "ios18.mul->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 46,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:35:26.628 Df ANECompilerService[7849:1da9e] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:35:26.629 Df ANECompilerService[7849:1da9e] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:35:26.636 Df aned[5661:1d993] [com.apple.xpc:connection] [0x100007c8f08cb40] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:35:26.636 Df ANECompilerService[7849:1da9e] [com.apple.xpc:connection] [0x300007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:35:26.683 Df aned[5661:1d993] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 2, output buffer count: 1"
+        ]
+      },
+      "ms": 394.7617457997694,
+      "tops": 5.6106244397941705,
+      "worker_footprint_mb": 1491.568464,
+      "second_load_s": 0.04099737499927869
+    },
+    "mlp57-m6430-fp16": {
+      "first_load_s": 10.620435333003115,
+      "plan": {
+        "ops": {
+          "ios18.linear->NeuralEngine": 3,
+          "ios18.silu->NeuralEngine": 1,
+          "ios18.mul->NeuralEngine": 1
+        },
+        "ane_cores": 32
+      },
+      "log": {
+        "lines": 50,
+        "failures": {
+          "Model load failed": 0,
+          "Compilation failed": 0,
+          "Register spiller failure": 0
+        },
+        "tail": [
+          "2026-09-22 23:35:56.458 Df ANECompilerService[7849:1d668] (ANECompiler) Dram Required for procedure <private> is 0.",
+          "2026-09-22 23:35:56.597 Df ANECompilerService[7849:1d668] (ANECompiler) End of compilation of network from file: <private>",
+          "2026-09-22 23:35:56.700 Df aned[5661:1db1e] [com.apple.xpc:connection] [0xb00007c8f08d040] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()",
+          "2026-09-22 23:35:56.700 Df ANECompilerService[7849:1d668] [com.apple.xpc:connection] [0xb00007b9fe90140] invalidated because the client process (pid 5661) either cancelled the connection or exited",
+          "2026-09-22 23:35:56.709 Df aned[5661:1db1e] (ANEServices) ANEServicesDevice::ANE_ProgramCreate, input buffer count: 1, output buffer count: 1"
+        ]
+      },
+      "ms": 341.15200829983223,
+      "tops": 6.492296234508461,
+      "worker_footprint_mb": 1077.446168,
+      "second_load_s": 0.023417958000209183
+    }
+  },
+  "ane_cores": 32,
+  "dual": {
+    "gate-m4126-row": {
+      "two_procs_tops": 17.501253537255298,
+      "two_procs_each_ms": [
+        94.35341249991325,
+        90.98332089997712
+      ],
+      "two_procs_footprint_mb": [
+        1280.558832,
+        1280.03452
+      ],
+      "two_threads_tops": 13.381821306602095,
+      "one_thread_tops": 13.100931578396393
+    },
+    "gate-m4126-g64": {
+      "two_procs_tops": 7.765480093543362,
+      "two_procs_each_ms": [
+        213.77075420023175,
+        211.14903330017114
+      ],
+      "two_procs_footprint_mb": [
+        1303.29992,
+        1303.840568
+      ],
+      "two_threads_tops": 10.36811871721884,
+      "one_thread_tops": 10.122522048127967
+    },
+    "gate-m4126-fp16": {
+      "two_procs_tops": 8.470672882980598,
+      "two_procs_each_ms": [
+        195.96158749991446,
+        187.05503330056672
+      ],
+      "two_procs_footprint_mb": [
+        1280.329408,
+        1279.854272
+      ],
+      "two_threads_tops": 7.4824926347850225,
+      "one_thread_tops": 7.360471713295587
+    },
+    "mlp-m4126-row": {
+      "two_procs_tops": 9.663461959275091,
+      "two_procs_each_ms": [
+        515.5414291999477,
+        490.1815124998393
+      ],
+      "two_procs_footprint_mb": [
+        857.81848,
+        857.32696
+      ],
+      "two_threads_tops": 9.317300391329987,
+      "one_thread_tops": 9.320819942683867
+    },
+    "mlp-m4126-g64": {
+      "two_procs_tops": 6.079361681505339,
+      "two_procs_each_ms": [
+        793.7799624996842,
+        819.6895916000358
+      ],
+      "two_procs_footprint_mb": [
+        1290.192624,
+        1291.781896
+      ],
+      "two_threads_tops": 5.558256586123781,
+      "one_thread_tops": 5.604824253787166
+    },
+    "mlp-m4126-fp16": {
+      "two_procs_tops": 6.825610623331798,
+      "two_procs_each_ms": [
+        729.8617790998833,
+        694.0579374997469
+      ],
+      "two_procs_footprint_mb": [
+        857.097656,
+        857.195888
+      ],
+      "two_threads_tops": 6.676932686907606,
+      "one_thread_tops": 6.68358013067224
+    },
+    "mlp57-m4126-row": {
+      "two_procs_tops": 16.67985262447556,
+      "two_procs_each_ms": [
+        170.20554589980748,
+        162.16467499980354
+      ],
+      "two_procs_footprint_mb": [
+        857.851344,
+        857.425312
+      ],
+      "two_threads_tops": 14.80033306506797,
+      "one_thread_tops": 14.781367684386943
+    },
+    "mlp57-m4126-g64": {
+      "two_procs_tops": 5.573461488120553,
+      "two_procs_each_ms": [
+        509.77682080047094,
+        495.28944169942406
+      ],
+      "two_procs_footprint_mb": [
+        1115.948736,
+        1115.86684
+      ],
+      "two_threads_tops": 4.998798331170076,
+      "one_thread_tops": 5.020955432078156
+    },
+    "mlp57-m4126-fp16": {
+      "two_procs_tops": 6.766162565606586,
+      "two_procs_each_ms": [
+        419.87914579949575,
+        399.4372666995332
+      ],
+      "two_procs_footprint_mb": [
+        857.1796,
+        857.114016
+      ],
+      "two_threads_tops": 6.547605094592653,
+      "one_thread_tops": 6.531223586208027
+    }
+  },
+  "concurrent": {
+    "gpu_alone_tflops": 16.90047619047619,
+    "gate-m4126-row": {
+      "ane_alone_tops": 12.459793837915683,
+      "ane_with_gpu_tops": 9.46258614040337,
+      "gpu_with_ane_tflops": 13.353000000000002,
+      "overlap_s": 15.715430974960327
+    },
+    "gate-m4126-g64": {
+      "ane_alone_tops": 9.965731984546066,
+      "ane_with_gpu_tops": 4.594136727370802,
+      "gpu_with_ane_tflops": 5.482352941176471,
+      "overlap_s": 25.857852935791016
+    },
+    "gate-m4126-fp16": {
+      "ane_alone_tops": 7.053415701371067,
+      "ane_with_gpu_tops": 5.220291136921827,
+      "gpu_with_ane_tflops": 12.150344827586208,
+      "overlap_s": 16.07337713241577
+    },
+    "mlp-m4126-row": {
+      "ane_alone_tops": 8.940359578403505,
+      "ane_with_gpu_tops": 5.517157721846293,
+      "gpu_with_ane_tflops": 5.343333333333334,
+      "overlap_s": 19.424293041229248
+    },
+    "mlp-m4126-g64": {
+      "ane_alone_tops": 5.490579227365787,
+      "ane_with_gpu_tops": 2.9172640328333164,
+      "gpu_with_ane_tflops": 4.787999999999999,
+      "overlap_s": 22.21189308166504
+    },
+    "mlp-m4126-fp16": {
+      "ane_alone_tops": 6.64465010233629,
+      "ane_with_gpu_tops": 3.851882085166741,
+      "gpu_with_ane_tflops": 5.31625,
+      "overlap_s": 20.057767868041992
+    },
+    "mlp57-m4126-row": {
+      "ane_alone_tops": 13.863493460335107,
+      "ane_with_gpu_tops": 9.467310291231245,
+      "gpu_with_ane_tflops": 6.7823529411764705,
+      "overlap_s": 17.565871953964233
+    },
+    "mlp57-m4126-g64": {
+      "ane_alone_tops": 4.955935210916731,
+      "ane_with_gpu_tops": 2.5743124512911626,
+      "gpu_with_ane_tflops": 4.510714285714285,
+      "overlap_s": 22.63726282119751
+    },
+    "mlp57-m4126-fp16": {
+      "ane_alone_tops": 6.4563889960469965,
+      "ane_with_gpu_tops": 3.9349692444336704,
+      "gpu_with_ane_tflops": 5.911176470588235,
+      "overlap_s": 19.505555868148804
+    }
+  },
+  "handoff": {
+    "gate-m4126-row": {
+      "round_trip_ms": 76.8784541010973,
+      "predict_ms": 70.6478126005095,
+      "copy_out_ms": 4.968679099692963,
+      "overhead_ms": 6.230641500587816,
+      "bytes_in_mb": 50.700288,
+      "bytes_out_mb": 135.200768
+    },
+    "gate-m4126-g64": {
+      "round_trip_ms": 88.30316260064137,
+      "predict_ms": 83.40518740005791,
+      "copy_out_ms": 3.9035918991430663,
+      "overhead_ms": 4.897975200583465,
+      "bytes_in_mb": 50.700288,
+      "bytes_out_mb": 135.200768
+    },
+    "gate-m4126-fp16": {
+      "round_trip_ms": 120.81680839910405,
+      "predict_ms": 115.31258749892004,
+      "copy_out_ms": 4.40147920162417,
+      "overhead_ms": 5.5042209001840146,
+      "bytes_in_mb": 50.700288,
+      "bytes_out_mb": 135.200768
+    },
+    "mlp-m4126-row": {
+      "round_trip_ms": 280.41703760100063,
+      "predict_ms": 276.81432490062434,
+      "copy_out_ms": 2.1062916988739744,
+      "overhead_ms": 3.602712700376265,
+      "bytes_in_mb": 50.700288,
+      "bytes_out_mb": 50.700288
+    },
+    "mlp-m4126-g64": {
+      "round_trip_ms": 450.75604990051943,
+      "predict_ms": 447.94153299953905,
+      "copy_out_ms": 1.7355793992464896,
+      "overhead_ms": 2.8145169009803905,
+      "bytes_in_mb": 50.700288,
+      "bytes_out_mb": 50.700288
+    },
+    "mlp-m4126-fp16": {
+      "round_trip_ms": 377.00910409912467,
+      "predict_ms": 373.9994291005132,
+      "copy_out_ms": 1.91278739948757,
+      "overhead_ms": 3.009674998611489,
+      "bytes_in_mb": 50.700288,
+      "bytes_out_mb": 50.700288
+    },
+    "mlp57-m4126-row": {
+      "round_trip_ms": 103.42011239845306,
+      "predict_ms": 99.93176669959212,
+      "copy_out_ms": 2.0039165996422525,
+      "overhead_ms": 3.488345698860945,
+      "bytes_in_mb": 50.700288,
+      "bytes_out_mb": 50.700288
+    },
+    "mlp57-m4126-g64": {
+      "round_trip_ms": 288.34539169838536,
+      "predict_ms": 285.6718666989764,
+      "copy_out_ms": 1.6251208005996887,
+      "overhead_ms": 2.6735249994089827,
+      "bytes_in_mb": 50.700288,
+      "bytes_out_mb": 50.700288
+    },
+    "mlp57-m4126-fp16": {
+      "round_trip_ms": 220.1610205011093,
+      "predict_ms": 217.3313875013264,
+      "copy_out_ms": 1.7174999993585516,
+      "overhead_ms": 2.8296329997829215,
+      "bytes_in_mb": 50.700288,
+      "bytes_out_mb": 50.700288
+    }
+  },
+  "numerics": {
+    "activation_max_abs": {
+      "mlp_input": 22.625,
+      "silu_gate_x_up": 476.7005615234375
+    },
+    "gpu_bf16_q8_vs_truth": {
+      "max_abs": 13.908935546875,
+      "mean_abs": 0.1064603254199028,
+      "max_rel": 17473.509765625,
+      "mean_rel": 0.028164092451334,
+      "over_1ulp_bf16": 0.34794682034153335,
+      "changed": 0.9999930177911416
+    },
+    "ane_row_vs_truth": {
+      "max_abs": 10.42852783203125,
+      "mean_abs": 0.4877646565437317,
+      "max_rel": 137464.5625,
+      "mean_rel": 0.17548079788684845,
+      "over_1ulp_bf16": 0.7961944515975925,
+      "changed": 0.9999978698345856
+    },
+    "ane_row_vs_gpu": {
+      "max_abs": 16.0,
+      "mean_abs": 0.5004633069038391,
+      "max_rel": 5460937.5,
+      "mean_rel": 252.1722412109375,
+      "over_1ulp_bf16": 0.790682056875101,
+      "changed": 0.9871781793428865
+    },
+    "ane_g64_vs_truth": {
+      "max_abs": 5.8160400390625,
+      "mean_abs": 0.23965631425380707,
+      "max_rel": 90230.421875,
+      "mean_rel": 0.08352832496166229,
+      "over_1ulp_bf16": 0.6256933293948942,
+      "changed": 0.9999965286193246
+    },
+    "ane_g64_vs_gpu": {
+      "max_abs": 14.0,
+      "mean_abs": 0.2640531659126282,
+      "max_rel": 2792968.75,
+      "mean_rel": 129.38014221191406,
+      "over_1ulp_bf16": 0.6384547559177574,
+      "changed": 0.9763043160622678
+    },
+    "ane_fp16_vs_truth": {
+      "max_abs": 1.24163818359375,
+      "mean_abs": 0.03362772986292839,
+      "max_rel": 3782.07666015625,
+      "mean_rel": 0.0108273234218359,
+      "over_1ulp_bf16": 0.1276619572654104,
+      "changed": 0.9999752664126879
+    },
+    "ane_fp16_vs_gpu": {
+      "max_abs": 14.0,
+      "mean_abs": 0.11242193728685379,
+      "max_rel": 824218.75,
+      "mean_rel": 45.15182113647461,
+      "over_1ulp_bf16": 0.34608268891884797,
+      "changed": 0.9480128791378858
+    }
+  }
+}

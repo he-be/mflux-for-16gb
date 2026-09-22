@@ -18,6 +18,8 @@
 !src/mflux/models/common/training/_example/train.json
 !src/mflux/models/common/training/_example/train_ernie_image_turbo.json
 !src/mflux/models/common/training/_example/train_ernie_image.json
+# the 16GB measurements link to their raw runs
+!docs/16gb/runs/m6mini/*.json
 !tests/training/config/train.json
 tests/training/tmp/
 
