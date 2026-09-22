@@ -41,7 +41,10 @@
 - [M3 Pro 18GB: 計算律速と SSD ストリーミングの実測](measurements/2026-09-22-m3pro-compute-vs-ssd.md)（合成ベンチ。実ウェイトでは未測定）
 - [M0: Krea 2 Turbo q8 チェックポイントの物理配置](measurements/2026-09-22-krea2-q8-checkpoint-layout.md)
 - [計測の土台: macOS で MLX のメモリを何で測るか](measurements/2026-09-22-memory-instrumentation.md)
+- [M1: クリーンな状態のベースライン](measurements/2026-09-22-m1-clean-baseline.md)
 - [M2: text encoder だけのプロセスで埋め込みを作る](measurements/2026-09-22-m2-text-encoder.md)
+- **[M3: q8 DiT を常駐させられるか(結論: 不合格)](measurements/2026-09-22-m3-dit-resident.md)**
+- [M4: VAE でデコード → 実画像 1 枚](measurements/2026-09-22-m4-vae-decode.md)
 - [計画: ブロック単位ウェイトストリーミング](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)
 
 ## いま分かっていること(2026-09-22)
@@ -58,14 +61,20 @@
 - 合成 safetensors 28 個 × 138MB を毎周ディスクから流し直しても、常駐 0.17GB で
   計算律速のまま(bind→eval→drop でメモリは戻る)。
 - **`ps rss` は MLX の確保を見ない。** 4GB 保持のプロセスを 30MB と報告する。
-  判定は `mx.get_peak_memory()` と `footprint -p` の `phys_footprint` で行う。
+  判定は `mx.get_peak_memory()` と `proc_pid_rusage` の `phys_footprint` で行う
+  (`footprint -p` は大きなプロセスを整数 GB に丸めるので使わない)。
 - **M2 合格**: TE だけのプロセスは 8.05GB 常駐・swapouts 0 で通る。エンコード 0.63〜0.81 s。
+- **M3 不合格**: q8 DiT 13.62GB は `mx.set_wired_limit` を使えば**常駐だけはできる**
+  (swapouts 0)。しかし 1024² のアクティベーション 1.94GB が乗ると要求は 15.96GB になり、
+  システムの 2.0GB と合わせて 17.9 / 19.33GB。ページキャッシュの余地が消えてスワップする。
+  768² に落としても消えない。**18GB 機で q8 を常駐方式で回すのは無理。**
+- **M4 合格**: VAE はタイル 512 で 4.40GB・swapouts 0。**実画像が 1 枚出た。**
+  3 コンポーネントを別プロセスに分ければ、各段は単独で 18GB 機に載る。
+- 実測できた速度(スワップ込みなので下限): 1024² で 28.2 s/step、768² で 14.7 s/step。
+- **LoRA は bake した方がよい。** 常駐 -0.44GB、1 ステップ 41.9 → 30.9 s。
 
 **まだ仮説(Krea 2 の実ウェイトでは未測定)**
 
-- **q8 DiT を 18GB 機に常駐させられるか。** クリーンな状態(再起動直後、常駐アプリ無し)で
-  14.06GB + アクティベーションが載るかは未測定。アクティベーション量そのものも未測定。
-  プロセスを分けて測る(計画 M3)。
 - **ブロック単位ストリーミングで I/O が隠れるか。** 読み出し側は 74 ms/ブロックと
   確定したが、計算側(実ブロックの forward 時間)が未測定。比が 2.0 を超えるかが
   分かれ目(計画 M5)。1 ステップ 約 29 秒という数字は FLOPS からの割り算であって
@@ -74,7 +83,8 @@
 ## 実行のしかた
 
 現状の mflux は 3 コンポーネントを同時に載せるので、この構成 (22.2GB) は 18GB 機では
-そのまま走らない。下は段階ロード / ストリーミングが入った後の形。
+そのまま走らない。**いま動くのは `tools/bench/` の 3 プロセス分割版**
+(引き継ぎの §5 にコマンドがある)。下は段階ロード / ストリーミングが入った後の形。
 
 ```sh
 uv run python tools/swapwatch.py --csv docs/16gb/runs/$(date +%Y%m%d-%H%M)-q8-4step.csv -- \
