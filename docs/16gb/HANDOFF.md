@@ -293,9 +293,9 @@ sudo sysctl -w iogpu.wired_limit_mb=0    # sudo が要る。確認は sysctl -n 
 
 ## 7. リポジトリの状態
 
-ブランチ `feat/krea2-block-streaming`。**`dd87bce` までが `fork` に push 済みで、
-それ以降の M1〜M6 のコミットはすべてローカルのみ。**
-push は毎回明示の承認が要る(RULE.md)。
+ブランチ `feat/krea2-block-streaming`。**M6 まで `fork` に push 済み**(`406a0c6`)。
+以前の引き継ぎが「`dd87bce` までが push 済み」と書いていたのは古い記録だった。
+push は毎回明示の承認が要る(RULE.md)。**`origin` は upstream なので push しない。**
 
 ### M6 で upstream のファイルに入れた変更
 
