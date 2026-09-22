@@ -29,7 +29,7 @@
 | `docs/16gb/runs/` | 実行ログ(swapwatch の CSV / JSON)と `images/` に出力画像 |
 | `.cursor/plans/` | 実装計画(RULE.md の規約) |
 | `tools/` | fork 固有のツール(`swapwatch.py`) |
-| `tools/bench/` | 段階ごとの計測スクリプト(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py`) |
+| `tools/bench/` | 段階ごとの計測スクリプト(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py` / `block_stream.py` / `bake_lora_checkpoint.py`) |
 | `~/Library/Caches/mflux/16gb-bench/` | 段の間で受け渡す中間生成物(埋め込み・latent)。リポジトリには入れない |
 
 ## 索引
@@ -45,6 +45,7 @@
 - [M2: text encoder だけのプロセスで埋め込みを作る](measurements/2026-09-22-m2-text-encoder.md)
 - **[M3: q8 DiT を常駐させられるか(結論: 不合格)](measurements/2026-09-22-m3-dit-resident.md)**
 - [M4: VAE でデコード → 実画像 1 枚](measurements/2026-09-22-m4-vae-decode.md)
+- **[M5: ブロック単位ストリーミング(結論: 合格)](measurements/2026-09-22-m5-block-streaming.md)**
 - [計画: ブロック単位ウェイトストリーミング](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)
 
 ## いま分かっていること(2026-09-22)
@@ -73,15 +74,31 @@
   768² に落としても消えない。**18GB 機で q8 を常駐方式で回すのは無理。**
 - **M4 合格**: VAE はタイル 512 で 4.40GB・swapouts 0。**実画像が 1 枚出た。**
   3 コンポーネントを別プロセスに分ければ、各段は単独で 18GB 機に載る。
-- 実測できた速度(スワップ込みなので下限): 1024² で 28.2 s/step、768² で 14.7 s/step。
-- **LoRA は bake した方がよい。** 常駐 -0.44GB、1 ステップ 41.9 → 30.9 s。
+- **M5 合格 — これで目標構成が通った。** 28 ブロックをディスクからストリーミングすると
+  要求は 15.96 → **3.72GB**、swapouts **0**、1 ステップ 29.8 s(常駐版 28.2 s の +5.8%)。
+  計算 ÷ I/O = **13.65**(合格基準 2.0)。出力は常駐版と**バイト単位で一致**。
+- **LoRA は事前にチェックポイントへ焼き込む。** 焼き込み自体もブロック単位でやれば
+  **2.14GB / 13 秒**で済み、以後の実行時コストはゼロ。
 
-**まだ仮説(Krea 2 の実ウェイトでは未測定)**
+## 目標構成は 18GB 機で通る(2026-09-22 時点、すべて `clean`)
 
-- **ブロック単位ストリーミングで I/O が隠れるか。** 読み出し側は 74 ms/ブロックと
-  確定したが、計算側(実ブロックの forward 時間)が未測定。比が 2.0 を超えるかが
-  分かれ目(計画 M5)。1 ステップ 約 29 秒という数字は FLOPS からの割り算であって
-  実測ではない。
+| 段 | mx peak | 実 footprint | 時間 |
+|---|---|---|---|
+| text encoder | 8.19GB | **8.29GB** ← 最大 | 4 s |
+| LoRA 焼き込み(1 回だけ) | 1.89GB | 2.14GB | 13 s |
+| **DiT ストリーミング** | 3.21GB | 3.72GB | **119 s** |
+| VAE(タイル 256) | 2.98GB | 4.28GB | 5.6 s |
+
+q8 + 4step LoRA / 1024² / 4 ステップ / euler / guidance 1.0 / seed 42。
+画像: `docs/16gb/runs/images/`。
+
+**いま最大の消費は DiT ではなく text encoder の 8.29GB。**
+16GB 機を狙うなら次に削るのはここ。
+
+**まだやっていないこと**
+
+- **M6**: この方式を mflux 本体へ入れる(いまは `tools/bench/` の分割プロセス版のみ)。
+- **M7**: 2 回実行して画像一致の確認、1280²(LoRA の学習 σ と一致する解像度)。
 
 ## 実行のしかた
 
