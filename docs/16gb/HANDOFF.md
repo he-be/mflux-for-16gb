@@ -385,8 +385,8 @@ I/O             : 71.8 ms / ブロック(M0 の実測 74 ms と一致)
 
 ## 8. リポジトリの状態
 
-ブランチ `feat/krea2-block-streaming`。**M6 まで `fork` に push 済み**(`406a0c6`)。
-以前の引き継ぎが「`dd87bce` までが push 済み」と書いていたのは古い記録だった。
+ブランチ `feat/krea2-block-streaming`。**M9a〜e まで `fork` に push 済み**(`3c855f9`、2026-09-22 夜)。
+mini(`m6-tb`)のチェックアウトも同じコミット。
 push は毎回明示の承認が要る(RULE.md)。**`origin` は upstream なので push しない。**
 
 ### M6 で upstream のファイルに入れた変更
