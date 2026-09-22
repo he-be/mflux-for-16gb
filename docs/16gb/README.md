@@ -51,7 +51,9 @@
 - [M5b: text encoder を q8 にする(結論: 採用)](measurements/2026-09-22-m5b-text-encoder-q8.md)
 - **[M6: mflux 本体への実装(結論: 合格。1280² も clean)](measurements/2026-09-22-m6-mflux-cli.md)**
 - **[M7: M6 mac mini 16GB の実機(結論: 合格。neural accelerator も効いている)](measurements/2026-09-22-m7-m6-mac-mini.md)**
+- **[M8: DiT 1 ブロックの時間の内訳(結論: 遅さの正体は活性の float32)](measurements/2026-09-22-m8-block-profile.md)**
 - [計画: ブロック単位ウェイトストリーミング](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)
+- [計画: DiT を M6 mini で 2〜3 倍速くする](../../.cursor/plans/2026-09-22-krea2-dit-speed.md)
 
 ## いま分かっていること(2026-09-22)
 
@@ -120,9 +122,11 @@ mflux 本体経由(`--block-streaming`)でも同じ: 1024² で footprint 5.21GB
 
 - **M3 Pro での `iogpu.wired_limit_mb=0` 再測定**(M6 の 2 本は前セッションが残した
   15360 の設定下。mini 側は既定 0 で通ったので、残っているのは M3 Pro だけ)。
-- **DiT の活性を bf16 にする。** M6 では bf16 の nax カーネルが float32 の 1.68 倍速い。
-  mflux は RoPE / RMSNorm を float32 で通す設計なので matmul も float32 で走っている。
-  出力の数値は変わるので、M5b と同じく**測って画像を見比べて**判断する話(M7 §4)。
+- **DiT を速くする(計画 M8a〜f)。** M8 で 1 ブロックを切り分けたら、DiT は
+  ノイズの float32 が伝播して**全体が float32 で走っていた**。実チェックポイントの
+  block 0 を bf16 の活性で回すと 587 → **320 ms**(attention が 142 → 28 ms)。
+  さらに I/O を計算と重ね、半速の `mlp.down`(K=16384)を K で 4 分割すると
+  1 ステップ 21.2 → **7.6 s 前後**の見込み。出力の数値は動くので画像で判定する。
 
 ## 実行のしかた
 

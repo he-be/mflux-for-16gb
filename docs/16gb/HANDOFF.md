@@ -1,7 +1,8 @@
 # 引き継ぎ(2026-09-22 時点)
 
 新しいセッションはこのファイルだけ読めば再開できる。次に読むのは
-[計画](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)。
+[DiT を速くする計画](../../.cursor/plans/2026-09-22-krea2-dit-speed.md)
+(元の[ストリーミング計画](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)は M7 まで済)。
 
 ## 1. やろうとしていること
 
@@ -245,11 +246,14 @@ I/O             : 71.8 ms / ブロック(M0 の実測 74 ms と一致)
   15360 の設定下。mini 側は既定 0 で通ったので、残っているのは M3 Pro だけ。
   `sudo sysctl -w iogpu.wired_limit_mb=0` のあと README の §実行のしかた を 1024² で 1 回。
   期待値は 29.6 s/step / footprint 5.2 GB / swapouts 0 / 前回とピクセル一致。
-- **DiT の活性を bf16 にする(M6 mini で 1.4 倍以上の見込み)。** bf16 の nax カーネルは
-  float32 の 1.68 倍速い。mflux は RoPE / RMSNorm を float32 で通す設計なので
-  (`rope_embedder.py`、`common.py`)、ブロック内の matmul も float32 で走っている。
-  計算 607 → 360 ms 程度、1 ステップ 21.2 → 14.2 s の見込み。
-  **出力の数値は変わるので、M5b と同じく測って画像を見比べて判断する。**
+- **DiT を速くする(計画 M8a〜f、[M8 の実測](measurements/2026-09-22-m8-block-profile.md))。**
+  遅さの正体は `Krea2LatentCreator.create_noise` の float32 が DiT 全体に伝播していること。
+  チェックポイントも TE の出力も bf16 で、float32 なのはノイズだけ。
+  実 block 0 を bf16 の活性で回すと 587 → **320 ms**(matmul 414 → 296、
+  **attention 142 → 28**)。M8a(入口で bf16 に落とす)→ M8b(I/O を計算と重ねる)→
+  M8c(`mlp.down` K=16384 を 4 分割、92.9 → 52.8 ms)→ M8d(`clear_cache` を減らす)の順。
+  見込み 21.2 → 13.1 → 9.2 → 7.6 s/step。**M8a と M8c は出力の数値が動くので画像で判定する。**
+  計器は `tools/bench/block_profile.py`(`--model` で実ブロック)と `qmm_shapes.py`。
 - **前処理ツールの昇格。** `bake_lora_checkpoint.py` と `quantize_te_checkpoint.py` は
   まだ `tools/bench/` にいる。低メモリ用スナップショットを 1 コマンドで作る
   CLI にすれば、シンボリックリンクを手で張る手順が消える。
