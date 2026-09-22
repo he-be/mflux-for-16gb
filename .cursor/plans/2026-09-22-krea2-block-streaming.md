@@ -1,6 +1,6 @@
 # 計画: Krea 2 q8 を 18GB 機で動かす(実測ゲート方式)
 
-- 日付: 2026-09-22(改訂 3)
+- 日付: 2026-09-22(改訂 4: M1〜M4 の実測を反映)
 - ブランチ: `feat/krea2-block-streaming`
 - 管理先: fork [`he-be/mflux-for-16gb`](https://github.com/he-be/mflux-for-16gb)(upstream へ PR は出さない)
 
@@ -18,10 +18,16 @@
 
 ```
 hw.memsize                        19.33 GB
-iogpu.wired_limit_mb              14336 MB (14.34 GB)
-max_recommended_working_set_size  15.03 GB
+max_buffer_length                  9.66 GB
+iogpu.wired_limit_mb              既定 0(単位は MiB。再起動で 0 に戻る)
+  └ 0 のとき      max_recommended_working_set_size  12.88 GB
+  └ 14336 MiB     同                                15.03 GB
+  └ 15360 MiB     同                                16.11 GB
 mx.set_wired_limit                既定 0(MLX は何も wire しない)
 ```
+
+**この 2 つは両方必要**だった(M3): `sudo sysctl` で枠を開け、プロセス内で
+`mx.set_wired_limit` を呼んで初めてウェイトが wire される。片方だけでは効かない。
 
 q8 の内訳(`mflux-community/krea-2-turbo-mflux-q8` の実ファイルサイズ):
 
@@ -33,17 +39,16 @@ q8 の内訳(`mflux-community/krea-2-turbo-mflux-q8` の実ファイルサイズ
 | VAE | 0.51 GB |
 
 - 全部同時 = 22.2 GB。**載らない。**
-- DiT + LoRA のみ = **14.06 GB**。クリーンな状態の空きメモリ次第で載る可能性がある。
-  ここが勝負どころ。
-
-DiT の数字はこの改訂で 14.06 → 13.62 GB に直した(初版は概算。実測は
-[M0](../../docs/16gb/measurements/2026-09-22-krea2-q8-checkpoint-layout.md) の
-safetensors ヘッダから)。以下 14.06 GB は DiT + LoRA の合計を指す。
+- **LoRA を bake すると常駐は増えない**(q8 のウェイトに畳み込まれるため 13.62 GB のまま。
+  bake 中だけ 15.23 GB の一時ピーク)。bake しないと別レイヤで残るので 14.06 GB。
+- DiT の数字はこの改訂で 14.06 → 13.62 GB に直した(初版は概算。実測は
+  [M0](../../docs/16gb/measurements/2026-09-22-krea2-q8-checkpoint-layout.md) の
+  safetensors ヘッダから)。
 
 ## 2. 段階(すべて実ウェイトで測る)
 
-mflux 本体のコードは M4 まで触らない。M1〜M3 はプロセスを分けることで、
-**コード変更なしに段階ロードを実現する**。
+mflux 本体のコードは M6 まで触らない。M1〜M4 はプロセスを分けることで、
+**コード変更なしに段階ロードを実現する**(済。`tools/bench/` の 4 本)。
 
 ### M0. チェックポイントの物理配置 ← 済
 
@@ -55,7 +60,9 @@ mflux 本体のコードは M4 まで触らない。M1〜M3 はプロセスを�
 ### M0b. 計器の検証 ← 済
 
 `ps rss` は MLX の確保を 1 バイトも見ない(4 GB 保持のプロセスを 30 MB と報告する)。
-判定は `mx.get_peak_memory()` と `footprint -p` の `phys_footprint` で行う。
+判定は `mx.get_peak_memory()` と `phys_footprint` で行う。ただし **`footprint -p` は
+大きなプロセスを整数 GB に丸める**(これで一度「16.12 GB の上限」という誤った結論を
+出した)。`proc_pid_rusage` を直接読むこと。
 [記録](../../docs/16gb/measurements/2026-09-22-memory-instrumentation.md)
 
 ### M1. クリーンな状態の測定(再起動直後)
@@ -80,7 +87,7 @@ mflux 本体のコードは M4 まで触らない。M1〜M3 はプロセスを�
 - M2 の埋め込みを読み、**q8 DiT + 4step LoRA(14.06 GB)だけ**を載せて 4 ステップ回し、
   latent を保存する。TE も VAE もこのプロセスには存在しない。
 - 計器は `tools/bench/dit_steps.py`(段階ごとのフラグは下の 1〜4 に対応)。
-- 測る: `mx.get_peak_memory()`、`phys_footprint_peak`、1 ステップの実時間、
+- 測る: `mx.get_peak_memory()`、`phys_footprint`、1 ステップの実時間、
   swapwatch verdict。**peak RSS は測れない**(M0b)。
 - 段階的に無理をする(各段でスワップしたら次へ):
   1. そのまま実行
@@ -157,7 +164,11 @@ M3 / M5 で数字が出た方式だけを入れる。
 - **`mx.load` は lazy。** ウェイトを読む時間を測るなら `mx.eval(model)` を明示する。
   しないと読み出しコストが次の処理の時間に紛れる。
 - **メモリは `ps rss` で測らない**(M0b)。`mx.get_peak_memory()` と
-  `footprint -p` の `phys_footprint` の 2 本で、一致することを確認して使う。
+  `proc_pid_rusage` の `phys_footprint` の 2 本で、一致することを確認して使う。
+  **一致しないときは原因を潰すまで結論を出さない**(VAE では 4.40 GB 対 14.16 GB で
+  一致しない。畳み込みが MLX の外側で確保している)。
+- **同じ数字が繰り返し出たら、現象ではなく計器を疑う。** 「3 回とも 1 MB 単位で同じ」は
+  `footprint -p` の丸めだった。
 - 数字は別経路で sanity check する(トークン数半減で時間が半分になるか、など)。
 - スクリプトは `tools/bench/`、結果は `docs/16gb/measurements/` に日付・機材つきで。
   swapwatch の CSV / JSON は `docs/16gb/runs/`、中間生成物(埋め込み・latent)は

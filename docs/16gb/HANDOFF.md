@@ -41,11 +41,15 @@ M3 Pro 18GB の MacBook Pro で **Krea 2 Turbo q8 + 4step 蒸留 LoRA** の画�
 
 ```
 hw.memsize                        19.33 GB
-iogpu.wired_limit_mb              14336 MB (14.34 GB)
-max_recommended_working_set_size  15.03 GB
 max_buffer_length                  9.66 GB
+iogpu.wired_limit_mb              既定 0(単位は MiB、再起動で 0 に戻る)
+  └ 0 のとき   working set 12.88 GB / 14336 MiB → 15.03 GB / 15360 MiB → 16.11 GB
 mx.set_wired_limit                既定 0(MLX は何も wire しない)
+システムの wired                   約 2.0 GB
 ```
+
+**`iogpu.wired_limit_mb` の既定は 0。** 以前の引き継ぎが 14336 を既定として記録して
+いたが、あれは前セッションが `sysctl` で手動設定した残骸だった。
 
 ### q8 チェックポイントのサイズ
 
@@ -57,7 +61,9 @@ mx.set_wired_limit                既定 0(MLX は何も wire しない)
 | text encoder (Qwen3-VL-4B, bf16) | 8.05 GB |
 | VAE | 0.51 GB |
 | 全部同時 | 22.2 GB → **載らない** |
-| **DiT + LoRA のみ** | **14.06 GB** → ここが勝負どころ |
+| **DiT(LoRA を bake した場合)** | **13.62 GB**(bake 中だけ 15.23 GB の一時ピーク) |
+| DiT(bake しない場合) | 14.06 GB |
+| + 1024² のアクティベーション | **+1.94 GB → 要求 15.96 GB** |
 
 ### 読み出し(実シャード、`F_NOCACHE`)
 
@@ -80,12 +86,15 @@ mx.set_wired_limit                既定 0(MLX は何も wire しない)
 ### 計器(ここを間違えると全部無意味になる)
 
 - **`ps rss` は MLX の確保を 1 バイトも見ない。** 4.00 GB の `mx.array` を持つプロセスを
-  `ps` は 0.03 GB と報告する。`phys_footprint` なら 3.84 GB。
-- 判定に使うのは `mx.get_peak_memory()`(プロセス内)と `footprint -p <pid>` の
-  `phys_footprint` / `phys_footprint_peak`(外から、ツリー全体を合計)。2 本が一致する
-  ことを毎回確認する。
-- `swapwatch` はこれに直してある。直す前は `uv run` の launcher を測っていて、8 GB
-  常駐の実行を「peak child RSS 0.03 GB」と報告していた。
+  `ps` は 0.03 GB と報告する。`phys_footprint` なら 4.10 GB。
+- **`footprint -p` は大きなプロセスを整数 GB に丸める。** これに引っかかって
+  「このマシンの上限は 16.12 GB」という**誤った結論を一度出した**(13326 / 14350 /
+  15374 は 13/14/15 GB + launcher の 14 MB だった)。`proc_pid_rusage` を
+  ctypes で直接読むこと(`swapwatch.py` は修正済み)。
+- 判定に使うのは `mx.get_peak_memory()`(プロセス内)と `phys_footprint`(外から、
+  ツリー全体を合計)。**2 本が一致することを毎回確認する。**
+  DiT では一致する(15.57 / 15.96 GB)が、**VAE では一致しない**
+  (4.40 / 14.16 GB。畳み込みが MLX の外側で確保している)。
 - 空きメモリは `free` ではなく **claimable = free + inactive + speculative + purgeable**
   で見る(`tools/bench/memstat.py`)。
 - 詳細: [計測の土台](measurements/2026-09-22-memory-instrumentation.md)
@@ -118,71 +127,91 @@ TE だけのプロセス: MLX ピーク **8.19 GB**、footprint ピーク 8.11�
 - `MemorySaver` はエンコード後に TE を、`--low-ram` はループ後に DiT を破棄する
   (`memory_saver.py:77`)。
 
-## 4. まだ分かっていないこと(次に測ること)
+## 4. 今日やったこと(M1〜M4)と、その結論
 
-1. **q8 DiT (14.06GB) をクリーンな状態で常駐させられるか。** アクティベーション量が未測定。
-2. **実ブロック 1 個の forward 時間。** これが分からないとストリーミングで I/O が
-   隠れるか判断できない。I/O 側は 74 ms/ブロックで確定済み。
-   計算 ÷ I/O ≥ 2.0 が合格基準。
+### M1〜M4 はすべて実施済み。結論: **常駐方式は 18GB 機では成立しない。**
 
-## 5. 次の手順
+| 段 | 内容 | 結果 |
+|---|---|---|
+| M1 | クリーンな状態のベースライン | 済。`iogpu.wired_limit_mb` の既定が 0 だと判明 |
+| M2 | TE だけのプロセス | **合格 clean**。8.19 GB、swapouts 0 |
+| M3 | **q8 DiT だけのプロセス** | **不合格**。4 ステップは完走するがスワップする |
+| M4 | VAE だけのプロセス | **合格 clean**。タイル 512 で 4.40 GB。**実画像が出た** |
 
-**M1 から。このために再起動が必要で、そこが今の停止点。**
-mflux 本体のコードは M6 まで触らない。
+詳細はそれぞれ `docs/16gb/measurements/2026-09-22-m{1,2,3,4}-*.md`。
 
-### M1. クリーンな状態の測定 ← いまここ
+### M3 の中身(一番重要)
 
-常駐アプリを落として再起動し、ベースラインを記録する:
+| 構成 | 常駐 | 要求 | 1 ステップ | swapouts | 判定 |
+|---|---|---|---|---|---|
+| ウェイトのみ + wire | 13.62 GB | 13.62 GB | — | **0** | **clean** |
+| + LoRA(bake なし)ロードのみ | 14.06 GB | 14.06 GB | — | **0** | **clean** |
+| **1024² / 4 ステップ** | 13.63 GB | **15.96 GB** | 28.15 s | 1117 MB | SWAPPED |
+| 768² / 4 ステップ | 13.63 GB | 15.2 GB | 14.71 s | 102〜467 MB | SWAPPED |
 
-```sh
-uv run python tools/bench/memstat.py --label clean-boot --json docs/16gb/runs/$(date +%Y%m%d-%H%M)-m1-baseline.json
+収支: 自プロセス 15.9 + システム 2.0 = **17.9 / 19.33 GB**。
+ページキャッシュが 0.15 GB まで削られ、それでも足りずに毎秒数百ページ掃き出す。
+**上限に当たっているのではなく、物理メモリが足りない。**
+
+### 効いた手・効かなかった手(全部実測済み。もう一度試す必要はない)
+
+| 手 | 結果 |
+|---|---|
+| **`mx.set_wired_limit`** | **必須。これなしではロードすら通らない**(1.4〜3.2 GB スワップ) |
+| **`sudo sysctl iogpu.wired_limit_mb`** | 上の前提条件。両方ないと wire されない |
+| **LoRA を bake する** | **した方がよい。** 常駐 -0.44 GB、1 ステップ 41.9 → 30.9 s |
+| VAE のタイル (512) | 必須。8.73 → 4.40 GB |
+| `mx.set_cache_limit` を絞る | **効かない。**ロード中は無関係、ループ中は 9 倍悪化 |
+| 解像度 768² | 速度は倍になるがスワップは消えない |
+| `F_NOCACHE` でページキャッシュ迂回 | **不要。**OS は既に正しく回収している(仮説は外れ) |
+
+### パイプラインは端から端まで通った
+
+```
+M2: TE 8.05 GB   → 埋め込み (1, 30, 30720)
+M3: DiT 13.62 GB → latent [1, 16, 128, 128]
+M4: VAE 0.51 GB  → 1024×1024 PNG ← docs/16gb/runs/images/
 ```
 
-参考(汚れた状態での値): claimable 7.5〜11.0 GB、swap 既使用 492 MB、
-compressor 1.26 GB。**14.06 GB には足りない。** 再起動後にどこまで広がるかが土俵。
+画像は意図どおりで、**q8 + 4step LoRA が正しく動くことを確認済み**。
 
-### M2. TE だけのプロセス ← 済。M1 の後に再実行して数字を揃える
+## 5. 次にやること: M5(ブロック単位ストリーミング)
 
-```sh
-uv run python tools/swapwatch.py --csv docs/16gb/runs/$(date +%Y%m%d-%H%M)-m2-te.csv -- \
-  uv run python tools/bench/te_encode.py \
-    --model ~/.cache/huggingface/hub/models--mflux-community--krea-2-turbo-mflux-q8/snapshots/ad5c0b1784c486bd45c2ced8a9f10aa45293a7c8 \
-    --out ~/Library/Caches/mflux/16gb-bench/krea2-embeds.safetensors \
-    --json docs/16gb/runs/$(date +%Y%m%d-%H%M)-m2-te.json
-```
+M3 が不合格だったので、計画どおり M5 へ進む。**M3 の数字が M5 の見込みを裏づけている:**
 
-### M3. DiT だけのプロセス ← 本命。スクリプトは書いてあり、配線は検証済み
+- ウェイト 13.62 GB が要求 15.96 GB の **86%**。
+- 1 ブロック 461.3 MB。28 個のうち 1〜2 個だけ常駐させれば **0.5〜1 GB**。
+- 要求は 0.9 + 1.94(アクティベーション)+ 0.35 ≒ **3.2 GB**。
+  **16GB 機でも桁で余る。**
 
-```sh
-uv run python tools/swapwatch.py --csv docs/16gb/runs/$(date +%Y%m%d-%H%M)-m3-dit.csv -- \
-  uv run python tools/bench/dit_steps.py \
-    --model ~/.cache/huggingface/hub/models--mflux-community--krea-2-turbo-mflux-q8/snapshots/ad5c0b1784c486bd45c2ced8a9f10aa45293a7c8 \
-    --embeds ~/Library/Caches/mflux/16gb-bench/krea2-embeds.safetensors \
-    --out ~/Library/Caches/mflux/16gb-bench/krea2-latents.safetensors \
-    --json docs/16gb/runs/$(date +%Y%m%d-%H%M)-m3-dit.json
-```
+分かれ目は速度だけ:
 
-測るのは `mx.get_peak_memory()` / 1 ステップの実時間 / swapwatch verdict /
-`phys_footprint_peak`。無理のかけ方は段階的に(スワップしたら次へ):
+| | |
+|---|---|
+| I/O(確定済み) | **74 ms / ブロック** |
+| 計算(未測定) | M3 から逆算すると 28.15 / 28 ≒ **1.0 s / ブロック** |
+| 比 | 13.6(合格基準は 2.0) |
 
-1. そのまま(上のコマンド)
-2. `--cache-limit-gb 1 --clear-cache-each-step`
-3. `sudo sysctl -w iogpu.wired_limit_mb=<もっと大きく>` してから `--wired-limit-gb 14`
-4. `--width 768 --height 768`(1024² が駄目だった証拠として記録)
+ただし 28.15 s/step は**スワップ込みの数字なので下限**であり、実ブロック 1 個の
+forward を直接測る必要がある。これが M5 の中身。
 
-`--no-lora` で LoRA の 0.44 GB を切り分けられる。`--compile` は mflux 本体と同じ
-`mx.compile` 経路を試すとき。
+### M5 の作り方
 
-### M4. VAE だけのプロセスでデコード → **実画像 1 枚**(スクリプト未作成)
+`tools/bench/` に 5 本目を書く。実ブロック 1 個を bind → forward → drop して
+計算時間と I/O 時間を測り、28 ブロックに広げて 1 ステップを回す。
+既存の `dit_steps.py` が `WeightLoader.load_single_local` でコンポーネント単位に
+読む形になっているので、そこからブロック単位に降りる。
 
-### M5. ブロック単位ストリーミングの実測(M3 の結果にかかわらず)
+**合格基準**(計画より): 比 ≥ 2.0、drop 後の常駐がベースライン +100 MB 以内、
+1 ステップが 28.15 s の +20% 以内。
 
-実ブロック 1 個を bind → forward → drop して、計算 ÷ I/O を測る。
-合格基準: 比 ≥ 2.0、drop 後の常駐がベースライン +100MB 以内。
+### その先
 
-### M6. mflux 本体への実装(数字が出た方式だけ)
-
-### M7. 実運用(2 回実行して画像一致、1280² も)
+- **M6**: 数字が出た方式を mflux 本体へ。段階ロード(TE→破棄→DiT→破棄→VAE)は
+  M2〜M4 で成立が確認できているので、これは入れてよい。
+  **VAE は `mx.get_peak_memory()` 4.40 GB に対し実 14.16 GB なので、
+  DiT を破棄してから構築すること。**
+- **M7**: 実運用(2 回実行して画像一致、1280² も)。
 
 ## 6. 測定の作法(踏んだ地雷)
 
@@ -190,6 +219,12 @@ uv run python tools/swapwatch.py --csv docs/16gb/runs/$(date +%Y%m%d-%H%M)-m3-di
   捨てられ、実際より速い数字が出る。初回 20.9 TFLOPS という誤測定をこれで出した
   (正しくは 5.9)。
 - **`ps rss` でメモリを測らない。** §3 の計器の節を読むこと。
+- **`footprint -p` の出力を信じない**(整数 GB に丸める)。`proc_pid_rusage` を読む。
+- **同じ数字が繰り返し出たら、現象ではなく計器を疑う。** 「3 回とも 1 MB 単位で
+  同じ」は物理現象ではなく丸めの症状だった。
+- **2 本の計器が食い違ったら、結論を出す前に原因を潰す。**
+- **子プロセスの stdout は `PYTHONUNBUFFERED=1` を付ける。** swapwatch に殺されると
+  バッファに溜まった出力が消え、どこまで進んだか分からなくなる。
 - **index レベルの観察で物理配置を語らない。** 「ブロック順に連続配置」と一度
   結論したが、バイトオフセットを見たら入り組んでいた。
 - **見積りで「載らない」と結論しない。** 一方で、載せるために画質を落とす案も出さない。
@@ -201,9 +236,16 @@ uv run python tools/swapwatch.py --csv docs/16gb/runs/$(date +%Y%m%d-%H%M)-m3-di
 
 ## 7. リポジトリの状態
 
-ブランチ `feat/krea2-block-streaming`。`dd87bce` までは `fork` に push 済み
-(以前の引き継ぎに残っていた「4 コミットがローカルのみ」は解消済み)。
+ブランチ `feat/krea2-block-streaming`。**`dd87bce` までが `fork` に push 済みで、
+それ以降の M1〜M4 のコミットはすべてローカルのみ。**
 push は毎回明示の承認が要る(RULE.md)。
 
 upstream のファイルで触ったのは `_typos.toml` の 1 行だけ(`nax` を辞書に追加)。
-`tools/swapwatch.py` は fork 固有のファイルで、計器の修正で書き換えてある。
+`tools/swapwatch.py` と `tools/bench/` は fork 固有。
+
+### 実行中の一時設定
+
+`sudo sysctl -w iogpu.wired_limit_mb=15360` が入ったままになっている可能性がある
+(再起動で 0 に戻る)。M5 はストリーミングで常駐を 1 GB 級に落とす話なので、
+**この設定は不要**。確認は `sysctl -n iogpu.wired_limit_mb`、戻すのは
+`sudo sysctl -w iogpu.wired_limit_mb=0`。
