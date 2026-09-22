@@ -54,6 +54,8 @@
 - **[M8: DiT 1 ブロックの時間の内訳(結論: 遅さの正体は活性の float32)](measurements/2026-09-22-m8-block-profile.md)**
 - **[M8a: DiT の活性を bf16 にする(結論: 合格。21.2 → 13.1 s/step、画像は同等)](measurements/2026-09-22-m8a-bf16-activations.md)**
 - **[M8b: 次のブロックを計算の裏で読む(結論: 合格。13.1 → 9.4 s/step、出力は完全一致)](measurements/2026-09-22-m8b-prefetch.md)**
+- **[M8c / M8d: K 分割(不採用)と clear_cache の廃止(採用)。最終 9.26 s/step](measurements/2026-09-22-m8c-m8d-kslices-cache-limit.md)**
+- [M8f: M3 Pro での回帰(合格。29.6 → 23.0 s/step、footprint 4.66 GB)](measurements/2026-09-22-m8f-m3pro.md)
 - [計画: ブロック単位ウェイトストリーミング](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)
 - [計画: DiT を M6 mini で 2〜3 倍速くする](../../.cursor/plans/2026-09-22-krea2-dit-speed.md)
 
@@ -124,11 +126,15 @@ mflux 本体経由(`--block-streaming`)でも同じ: 1024² で footprint 5.21GB
 
 - **M3 Pro での `iogpu.wired_limit_mb=0` 再測定**(M6 の 2 本は前セッションが残した
   15360 の設定下。mini 側は既定 0 で通ったので、残っているのは M3 Pro だけ)。
-- **DiT を速くする(計画 M8a〜f)。** M8 で 1 ブロックを切り分けたら、DiT は
-  ノイズの float32 が伝播して**全体が float32 で走っていた**。実チェックポイントの
-  block 0 を bf16 の活性で回すと 587 → **320 ms**(attention が 142 → 28 ms)。
-  さらに I/O を計算と重ね、半速の `mlp.down`(K=16384)を K で 4 分割すると
-  1 ステップ 21.2 → **7.6 s 前後**の見込み。出力の数値は動くので画像で判定する。
+- **M8 済 — DiT は M6 mini で 2.3 倍、M3 Pro で 1.3 倍速くなった。** 遅さの正体は
+  ノイズの float32 が DiT 全体に伝播していたこと(M8)。ストリーミング経路で bf16 に落とし
+  (M8a)、次のブロックを計算の裏で読み(M8b)、ブロックごとの `clear_cache` を
+  cache limit に置き換えた(M8d)。1024² が 21.2 → **9.26 s/step**、1280² が
+  35.2 → **15.88 s/step**、M3 Pro が 29.6 → **22.96 s/step**、すべて clean。
+  画像は機材差より小さい差。`mlp.down` の K 分割(M8c)は単体では速いが本番では
+  プリフェッチと干渉して遅くなるので不採用。
+- **残り**: `powermetrics`(要 sudo)での持続クロック確認、K=16384 の半速カーネルを
+  MLX に報告、M3 Pro の `iogpu.wired_limit_mb=0` 再測定、前処理ツールの昇格。
 
 ## 実行のしかた
 

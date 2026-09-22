@@ -240,20 +240,35 @@ I/O             : 71.8 ms / ブロック(M0 の実測 74 ms と一致)
 (平均 4.6 / 255、目視では同じ)。カーネルが違うので q8 matmul の累積順序が変わる。
 **クロスマシンのビット一致を約束しないこと。**
 
+### M8(2026-09-22 午後): DiT を速くした ← 済
+
+| | M7 | **最終** | footprint |
+|---|---|---|---|
+| M6 mini 1024² | 21.2 s/step | **9.26 s/step** | 5.72 GB |
+| M6 mini 1280² | 35.2 s/step | **15.88 s/step** | 6.07 GB |
+| M3 Pro 1024² | 29.6 s/step | **22.96 s/step** | 4.66 GB |
+
+原因はノイズの float32 が DiT 全体に伝播していたこと([M8](measurements/2026-09-22-m8-block-profile.md))。
+直したのは 3 か所: ストリーミング経路で latent を bf16 に落とす([M8a](measurements/2026-09-22-m8a-bf16-activations.md))、
+次のブロックを `mx.async_eval` の裏で読む([M8b](measurements/2026-09-22-m8b-prefetch.md))、
+ブロックごとの `clear_cache` を cache limit 2 GB に置き換える([M8c/d](measurements/2026-09-22-m8c-m8d-kslices-cache-limit.md))。
+`mlp.down` の K 分割は本番でプリフェッチと干渉するので不採用(同)。M3 Pro でも速くなり footprint は減る([M8f](measurements/2026-09-22-m8f-m3pro.md))。
+画像は bf16 化で動くが機材差より小さい。**bf16 同士なら機材差も 4.6 → 1.55 に縮む。**
+
+踏んだもの: 別タスクと GPU を取り合うと数字が一貫して 5〜10% ずれる(止めて取り直した)。
+合成ブロックの scales が float32 だと別カーネルに落ちる(実ブロックを `--model` で読む)。
+単体で速い変更が本番で遅いことがある(M8c)。**本番の形(プリフェッチあり)で測ってから採用する。**
+
 ## 6. 次にやること
 
 - **M3 Pro での `iogpu.wired_limit_mb=0` 再測定。** M6 の 2 本は前セッションが残した
   15360 の設定下。mini 側は既定 0 で通ったので、残っているのは M3 Pro だけ。
   `sudo sysctl -w iogpu.wired_limit_mb=0` のあと README の §実行のしかた を 1024² で 1 回。
   期待値は 29.6 s/step / footprint 5.2 GB / swapouts 0 / 前回とピクセル一致。
-- **DiT を速くする(計画 M8a〜f、[M8 の実測](measurements/2026-09-22-m8-block-profile.md))。**
-  遅さの正体は `Krea2LatentCreator.create_noise` の float32 が DiT 全体に伝播していること。
-  チェックポイントも TE の出力も bf16 で、float32 なのはノイズだけ。
-  実 block 0 を bf16 の活性で回すと 587 → **320 ms**(matmul 414 → 296、
-  **attention 142 → 28**)。M8a(入口で bf16 に落とす)→ M8b(I/O を計算と重ねる)→
-  M8c(`mlp.down` K=16384 を 4 分割、92.9 → 52.8 ms)→ M8d(`clear_cache` を減らす)の順。
-  見込み 21.2 → 13.1 → 9.2 → 7.6 s/step。**M8a と M8c は出力の数値が動くので画像で判定する。**
-  計器は `tools/bench/block_profile.py`(`--model` で実ブロック)と `qmm_shapes.py`。
+- **DiT の高速化は済(M8a〜f)。** 残っているのは (1) `sudo powermetrics --samplers
+  gpu_power -i 1000` を本番と並走させて持続クロックを見る(M8c/d §3。sudo が要るので
+  未実施)、(2) K=16384 の q8 matmul が半速になる件を再現例つきで MLX に報告する
+  (`tools/bench/qmm_shapes.py`)、(3) M3 Pro の `iogpu.wired_limit_mb=0` 再測定。
 - **前処理ツールの昇格。** `bake_lora_checkpoint.py` と `quantize_te_checkpoint.py` は
   まだ `tools/bench/` にいる。低メモリ用スナップショットを 1 コマンドで作る
   CLI にすれば、シンボリックリンクを手で張る手順が消える。

@@ -40,7 +40,6 @@ class Krea2StreamedBlock:
         computed = time.perf_counter()
 
         self.block.update(self.stream.read(self.index))
-        mx.clear_cache()
         self.stream.record(
             self.index,
             io=bound - start,
@@ -54,6 +53,11 @@ class Krea2StreamedBlock:
 class Krea2BlockStream:
     # Everything in the transformer that is not a block. 0.706 GB, and it stays resident.
     GLOBAL_MODULES = ("first", "tmlp", "tproj", "txtfusion", "txtmlp", "last")
+    # Every block has the same tensor shapes, so the buffers a dropped block leaves in MLX's
+    # cache are exactly what the next prefetch needs; clearing the cache after each block
+    # cost 12-15 ms of page faults per block instead. The limit keeps the cache from holding
+    # more than about two blocks' worth of dropped buffers and activations.
+    CACHE_LIMIT_BYTES = 2 << 30
     INDEX_FILE = "model.safetensors.index.json"
 
     def __init__(self, root: Path):
@@ -95,6 +99,7 @@ class Krea2BlockStream:
         for name in Krea2BlockStream.GLOBAL_MODULES:
             mx.eval(getattr(transformer, name).parameters())
         mx.clear_cache()
+        mx.set_cache_limit(Krea2BlockStream.CACHE_LIMIT_BYTES)
         transformer.blocks = [Krea2StreamedBlock(i, b, self) for i, b in enumerate(transformer.blocks)]
 
     def read(self, index: int) -> dict:
