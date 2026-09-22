@@ -1,5 +1,6 @@
 import argparse
 import csv
+import ctypes
 import re
 import subprocess
 import sys
@@ -15,6 +16,16 @@ from pathlib import Path
 
 PAGE_SIZE = 16384
 
+# proc_pid_rusage(pid, RUSAGE_INFO_V0, buf). The struct is a 16 byte uuid followed by
+# uint64s, and ri_phys_footprint is the eighth of them, so it sits at byte 72. Read this
+# way rather than through the `footprint` tool, which rounds to whole GB once a process
+# is that large: three different configurations all "peaked" at 13326 MB, which turned
+# out to be 13 GB rounded plus the 14 MB uv launcher, not a ceiling. Validated against
+# the tool on a 4 GB process, where it still prints MB: 4103570944 B vs 3914 MiB.
+_LIBC = ctypes.CDLL("/usr/lib/libSystem.B.dylib")
+_RUSAGE_INFO_V0_SIZE = 96
+_PHYS_FOOTPRINT_OFFSET = 72
+
 
 @dataclass
 class Sample:
@@ -28,7 +39,6 @@ class Sample:
     filebacked_mb: float
     anonymous_mb: float
     child_footprint_mb: float
-    child_peak_footprint_mb: float
 
 
 class SwapWatch:
@@ -79,7 +89,7 @@ class SwapWatch:
     def _sample(self, start, base_swap, base_out, pid, writer, handle) -> None:
         counters = self._vm_counters()
         used = self._swap_used_mb()
-        footprint, peak_footprint = self._footprint_mb(pid)
+        footprint = self._footprint_mb(pid)
         sample = Sample(
             t=time.time() - start,
             swap_used_mb=used,
@@ -91,7 +101,6 @@ class SwapWatch:
             filebacked_mb=counters["filebacked"] * PAGE_SIZE / 1e6,
             anonymous_mb=counters["anonymous"] * PAGE_SIZE / 1e6,
             child_footprint_mb=footprint,
-            child_peak_footprint_mb=peak_footprint,
         )
         self.samples.append(sample)
 
@@ -108,7 +117,6 @@ class SwapWatch:
                     f"{sample.filebacked_mb:.1f}",
                     f"{sample.anonymous_mb:.1f}",
                     f"{sample.child_footprint_mb:.1f}",
-                    f"{sample.child_peak_footprint_mb:.1f}",
                 ]
             )
             handle.flush()
@@ -126,7 +134,7 @@ class SwapWatch:
             print("🛁 swapwatch: the command exited before the first sample")
             return
         peak_swap = max(s.swap_delta_mb for s in self.samples)
-        peak_footprint = max(s.child_peak_footprint_mb for s in self.samples)
+        peak_footprint = max(s.child_footprint_mb for s in self.samples)
         peak_comp = max(s.compressor_mb for s in self.samples)
         peak_file = max(s.filebacked_mb for s in self.samples)
         base_file = self.samples[0].filebacked_mb
@@ -135,7 +143,7 @@ class SwapWatch:
         verdict = "SWAPPED" if (out_delta > 0 or peak_swap >= self.warn_delta_mb) else "clean"
         print("🛁 swapwatch summary")
         print(f"   duration          : {self.samples[-1].t:.0f} s ({len(self.samples)} samples)")
-        print(f"   peak footprint    : {peak_footprint / 1000:.2f} GB (phys_footprint, process tree)")
+        print(f"   peak footprint    : {peak_footprint / 1000:.2f} GB (phys_footprint, sampled)")
         print(f"   swap used (base)  : {base_swap:.0f} MB")
         print(f"   swap rise (peak)  : {peak_swap:.0f} MB")
         print(f"   swapouts / swapins: {out_delta} / {in_delta} pages ({out_delta * PAGE_SIZE / 1e6:.0f} MB out)")
@@ -163,7 +171,6 @@ class SwapWatch:
                 "filebacked_mb",
                 "anonymous_mb",
                 "child_footprint_mb",
-                "child_peak_footprint_mb",
             ]  # fmt: skip
         )
         return writer, handle
@@ -203,28 +210,26 @@ class SwapWatch:
         return int(match.group(1)) if match else 0
 
     @staticmethod
-    def _footprint_mb(pid: int) -> tuple[float, float]:
+    def _footprint_mb(pid: int) -> float:
         # ps rss does not see MLX's buffers at all: a process holding a 4 GB mx array
         # reports 30 MB, because the allocation is an IOAccelerator region. phys_footprint
-        # does count it (3840 MB for that same array), so it is the only honest
-        # per-process number here. footprint reports the peak too, which means a coarse
-        # sampling interval cannot miss a short-lived high-water mark.
-        # Summed over the process tree because every run goes through `uv run`, which
-        # execs the real python as a grandchild.
-        total = peak = 0.0
+        # does count it, so it is the only honest per-process number here. Summed over the
+        # process tree because every run goes through `uv run`, which execs the real
+        # python as a grandchild.
+        total = 0.0
         for target in SwapWatch._tree_pids(pid):
-            out = subprocess.run(["footprint", "-p", str(target)], capture_output=True, text=True).stdout
-            total += SwapWatch._parse_footprint(out, "phys_footprint")
-            peak += SwapWatch._parse_footprint(out, "phys_footprint_peak")
-        return total, peak
+            value = SwapWatch._phys_footprint(target)
+            if value is not None:
+                total += value / 1e6
+        return total
 
     @staticmethod
-    def _parse_footprint(out: str, field: str) -> float:
-        match = re.search(rf"{field}:\s*([\d.]+)\s*([KMG]?B)", out)
-        if not match:
-            return 0.0
-        scale = {"B": 1e-6, "KB": 1 / 1024, "MB": 1.0, "GB": 1024.0}
-        return float(match.group(1)) * scale.get(match.group(2), 1.0)
+    def _phys_footprint(pid: int) -> int | None:
+        buffer = (ctypes.c_uint8 * _RUSAGE_INFO_V0_SIZE)()
+        if _LIBC.proc_pid_rusage(ctypes.c_int(pid), ctypes.c_int(0), ctypes.byref(buffer)) != 0:
+            return None
+        start = _PHYS_FOOTPRINT_OFFSET
+        return int.from_bytes(bytes(buffer[start : start + 8]), "little")
 
     @staticmethod
     def _tree_pids(pid: int) -> list[int]:

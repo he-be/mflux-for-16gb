@@ -67,3 +67,75 @@ inactive / speculative に置いたまま要求に応じて返すので、`free`
 compressor が 1.26 → 5.69 GB に伸びた(swapouts は 0)。swapouts が出ていなければ
 `clean` だが、これは「他のプロセスを圧縮して場所を作った」状態であって余裕ではない。
 14 GB を測るときは再起動してから測る理由がここにある。
+
+
+---
+
+# 追記(同日、M3 の途中で判明): `footprint -p` は大きなプロセスを GB に丸める
+
+## 何が起きたか
+
+M3 の全段で、`swapwatch` が報告する peak footprint が条件によらず同じ値になった:
+
+```
+13326 MB / 14350 MB / 15374 MB
+```
+
+これを「OS がプロセスに許す上限に当たっている」と解釈し、
+**「このマシンの 1 プロセスあたりの実効上限は 16.12 GB」という結論を文書に書いた。
+それは誤りだった。**
+
+3 つの値は **きっかり 1024 ずつ離れている**。分解すると:
+
+```
+13326 = 13 * 1024 + 14
+14350 = 14 * 1024 + 14
+15374 = 15 * 1024 + 14
+```
+
+`footprint -p` は、プロセスが大きくなると **`phys_footprint: 13 GB` のように
+整数 GB で出力する**。そこに `uv run` launcher の 14 MB が足されていた。
+つまり観測していたのは「13 GB 台」「14 GB 台」「15 GB 台」という丸めであって、
+同一の上限ではなかった。**同じに見えたのは、丸めたから。**
+
+4 GB 級のプロセスでは MB 単位で出る(`phys_footprint: 3914 MB`)ので、
+最初の検証では気づけなかった。
+
+## 直し方: `proc_pid_rusage` を直接読む
+
+`libSystem` の `proc_pid_rusage(pid, RUSAGE_INFO_V0, &buf)` は
+`ri_phys_footprint` をバイト単位で返す。構造体は 16 バイトの uuid に続いて
+uint64 が並び、`ri_phys_footprint` は 8 番目なので **オフセット 72**。
+
+```python
+_LIBC = ctypes.CDLL("/usr/lib/libSystem.B.dylib")
+buf = (ctypes.c_uint8 * 96)()
+_LIBC.proc_pid_rusage(ctypes.c_int(pid), ctypes.c_int(0), ctypes.byref(buf))
+phys_footprint = int.from_bytes(bytes(buf[72:80]), "little")
+```
+
+4 GB を保持するプロセスで検証: **4103570944 B** に対しツールは **3914 MB**
+(= 3914 MiB = 4103565312 B)。一致する。
+
+サブプロセスを起こさないので 108 ms → ほぼ 0 になり、ピークは
+`phys_footprint_peak` が取れなくなる代わりにサンプルの最大値で取る
+(精密なピークはプロセス内の `mx.get_peak_memory()` が持っている)。
+
+## 教訓
+
+- **同じ数字が繰り返し出たら、まず計器を疑う。** 「3 回とも 1 MB 単位で同じ」は
+  物理現象ではなく、丸めの症状だった。
+- ツールの出力は**単位だけでなく桁数も**確認する。同じツールが値の大きさで
+  MB と GB を切り替えることがある。
+- 幸い、**この誤りは M3 の判定(スワップする / しない)を変えていない。**
+  判定は swapouts と `mx.get_peak_memory()` で出しており、そちらは正しい。
+  変わったのは「なぜ」の説明のうち 1 つだけ。
+
+## 補足: VAE では MLX の会計が実消費を大きく下回る
+
+精密化した計器で M4 を測ると、**`mx.get_peak_memory()` 4.40 GB に対して
+`phys_footprint` が 14.16 GB** まで伸びる(タイル 512 でデコード)。
+DiT 側では mx peak 15.57 GB に対し footprint 15.96 GB(差 0.25 GB = python + MLX)で
+一致しているので、これは VAE 固有。畳み込み経路が MLX のアロケータの外側で
+確保しているためと思われる。**畳み込みを含むモデルで `mx.get_peak_memory()` だけを
+見て容量を判断しない。**
