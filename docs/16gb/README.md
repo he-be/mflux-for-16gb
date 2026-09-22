@@ -52,6 +52,7 @@
 - **[M6: mflux 本体への実装(結論: 合格。1280² も clean)](measurements/2026-09-22-m6-mflux-cli.md)**
 - **[M7: M6 mac mini 16GB の実機(結論: 合格。neural accelerator も効いている)](measurements/2026-09-22-m7-m6-mac-mini.md)**
 - **[M8: DiT 1 ブロックの時間の内訳(結論: 遅さの正体は活性の float32)](measurements/2026-09-22-m8-block-profile.md)**
+- **[M8a: DiT の活性を bf16 にする(結論: 合格。21.2 → 13.1 s/step、画像は同等)](measurements/2026-09-22-m8a-bf16-activations.md)**
 - [計画: ブロック単位ウェイトストリーミング](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)
 - [計画: DiT を M6 mini で 2〜3 倍速くする](../../.cursor/plans/2026-09-22-krea2-dit-speed.md)
 

@@ -231,12 +231,21 @@ class Krea2(nn.Module):
         guidance: float,
         streamed: bool = False,
     ):
+        # The noise is float32 and the checkpoint, its scales and the text embeddings are all
+        # bf16; fed as is, the float32 promotes the whole transformer and every block runs on
+        # the float32 kernels (587 ms a block on an M6 against 320 ms in bf16, attention alone
+        # 142 against 28). Streaming casts at the door, like the training adapter does. The
+        # resident path keeps float32 so its reference images stay valid.
+        # See docs/16gb/measurements/2026-09-22-m8-block-profile.md.
+        dtype = ModelConfig.precision if streamed else None
+
         def predict(latents: mx.array, timestep: mx.array) -> mx.array:
-            v = transformer(latents, timestep, embeds)
+            x = latents.astype(dtype) if dtype is not None else latents
+            v = transformer(x, timestep, embeds)
             if neg_embeds is not None:
-                v_neg = transformer(latents, timestep, neg_embeds)
+                v_neg = transformer(x, timestep, neg_embeds)
                 v = v_neg + guidance * (v - v_neg)
-            return v
+            return v.astype(latents.dtype)
 
         # A streamed block reads from disk and calls mx.eval inside the forward pass, neither
         # of which survives being traced into a compiled graph.
