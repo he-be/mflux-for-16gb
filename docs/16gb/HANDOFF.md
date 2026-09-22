@@ -7,6 +7,7 @@
 
 M3 Pro 18GB の MacBook Pro で **Krea 2 Turbo q8 + 4step 蒸留 LoRA** の画像生成を、
 **スワップさせずに**通す。その後 M6 mac mini でも同じ構成を回す。
+**両方とも済んだ**(M6 / M7)。
 
 ### 動かせない前提
 
@@ -22,20 +23,21 @@ M3 Pro 18GB の MacBook Pro で **Krea 2 Turbo q8 + 4step 蒸留 LoRA** の画�
 | 何 | どこ |
 |---|---|
 | 作業リポジトリ | `/Users/mh/dev/mflux`(upstream `mflux-community/mflux` の clone) |
+| **M6 mac mini(16GB)** | ssh `m6-tb`(Thunderbolt bridge 169.254.24.129)。`~/dev/mflux` と `~/Library/Caches/mflux/16gb-bench/krea2-lowram` に同じものが入っている。uv は `~/.local/bin/env` を source してから |
 | fork remote | `fork` = `https://github.com/he-be/mflux-for-16gb`(**PR は出さない**) |
 | ブランチ | `feat/krea2-block-streaming` |
 | q8 ウェイト | `~/.cache/huggingface/hub/models--mflux-community--krea-2-turbo-mflux-q8/snapshots/ad5c0b1784c486bd45c2ced8a9f10aa45293a7c8/` |
 | 4step LoRA | `~/Library/Caches/mflux/loras/krea2_turbo_4step_rank_64_lora_comfyui.safetensors` |
 | 中間生成物 | `~/Library/Caches/mflux/16gb-bench/`(埋め込み・latent・**q8 TE 4.3GB** と**焼き込み済み DiT 13GB**。リポジトリ外) |
 | スワップ見張り | `tools/swapwatch.py` |
-| 計測スクリプト | `tools/bench/`(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py` / `block_stream.py` / `bake_lora_checkpoint.py` / `quantize_te_checkpoint.py`) |
+| 計測スクリプト | `tools/bench/`(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py` / `block_stream.py` / `bake_lora_checkpoint.py` / `quantize_te_checkpoint.py` / `matmul_probe.py` / `nax_probe.py` / `qmm_spy.py`) |
 | 文書 | `docs/16gb/`(research / measurements / runs)、計画は `.cursor/plans/` |
 
 ダウンロードは完了済み(q8 21GB + LoRA 438MB)。再取得は不要。LoRA は
 `lvladikov/Krea2-Turbo-Distill-4step-LoRA:krea2_turbo_4step_rank_64_lora_comfyui.safetensors`
 という指定でも通る(mflux が自前のキャッシュに写しを持っている)。
 
-## 3. 確定した事実(すべてこのマシンでの実測)
+## 3. 確定した事実(断りがなければ M3 Pro 18GB での実測。M6 mini の数字は §5)
 
 ### ハード
 
@@ -82,6 +84,10 @@ mx.set_wired_limit                既定 0(MLX は何も wire しない)
 | bf16 matmul 5120×6144@6144×6144 | 65.5 ms = 5.90 TFLOPS |
 | q8 / q4 quantized matmul 同形状 | 75 ms = 5.1 TFLOPS |
 | 合成 28×138MB の bind→eval→drop | 常駐 0.17GB、計算律速のまま |
+
+同じ形を M6 mini で測ると bf16 12.35 / q8 **17.16** / q4 18.49 TFLOPS。
+**q8 が bf16 より速いのが neural accelerator の指紋**(M3 Pro では逆に遅い)。
+再現は `tools/bench/matmul_probe.py`。
 
 ### 計器(ここを間違えると全部無意味になる)
 
@@ -165,6 +171,7 @@ q8 + 4step LoRA / 1024² / 4 ステップ / euler / guidance 1.0 / seed 42。
 | M5 ストリーミング | **合格 clean**。要求 3.72 GB、比 13.65、ビット一致 |
 | M5b TE を q8 に | **採用**。8.29 → 4.96 GB。画像は目視で同じ、描き込みは同等 |
 | M6 本体への実装 | **合格**。`--block-streaming`。CLI 経由で 29.60 s/step、比 13.59、**出力はピクセル完全一致**。1280² も clean(48.91 s/step、6.89 GB) |
+| M7 M6 mac mini 16GB | **合格 clean**。1024² 20.9 s/step / 5.32 GB、1280² 35.21 s/step / 6.46 GB、swapouts 0、`iogpu.wired_limit_mb` は既定 0。**neural accelerator が効いている** |
 
 ### M3(常駐)がなぜ駄目だったか
 
@@ -201,41 +208,53 @@ I/O             : 71.8 ms / ブロック(M0 の実測 74 ms と一致)
 | 解像度 768² | 常駐方式では速度は倍になるがスワップは消えない |
 | `F_NOCACHE` でページキャッシュ迂回 | **不要。**OS は既に正しく回収している |
 
-## 5. 次にやること
+## 5. M7 の結果(M6 mac mini 16GB)← 済
 
-### すぐやること: `iogpu.wired_limit_mb=0` で測り直す ← いまここ
+**16GB 機で通った。§1 の目的は達成。** 詳細は
+[M7](measurements/2026-09-22-m7-m6-mac-mini.md)。
 
-M6 の 2 本(1024² / 1280²)は、前セッションが残した `15360` の設定下で測っている。
-**ストリーミングにこの設定は不要**なので、既定の 0 に戻して通ることを確認する。
-特別な設定なしで通ることがこの方式の価値なので、ここは省けない。
+| | M3 Pro 18GB | **M6 mini 16GB** |
+|---|---|---|
+| 1024² 1 ステップ | 29.60 s | **20.9〜21.2 s** |
+| 1024² footprint | 5.21 GB | **5.32 GB** |
+| 1280² 1 ステップ | 48.91 s | **35.21 s** |
+| 1280² footprint | 6.89 GB | **6.46 GB** |
+| I/O / ブロック | 71.9 ms (6.24 GB/s) | **138 ms (3.34 GB/s)** ← mini の SSD は遅い |
+| 計算 / ブロック(1024²) | 976.9 ms | **607 ms** |
+| 計算 ÷ I/O | 13.59 | **4.16**(基準 2.0) |
+| swapouts | 0 | **0** |
+| `iogpu.wired_limit_mb` | 15360(残骸) | **0(既定のまま)** |
 
-```sh
-sudo sysctl -w iogpu.wired_limit_mb=0    # sudo が要る。確認は sysctl -n iogpu.wired_limit_mb
-```
+送ったもの: リポジトリ 256 MB と `krea2-lowram` 17 GB だけ。**元の q8 スナップショット
+21 GB は要らない**(mini 側で bake も量子化もしない)。Thunderbolt bridge 越しの ssh で
+約 290 MB/s。手順は M7 §2。
 
-そのあと README の §実行のしかた のコマンドをそのまま 1024² で 1 回。
-期待値は 29.6 s/step / footprint 5.2 GB / swapouts 0 / 前回とピクセル一致。
+**neural accelerator は効いている。** 生成のホットパスの `mx.quantized_matmul` が
+`affine_qmm_t_nax_*` にディスパッチされることを Metal のキャプチャで確認した
+(`tools/bench/nax_probe.py`)。合成ベンチでは q8 matmul が M3 Pro の
+5.11 → **17.16 TFLOPS**。**q8 が素の bf16 より速いのが neural accelerator の指紋**
+(M3 Pro では逆に遅い)。
 
-### M7: 実運用
+**同じ機械では出力はピクセル完全一致。機械をまたぐと一致しない**
+(平均 4.6 / 255、目視では同じ)。カーネルが違うので q8 matmul の累積順序が変わる。
+**クロスマシンのビット一致を約束しないこと。**
 
-- 2 回実行して画像一致 → **実質済み。** M6 の 1024² の出力が、40 分前の別プロセス
-  (`tools/bench/`)の結果と**ピクセル完全一致**した。
-- 1280²(LoRA の学習 σ と一致する解像度) → **済。clean。**
-  48.91 s/step、footprint 6.89 GB、swapouts 0。1024² より明らかに描き込みが多い。
-  `images/20260922-1129-m6-cli-1280.png`
+## 6. 次にやること
 
-### その先
-
-**どの段も 7 GB を超えていないので、16GB 機には余裕がある。** 次の削りどころを
-探すより、M6 mac mini の実機で回して確認する方が先(§1 の目的)。
-
-やるとすれば:
-
+- **M3 Pro での `iogpu.wired_limit_mb=0` 再測定。** M6 の 2 本は前セッションが残した
+  15360 の設定下。mini 側は既定 0 で通ったので、残っているのは M3 Pro だけ。
+  `sudo sysctl -w iogpu.wired_limit_mb=0` のあと README の §実行のしかた を 1024² で 1 回。
+  期待値は 29.6 s/step / footprint 5.2 GB / swapouts 0 / 前回とピクセル一致。
+- **DiT の活性を bf16 にする(M6 mini で 1.4 倍以上の見込み)。** bf16 の nax カーネルは
+  float32 の 1.68 倍速い。mflux は RoPE / RMSNorm を float32 で通す設計なので
+  (`rope_embedder.py`、`common.py`)、ブロック内の matmul も float32 で走っている。
+  計算 607 → 360 ms 程度、1 ステップ 21.2 → 14.2 s の見込み。
+  **出力の数値は変わるので、M5b と同じく測って画像を見比べて判断する。**
 - **前処理ツールの昇格。** `bake_lora_checkpoint.py` と `quantize_te_checkpoint.py` は
   まだ `tools/bench/` にいる。低メモリ用スナップショットを 1 コマンドで作る
   CLI にすれば、シンボリックリンクを手で張る手順が消える。
-- **プリフェッチ。** I/O 72 ms は計算 977 ms の下に完全に隠れているので、
-  **やる理由は今のところない**(比 13.59)。1280² では比 22.9 でさらに余裕がある。
+- **プリフェッチ。** M3 Pro では比 13.59 でやる理由がなかったが、**mini では 4.16**。
+  I/O がステップ時間の 19% を占める。bf16 化のあとならもっと効く。
 
 **TE の q8 について**: 「TE の量子化は禁止」と書いてあったのは
 **エージェントが根拠なく足した行**で、ユーザの要件ではなかった(`b01d4d7`)。
@@ -270,7 +289,7 @@ sudo sysctl -w iogpu.wired_limit_mb=0    # sudo が要る。確認は sysctl -n 
   区別できない。1024² の実行で出た 56 ページは、同じサンプルで swap used が 21 MB
   減っていたので外来だった。**より重い 1280² が swapouts 0 で通って決着した。**
 
-## 6. 測定の作法(踏んだ地雷)
+## 7. 測定の作法(踏んだ地雷)
 
 - **ベンチのループは内側で `mx.eval`。** 外でまとめて eval すると未使用グラフが
   捨てられ、実際より速い数字が出る。初回 20.9 TFLOPS という誤測定をこれで出した
@@ -291,7 +310,7 @@ sudo sysctl -w iogpu.wired_limit_mb=0    # sudo が要る。確認は sysctl -n 
   コードブロックまで整形するので、`docs/16gb/` の既存メモに無関係な差分が出る。
   自分が触ったファイルだけを指定して整形する。
 
-## 7. リポジトリの状態
+## 8. リポジトリの状態
 
 ブランチ `feat/krea2-block-streaming`。**M6 まで `fork` に push 済み**(`406a0c6`)。
 以前の引き継ぎが「`dd87bce` までが push 済み」と書いていたのは古い記録だった。
@@ -315,7 +334,21 @@ push は毎回明示の承認が要る(RULE.md)。**`origin` は upstream なの
 **常駐モードの挙動は変えていない。** `_component` は素通りする。
 fast テストは 1504 件すべて緑。
 
+### M7 で足したもの
+
+| ファイル | |
+|---|---|
+| `docs/16gb/measurements/2026-09-22-m7-m6-mac-mini.md` | 新規。M6 mini の実測 |
+| `docs/16gb/runs/m6mini/*.csv` | swapwatch のログ 3 本 |
+| `docs/16gb/runs/images/20260922-14*-m7-m6mini-*.png` | 1024² / 1280² の出力 |
+| `tools/bench/matmul_probe.py` | 新規。dtype 別の matmul / quantized matmul の TFLOPS |
+| `tools/bench/nax_probe.py` | 新規。Metal のキャプチャでディスパッチされたカーネル名を読む |
+| `tools/bench/qmm_spy.py` | 新規。実際の生成が出す `quantized_matmul` の形を全部記録する |
+
+**`src/` は 1 行も触っていない。** M7 は計測だけ。
+
 ### 実行中の一時設定
 
-**`iogpu.wired_limit_mb` が `15360` のままになっている**(再起動で 0 に戻る)。
-**ストリーミングにこの設定は不要**なので 0 に戻し、その状態で測り直すこと(§5)。
+**M3 Pro の `iogpu.wired_limit_mb` が `15360` のままになっている**(再起動で 0 に戻る)。
+**ストリーミングにこの設定は不要**なので 0 に戻し、その状態で測り直すこと(§6)。
+**M6 mini は既定の 0 のままで通っているので、そちらは対応不要。**

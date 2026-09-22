@@ -31,7 +31,7 @@
 | `docs/16gb/runs/` | 実行ログ(swapwatch の CSV / JSON)と `images/` に出力画像 |
 | `.cursor/plans/` | 実装計画(RULE.md の規約) |
 | `tools/` | fork 固有のツール(`swapwatch.py`) |
-| `tools/bench/` | 段階ごとの計測スクリプト(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py` / `block_stream.py` / `bake_lora_checkpoint.py` / `quantize_te_checkpoint.py`) |
+| `tools/bench/` | 段階ごとの計測スクリプト(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py` / `block_stream.py` / `bake_lora_checkpoint.py` / `quantize_te_checkpoint.py` / `matmul_probe.py` / `nax_probe.py` / `qmm_spy.py`) |
 | `~/Library/Caches/mflux/16gb-bench/` | 段の間で受け渡す中間生成物(埋め込み・latent)。リポジトリには入れない |
 
 ## 索引
@@ -50,6 +50,7 @@
 - **[M5: ブロック単位ストリーミング(結論: 合格)](measurements/2026-09-22-m5-block-streaming.md)**
 - [M5b: text encoder を q8 にする(結論: 採用)](measurements/2026-09-22-m5b-text-encoder-q8.md)
 - **[M6: mflux 本体への実装(結論: 合格。1280² も clean)](measurements/2026-09-22-m6-mflux-cli.md)**
+- **[M7: M6 mac mini 16GB の実機(結論: 合格。neural accelerator も効いている)](measurements/2026-09-22-m7-m6-mac-mini.md)**
 - [計画: ブロック単位ウェイトストリーミング](../../.cursor/plans/2026-09-22-krea2-block-streaming.md)
 
 ## いま分かっていること(2026-09-22)
@@ -108,10 +109,20 @@ mflux 本体経由(`--block-streaming`)でも同じ: 1024² で footprint 5.21GB
 - **1280² も clean。** LoRA の学習 σ と一致する解像度(μ=1.15)で
   48.91 s/step、footprint 6.89GB、**swapouts 0**。1024² より明らかに描き込みが多い。
 
+- **M7 合格 — 本来の目的だった 16GB 機で通った。** Mac mini (Apple M6) 16GB / macOS 27 で
+  1024² が 20.9 s/step・footprint 5.32GB、1280² が 35.21 s/step・footprint 6.46GB、
+  どちらも **swapouts 0**、`iogpu.wired_limit_mb` は**既定の 0 のまま**。
+  M3 Pro より 1 ステップ 1.42 倍速い。**M6 の GPU neural accelerator は効いている**
+  (生成のホットパスが `affine_qmm_t_nax_*` に落ちることを Metal のキャプチャで確認)。
+  一方 mini の SSD は半分の速さ(3.34 GB/s)で、計算 ÷ I/O は 13.59 → 4.16。
+
 **まだやっていないこと**
 
-- **`iogpu.wired_limit_mb=0` での再測定**(上の 2 本は前セッションが残した 15360 の
-  設定下。ストリーミングにこの設定は不要なので、既定に戻して通ることを確認する)。
+- **M3 Pro での `iogpu.wired_limit_mb=0` 再測定**(M6 の 2 本は前セッションが残した
+  15360 の設定下。mini 側は既定 0 で通ったので、残っているのは M3 Pro だけ)。
+- **DiT の活性を bf16 にする。** M6 では bf16 の nax カーネルが float32 の 1.68 倍速い。
+  mflux は RoPE / RMSNorm を float32 で通す設計なので matmul も float32 で走っている。
+  出力の数値は変わるので、M5b と同じく**測って画像を見比べて**判断する話(M7 §4)。
 
 ## 実行のしかた
 
@@ -160,6 +171,13 @@ uv run python tools/swapwatch.py --csv docs/16gb/runs/$(date +%Y%m%d-%H%M)-q8-4s
 `--lora-paths` との併用はエラーになる(事前焼き込みを使うこと)。
 `--low-ram` は**使わない**。あれが入れる `mx.set_cache_limit(1GB)` は M3 でループを
 9 倍悪化させた手で、ストリーミングには不要。
+
+### 別のマシンで回す
+
+M6 mac mini (16GB) への移し方と実測は
+**[M7](measurements/2026-09-22-m7-m6-mac-mini.md)** にある。送るのは
+リポジトリと**前処理済みの `krea2-lowram` 17GB だけ**で、元の q8 スナップショット
+21GB は要らない(bake も量子化もしない)。`rsync -aL` で symlink を実体化する。
 
 `swapwatch` は既定でスワップが 1GB 増えた時点で実行を落とす
 (`--abort-delta-mb 0` で無効化、`--warn-delta-mb` で警告閾値)。
