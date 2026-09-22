@@ -22,9 +22,14 @@ import numpy as np
 # memory, and how far fp16 activations move the numbers against the bf16 GPU path. The Core
 # ML side lives in a worker process, as it would in production (predict holds the GIL).
 #
-#   uv run --with coremltools python tools/bench/ane_probe.py --model ~/Library/Caches/mflux/16gb-bench/krea2-lowram
-#   uv run --with coremltools python tools/bench/ane_probe.py --model ... --only single --shapes gate,mlp --variants row
-#   uv run --with coremltools python tools/bench/ane_probe.py --model ... --only actstats     # a real 1024^2 run
+# coremltools 9.0 has no native extensions for Python 3.14 (it imports, but every proxy is
+# missing and the convert dies at "BlobWriter not loaded"), so pin 3.13 and keep the project's
+# own venv out of the way:
+#
+#   UV_PROJECT_ENVIRONMENT=.venv313 uv run --python 3.13 --with coremltools \
+#       python tools/bench/ane_probe.py --model ~/Library/Caches/mflux/16gb-bench/krea2-lowram
+#   ... --only single --shapes gate,mlp --variants row
+#   ... --only actstats     # a real 1024^2 run
 #
 # See docs/16gb/measurements/2026-09-22-m11a-ane-probe.md.
 

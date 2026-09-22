@@ -9,7 +9,8 @@
 - 外部の根拠: `~/dev/Irodori-TTS`(`docs/note-mac.md`、`docs/experiments/17-m1-ane-factors.md`、`irodori_tts/ane_worker.py`)、
   Draw Things の ANE 記事(§7)
 - 管理先: fork [`he-be/mflux-for-16gb`](https://github.com/he-be/mflux-for-16gb)(upstream へ PR は出さない)
-- 状態: **M11a 着手中。`tools/bench/ane_probe.py` は書けたが mini では未実行。** 再開手順は §8。
+- 状態: **M11a 不合格で終了(2026-09-22)。M11b / M11c には進まない。**
+  測定: [M11a: ANE を 2 台目の演算器にできるか](../../docs/16gb/measurements/2026-09-22-m11a-ane-probe.md)
 
 ## 0. 前提(動かせない要件)
 
@@ -128,7 +129,22 @@ GPU 側 (1−a)×149 ms と ANE 側 a×2490/R ms が釣り合う点:
 呼び出しオーバーヘッド 5 ms 以内、常駐が §3 の見積りの ±20%、fp16 の出力差が norm の bf16 化(M9b §5)と同程度。
 **1 つでも外れたら「M6 でも ANE 併用は割に合わない」と数字つきで閉じ、M11b には進まない。**
 
-### M11b. MLP の列分割を本番に(M11a 合格のときだけ)
+**結果(2026-09-22、`docs/16gb/measurements/2026-09-22-m11a-ane-probe.md`)**: 5 つのうち 3 つを外した。
+
+| # | 基準 | 実測 | |
+|---|---|---|---|
+| 1 | 併走下で 15 TOPS 以上 | 9.47(単独 15.38) | ✗ |
+| 2 | GPU の低下 5% 以内 | **−60%**(16.90 → 6.78 TFLOPS) | ✗ |
+| 3 | 受け渡し 5 ms 以内 | 3.5 ms | ✓ |
+| 4 | 常駐が見積りの ±20% | 約 5.7 GB(+12%) | ✓ |
+| 5 | 出力差が norm の bf16 化と同程度 | 79% が 1 ULP 超(bf16 化は 33%) | ✗ |
+
+**閉じ方**: 行列積はどれも帯域律速で、ANE と GPU は同じ帯域を食い合う。演算器を足しても帯域は
+足されないので、併走の実測を §3 のモデルに戻すと 1 ステップ 7.9 → 約 7.8 s(常駐は +5.7 GB)。
+デュアル ANE も 2 基が 1 デバイスに束ねられていて 2 プロセスで +34% しか増えない。
+Irodori-TTS で 1.35 倍出たのは M3 Pro の GPU が弱く帯域に余裕があったから。
+
+### M11b. MLP の列分割を本番に(M11a 合格のときだけ) — **不合格につき実施しない**
 
 - `feed_forward.py`: `down_splits` と同じ流儀で `ane_share`(a)を持ち、GPU 側は列の (1−a) だけを計算し、
   ANE の部分積を足す。常駐モードでは常に 0。
@@ -143,7 +159,7 @@ GPU 側 (1−a)×149 ms と ANE 側 a×2490/R ms が釣り合う点:
 
 **合格基準**: 1024² **6.0 s/step 以下**、clean(swapouts 0)、1280² も clean、画像判定合格。
 
-### M11c. 実行時 LoRA との共存
+### M11c. 実行時 LoRA との共存 — **M11b が止まったので実施しない**
 
 M10 の LoRA は gate / up / down の side path。ANE の列に対応する delta は rank 64 なので GPU で計算して
 足す(`_down_adapter` の形をそのまま使う)。M11b の後。
@@ -167,18 +183,17 @@ M10 の LoRA は gate / up / down の side path。ANE の列に対応する delt
 - [Apple: M6 と M5 Ultra](https://www.apple.com/newsroom/2026/08/apple-introduces-m6-and-m5-ultra-for-a-big-leap-in-performance-and-ai-compute/)(デュアル 16 コア Neural Engine、ピーク 2 倍)
 - [M6 vs M5: Dual Neural Engine](https://www.ithinkdiff.com/m6-chip-vs-m5-chip-2nm-design-12-cores-and-dual-neural-engine/)
 
-## 8. 再開手順(2026-09-22 中断時点)
+## 8. 実施記録(2026-09-22)
 
-1. mini への経路: Thunderbolt bridge(`m6-tb`)が落ちていたので **`ssh m6-lan`**(192.168.0.64)を使う。
-   `just studio-mini` の rsync は `m6-tb` 前提なので、手で同期する:
+probe は計画どおり mini の実ウェイトで全項目を走らせた。生データは
+`docs/16gb/runs/m6mini/20260922-2306-m11a-ane-probe.json` と `…-2343-m11a-actstats.json`。
+環境で踏んだことを 2 つだけ残す(次に coremltools を触るときのため):
+
+1. **Python 3.14 では coremltools 9.0 のネイティブ拡張が載らない。** `import coremltools` は通るのに
+   `libcoremlpython` / `libmilstoragepython` が無く、変換が `BlobWriter not loaded` で落ちる。
+   3.13 なら載る。mini の `.venv`(3.14、studio が使用中)を壊さないよう別 venv で回した:
+   `UV_PROJECT_ENVIRONMENT=.venv313 uv run --python 3.13 --with coremltools python tools/bench/ane_probe.py ...`
+   環境確認は `from coremltools.libcoremlpython import _MLModelProxy` まで見ること。
+2. **Thunderbolt bridge(`m6-tb`)が落ちているときは `ssh m6-lan`(192.168.0.64)。**
+   `just studio-mini` の rsync は `m6-tb` 前提なので手で流す:
    `rsync -a --exclude .venv --exclude .git --exclude '*.pyc' src tools pyproject.toml uv.lock m6-lan:dev/mflux/`
-2. mini は Python 3.14 / coremltools 9.0 が `uv run --with coremltools` で入る(確認済み、importOK)。
-   studio(pid 6282、19 MB、idle)が動いているが GPU は使っていないので止めなくてよい。
-3. 最初の煙試験(mini で):
-   `source ~/.local/bin/env; cd ~/dev/mflux && uv run --with coremltools python tools/bench/ane_probe.py --only convert,single --shapes gate --variants row --m 4126`
-   - まず `Block0` の key 名(`attn.wq.weight` 等)が `Krea2BlockStream.read(0)` の flatten と合うか。合わなければ `Block0.weights` を直す。
-   - `ct.convert` の fp16 I/O が MIL Program 入力で通るか(通らなければ fp32 I/O に落ちて `io` に理由が出る)。
-   - `[linear->NeuralEngine x1]` が出るか。出なければ `--layout conv` を試す。
-4. 全部: `--only convert,single,dual,concurrent,handoff,numerics --json docs/16gb/runs/m6mini/<ts>-m11a-ane-probe.json`
-   → 続けて `--only actstats --json docs/16gb/runs/m6mini/<ts>-m11a-actstats.json`(実走 1 枚、約 40 s)。
-5. 記録は `docs/16gb/measurements/2026-09-22-m11a-ane-probe.md`(M9 の書式)。合格基準は §5 M11a。

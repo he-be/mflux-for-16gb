@@ -310,11 +310,14 @@ I/O             : 71.8 ms / ブロック(M0 の実測 74 ms と一致)
 
 ## 6. 次にやること
 
-- **M11a: ANE を 2 台目の演算器として足せるかの probe**([計画](../../.cursor/plans/2026-09-22-krea2-ane-hybrid.md))。
-  GPU 単独の伸びしろは 1.27 倍で頭打ち(M9)。Irodori-TTS は M3 Pro で ANE + GPU の並走で 1.35 倍、Draw Things は
-  M5 で ANE+NAX hybrid を既定にしている。Krea 2 は CFG 分岐がないので **MLP の行列積を列で割って GPU と ANE に同時に
-  やらせる**形。机上で 7.9 → 5.5 s/step(ANE 1 基)、常駐 +5 GB。**先に `tools/bench/ane_probe.py` で ANE の実効 TOPS /
-  GPU 併走 / 常駐 / fp16 の数値を測り、合格基準を 1 つでも外したら閉じる。**
+- ~~**M11a: ANE を 2 台目の演算器として足せるかの probe**~~ → **済。不合格で閉じた**
+  ([M11a](measurements/2026-09-22-m11a-ane-probe.md))。ANE 単独は候補の形で 15.4 TOPS 出るが、
+  **GPU と併走させると GPU が 16.90 → 6.78 TFLOPS(−60%)、ANE も 15.4 → 9.5 TOPS**。行列積はどれも
+  帯域律速で、演算器を足しても帯域は足されない。デュアル ANE も 2 基が 1 デバイスに束ねられていて
+  2 プロセスで +34%。Core ML は group-64 の int8 を ANE に載せず(GPU に落ちる)、載る行スケール int8 は
+  GPU 比で 79% の要素が bf16 1 ULP を超える。併走の実測を戻すと 1 ステップ 7.9 → 約 7.8 s で常駐 +5.7 GB。
+  **M11b / M11c には進まない。**
+- **次の取り分は ANE ではなく `mlp.down` の MLX カーネル**(9.1 TFLOPS 対 MPS 17.9、M9 §1)。同じ帯域のまま 1.3 s/step。
 - **M3 Pro を常駐アプリなしで再測定**(今回は作業中の機械で swapouts 8 ページ、clean でない)。
   同時に `sudo sysctl -w iogpu.wired_limit_mb=0` の宿題を消す。期待値 22.9 s/step / 5.0 GB / 0 ページ。
 - **M9f `powermetrics`**(要 sudo)。1280² の +3%/step が持続クロックかどうか。
