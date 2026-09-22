@@ -1,0 +1,2313 @@
+===== alone =====
+*** Sampled system activity (Wed Sep 23 04:33:05 2026 +0900) (1002.68ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1672 MHz
+GPU HW active residency:  40.46% (502 MHz: 1.6% 669 MHz:   0% 834 MHz: .42% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz: .21% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: .13% 1530 MHz: .03% 1620 MHz: .08% 1680 MHz: .31% 1735 MHz:  38%)
+GPU idle residency:  59.54%
+GPU Power: 7779 mW
+*** Sampled system activity (Wed Sep 23 04:33:06 2026 +0900) (1002.91ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz: .05% 1680 MHz: .16% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 21149 mW
+*** Sampled system activity (Wed Sep 23 04:33:07 2026 +0900) (1002.79ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz: .03% 1620 MHz: .05% 1680 MHz: .05% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 21158 mW
+*** Sampled system activity (Wed Sep 23 04:33:08 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz: .13% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 21415 mW
+*** Sampled system activity (Wed Sep 23 04:33:09 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz: .05% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 21382 mW
+*** Sampled system activity (Wed Sep 23 04:33:10 2026 +0900) (1002.93ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz: .05% 1680 MHz: .13% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 21073 mW
+*** Sampled system activity (Wed Sep 23 04:33:11 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: .02% 1530 MHz: .05% 1620 MHz: .11% 1680 MHz: .18% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 20931 mW
+*** Sampled system activity (Wed Sep 23 04:33:12 2026 +0900) (1002.90ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz: .03% 1680 MHz: .08% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 20921 mW
+*** Sampled system activity (Wed Sep 23 04:33:13 2026 +0900) (1003.03ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz: .05% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 21267 mW
+*** Sampled system activity (Wed Sep 23 04:33:14 2026 +0900) (1002.78ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz: .03% 1680 MHz: .16% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 21300 mW
+*** Sampled system activity (Wed Sep 23 04:33:15 2026 +0900) (1002.80ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz: .05% 1680 MHz: .18% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 21532 mW
+*** Sampled system activity (Wed Sep 23 04:33:16 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz: .03% 1680 MHz: .16% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 21516 mW
+*** Sampled system activity (Wed Sep 23 04:33:17 2026 +0900) (1002.90ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz: .03% 1680 MHz: .08% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 21386 mW
+*** Sampled system activity (Wed Sep 23 04:33:18 2026 +0900) (1002.98ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz: .08% 1680 MHz: .21% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 21632 mW
+*** Sampled system activity (Wed Sep 23 04:33:19 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz: .05% 1680 MHz: .15% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 21151 mW
+*** Sampled system activity (Wed Sep 23 04:33:20 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz: .03% 1680 MHz: .10% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 21276 mW
+*** Sampled system activity (Wed Sep 23 04:33:21 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz: .10% 1680 MHz: .18% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 21220 mW
+*** Sampled system activity (Wed Sep 23 04:33:22 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1735 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz: .03% 1620 MHz: .08% 1680 MHz: .31% 1735 MHz: 100%)
+GPU idle residency:   0.00%
+GPU Power: 21539 mW
+*** Sampled system activity (Wed Sep 23 04:33:23 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1734 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz: .03% 1620 MHz: .08% 1680 MHz: 1.1% 1735 MHz:  99%)
+GPU idle residency:   0.00%
+GPU Power: 21481 mW
+*** Sampled system activity (Wed Sep 23 04:33:24 2026 +0900) (1002.76ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1734 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz: .03% 1620 MHz: .08% 1680 MHz: 1.6% 1735 MHz:  98%)
+GPU idle residency:   0.00%
+GPU Power: 21802 mW
+*** Sampled system activity (Wed Sep 23 04:33:25 2026 +0900) (1003.77ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1732 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: .05% 1530 MHz: .08% 1620 MHz: .05% 1680 MHz: 4.9% 1735 MHz:  95%)
+GPU idle residency:   0.00%
+GPU Power: 21488 mW
+*** Sampled system activity (Wed Sep 23 04:33:26 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1728 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz: .67% 1680 MHz:  12% 1735 MHz:  88%)
+GPU idle residency:   0.00%
+GPU Power: 21515 mW
+*** Sampled system activity (Wed Sep 23 04:33:27 2026 +0900) (1002.94ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1724 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz: 2.0% 1680 MHz:  16% 1735 MHz:  82%)
+GPU idle residency:   0.00%
+GPU Power: 21587 mW
+*** Sampled system activity (Wed Sep 23 04:33:28 2026 +0900) (1002.90ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1718 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz: .26% 1620 MHz: 3.4% 1680 MHz:  23% 1735 MHz:  73%)
+GPU idle residency:   0.00%
+GPU Power: 20977 mW
+*** Sampled system activity (Wed Sep 23 04:33:29 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1714 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz: .74% 1620 MHz: 8.2% 1680 MHz:  19% 1735 MHz:  72%)
+GPU idle residency:   0.00%
+GPU Power: 20802 mW
+*** Sampled system activity (Wed Sep 23 04:33:30 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1703 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz: 3.7% 1620 MHz:  12% 1680 MHz:  19% 1735 MHz:  65%)
+GPU idle residency:   0.00%
+GPU Power: 20600 mW
+*** Sampled system activity (Wed Sep 23 04:33:31 2026 +0900) (1003.09ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1692 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz: 6.0% 1620 MHz:  17% 1680 MHz:  21% 1735 MHz:  56%)
+GPU idle residency:   0.00%
+GPU Power: 20354 mW
+*** Sampled system activity (Wed Sep 23 04:33:32 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1695 MHz
+GPU HW active residency:  97.46% (502 MHz: .01% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: .02% 1530 MHz: 7.0% 1620 MHz: 9.7% 1680 MHz:  24% 1735 MHz:  57%)
+GPU idle residency:   2.54%
+GPU Power: 19955 mW
+*** Sampled system activity (Wed Sep 23 04:33:33 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1678 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: .15% 1530 MHz:  11% 1620 MHz:  18% 1680 MHz:  25% 1735 MHz:  46%)
+GPU idle residency:   0.00%
+GPU Power: 20010 mW
+*** Sampled system activity (Wed Sep 23 04:33:34 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1663 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: .32% 1530 MHz:  17% 1620 MHz:  22% 1680 MHz:  19% 1735 MHz:  42%)
+GPU idle residency:   0.00%
+GPU Power: 19704 mW
+*** Sampled system activity (Wed Sep 23 04:33:35 2026 +0900) (1002.78ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1657 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: .59% 1530 MHz:  23% 1620 MHz:  17% 1680 MHz:  17% 1735 MHz:  42%)
+GPU idle residency:   0.00%
+GPU Power: 19668 mW
+*** Sampled system activity (Wed Sep 23 04:33:36 2026 +0900) (1002.81ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1656 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: .55% 1530 MHz:  21% 1620 MHz:  22% 1680 MHz:  16% 1735 MHz:  40%)
+GPU idle residency:   0.00%
+GPU Power: 19743 mW
+*** Sampled system activity (Wed Sep 23 04:33:37 2026 +0900) (1002.79ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1651 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz: .05% 1442 MHz: 1.0% 1530 MHz:  22% 1620 MHz:  23% 1680 MHz:  20% 1735 MHz:  35%)
+GPU idle residency:   0.00%
+GPU Power: 19532 mW
+*** Sampled system activity (Wed Sep 23 04:33:38 2026 +0900) (1003.09ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1644 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: 1.3% 1530 MHz:  27% 1620 MHz:  18% 1680 MHz:  21% 1735 MHz:  33%)
+GPU idle residency:   0.00%
+GPU Power: 19387 mW
+*** Sampled system activity (Wed Sep 23 04:33:39 2026 +0900) (1003.10ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1621 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz: .03% 1442 MHz: 3.2% 1530 MHz:  36% 1620 MHz:  18% 1680 MHz:  15% 1735 MHz:  27%)
+GPU idle residency:   0.00%
+GPU Power: 18885 mW
+*** Sampled system activity (Wed Sep 23 04:33:40 2026 +0900) (1002.97ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1623 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: 2.8% 1530 MHz:  34% 1620 MHz:  19% 1680 MHz:  21% 1735 MHz:  23%)
+GPU idle residency:   0.00%
+GPU Power: 18914 mW
+*** Sampled system activity (Wed Sep 23 04:33:41 2026 +0900) (1003.16ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1611 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: 3.6% 1530 MHz:  37% 1620 MHz:  24% 1680 MHz:  20% 1735 MHz:  16%)
+GPU idle residency:   0.00%
+GPU Power: 18621 mW
+*** Sampled system activity (Wed Sep 23 04:33:42 2026 +0900) (1002.80ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1604 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: 4.0% 1530 MHz:  43% 1620 MHz:  18% 1680 MHz:  18% 1735 MHz:  17%)
+GPU idle residency:   0.00%
+GPU Power: 18499 mW
+*** Sampled system activity (Wed Sep 23 04:33:43 2026 +0900) (1002.81ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1604 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: 4.2% 1530 MHz:  40% 1620 MHz:  22% 1680 MHz:  21% 1735 MHz:  13%)
+GPU idle residency:   0.00%
+GPU Power: 18505 mW
+*** Sampled system activity (Wed Sep 23 04:33:44 2026 +0900) (1002.80ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1595 MHz
+GPU HW active residency: 100.00% (502 MHz: .81% 669 MHz: .05% 834 MHz: .05% 1002 MHz: .05% 1090 MHz: .05% 1178 MHz: .05% 1266 MHz: .05% 1354 MHz: .05% 1442 MHz: 3.7% 1530 MHz:  38% 1620 MHz:  22% 1680 MHz:  23% 1735 MHz:  12%)
+GPU idle residency:   0.00%
+GPU Power: 18250 mW
+*** Sampled system activity (Wed Sep 23 04:33:45 2026 +0900) (1002.91ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1591 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz: .03% 1442 MHz: 5.0% 1530 MHz:  44% 1620 MHz:  27% 1680 MHz:  14% 1735 MHz: 9.8%)
+GPU idle residency:   0.00%
+GPU Power: 18261 mW
+*** Sampled system activity (Wed Sep 23 04:33:46 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1583 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: 6.8% 1530 MHz:  48% 1620 MHz:  21% 1680 MHz:  16% 1735 MHz: 7.3%)
+GPU idle residency:   0.00%
+GPU Power: 18143 mW
+*** Sampled system activity (Wed Sep 23 04:33:47 2026 +0900) (1002.89ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1576 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: 7.2% 1530 MHz:  49% 1620 MHz:  25% 1680 MHz:  15% 1735 MHz: 3.7%)
+GPU idle residency:   0.00%
+GPU Power: 17943 mW
+*** Sampled system activity (Wed Sep 23 04:33:48 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1564 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: 9.0% 1530 MHz:  57% 1620 MHz:  19% 1680 MHz:  13% 1735 MHz: 3.2%)
+GPU idle residency:   0.00%
+GPU Power: 17748 mW
+*** Sampled system activity (Wed Sep 23 04:33:49 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1563 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz: .05% 1442 MHz: 9.7% 1530 MHz:  56% 1620 MHz:  19% 1680 MHz:  12% 1735 MHz: 2.7%)
+GPU idle residency:   0.00%
+GPU Power: 17767 mW
+*** Sampled system activity (Wed Sep 23 04:33:50 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1573 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: 7.2% 1530 MHz:  54% 1620 MHz:  20% 1680 MHz:  14% 1735 MHz: 5.0%)
+GPU idle residency:   0.00%
+GPU Power: 17878 mW
+*** Sampled system activity (Wed Sep 23 04:33:51 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1553 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: 9.0% 1530 MHz:  62% 1620 MHz:  22% 1680 MHz: 6.5% 1735 MHz: 1.0%)
+GPU idle residency:   0.00%
+GPU Power: 17613 mW
+*** Sampled system activity (Wed Sep 23 04:33:52 2026 +0900) (1002.89ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1561 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: 9.9% 1530 MHz:  57% 1620 MHz:  18% 1680 MHz:  13% 1735 MHz: 2.1%)
+GPU idle residency:   0.00%
+GPU Power: 17742 mW
+*** Sampled system activity (Wed Sep 23 04:33:53 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1553 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz: 9.9% 1530 MHz:  61% 1620 MHz:  21% 1680 MHz: 6.8% 1735 MHz: .84%)
+GPU idle residency:   0.00%
+GPU Power: 17535 mW
+*** Sampled system activity (Wed Sep 23 04:33:54 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1539 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:  11% 1530 MHz:  68% 1620 MHz:  19% 1680 MHz: 1.7% 1735 MHz:   0%)
+GPU idle residency:   0.00%
+GPU Power: 17346 mW
+*** Sampled system activity (Wed Sep 23 04:33:55 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1551 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz: .03% 1442 MHz: 9.6% 1530 MHz:  63% 1620 MHz:  20% 1680 MHz: 6.7% 1735 MHz: .68%)
+GPU idle residency:   0.00%
+GPU Power: 17387 mW
+*** Sampled system activity (Wed Sep 23 04:33:56 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1542 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz: .03% 1442 MHz:  14% 1530 MHz:  64% 1620 MHz:  17% 1680 MHz: 5.1% 1735 MHz: .86%)
+GPU idle residency:   0.00%
+GPU Power: 17200 mW
+*** Sampled system activity (Wed Sep 23 04:33:57 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1540 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz: .03% 1442 MHz:  13% 1530 MHz:  66% 1620 MHz:  18% 1680 MHz: 3.1% 1735 MHz: .50%)
+GPU idle residency:   0.00%
+GPU Power: 17056 mW
+*** Sampled system activity (Wed Sep 23 04:33:58 2026 +0900) (1003.00ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1540 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:  13% 1530 MHz:  66% 1620 MHz:  17% 1680 MHz: 3.5% 1735 MHz: .37%)
+GPU idle residency:   0.00%
+GPU Power: 17049 mW
+*** Sampled system activity (Wed Sep 23 04:33:59 2026 +0900) (1002.30ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1535 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz: .03% 1442 MHz:  15% 1530 MHz:  67% 1620 MHz:  18% 1680 MHz: .87% 1735 MHz:   0%)
+GPU idle residency:   0.00%
+GPU Power: 16994 mW
+*** Sampled system activity (Wed Sep 23 04:34:00 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1531 MHz
+GPU HW active residency:  91.00% (502 MHz: .09% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:  17% 1530 MHz:  59% 1620 MHz:  13% 1680 MHz: 2.3% 1735 MHz: .49%)
+GPU idle residency:   9.00%
+GPU Power: 15044 mW
+*** Sampled system activity (Wed Sep 23 04:34:01 2026 +0900) (1002.77ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 815 MHz
+GPU HW active residency:   6.23% (502 MHz: 4.4% 669 MHz: .09% 834 MHz:   0% 1002 MHz: .12% 1090 MHz:   0% 1178 MHz: .10% 1266 MHz:   0% 1354 MHz: .08% 1442 MHz:   0% 1530 MHz: .07% 1620 MHz: .07% 1680 MHz:   0% 1735 MHz: 1.3%)
+GPU idle residency:  93.77%
+GPU Power: 45 mW
+*** Sampled system activity (Wed Sep 23 04:34:02 2026 +0900) (1004.33ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   3.72% (502 MHz: 3.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  96.28%
+GPU Power: 15 mW
+*** Sampled system activity (Wed Sep 23 04:34:03 2026 +0900) (1004.32ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 6 mW
+*** Sampled system activity (Wed Sep 23 04:34:04 2026 +0900) (1004.36ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.74% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.26%
+GPU Power: 6 mW
+*** Sampled system activity (Wed Sep 23 04:34:05 2026 +0900) (1004.23ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.74% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.26%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:34:06 2026 +0900) (1002.70ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.74% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.26%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:34:07 2026 +0900) (1004.32ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.73% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.27%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:34:08 2026 +0900) (1002.37ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:34:09 2026 +0900) (1004.33ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.74% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.26%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:34:10 2026 +0900) (1004.24ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.77% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.23%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:34:11 2026 +0900) (1004.36ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:34:12 2026 +0900) (1004.29ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.76% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.24%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:34:13 2026 +0900) (1004.26ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.74% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.26%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:14 2026 +0900) (1004.32ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.73% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.27%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:15 2026 +0900) (1003.96ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:16 2026 +0900) (1004.28ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:17 2026 +0900) (1004.32ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.73% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.27%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:18 2026 +0900) (1004.18ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.74% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.26%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:19 2026 +0900) (1004.29ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.74% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.26%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:20 2026 +0900) (1004.36ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.76% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.24%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:21 2026 +0900) (1004.22ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.73% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.27%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:22 2026 +0900) (1003.73ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.71% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.29%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:23 2026 +0900) (1003.95ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:24 2026 +0900) (1004.31ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.74% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.26%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:25 2026 +0900) (1004.33ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.74% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.26%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:26 2026 +0900) (1004.26ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.72% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.28%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:27 2026 +0900) (1003.78ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:28 2026 +0900) (1004.29ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:29 2026 +0900) (1004.29ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.74% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.26%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:30 2026 +0900) (1004.33ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.76% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.24%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:31 2026 +0900) (1004.27ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.74% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.26%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:32 2026 +0900) (1004.27ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:33 2026 +0900) (1004.28ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.74% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.26%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:34 2026 +0900) (1004.30ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:35 2026 +0900) (1004.35ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.76% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.24%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:36 2026 +0900) (1004.33ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:37 2026 +0900) (1004.30ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.76% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.24%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:38 2026 +0900) (1004.23ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.74% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.26%
+GPU Power: 3 mW
+*** Sampled system activity (Wed Sep 23 04:34:39 2026 +0900) (1004.28ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.82% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.18%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:40 2026 +0900) (1003.67ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.89% (502 MHz: 1.9% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.11%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:34:41 2026 +0900) (1004.31ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.73% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.27%
+GPU Power: 3 mW
+*** Sampled system activity (Wed Sep 23 04:34:42 2026 +0900) (1004.31ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 3 mW
+*** Sampled system activity (Wed Sep 23 04:34:43 2026 +0900) (1004.19ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.73% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.27%
+GPU Power: 3 mW
+*** Sampled system activity (Wed Sep 23 04:34:44 2026 +0900) (1003.56ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.74% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.26%
+GPU Power: 3 mW
+*** Sampled system activity (Wed Sep 23 04:34:45 2026 +0900) (1004.29ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 3 mW
+*** Sampled system activity (Wed Sep 23 04:34:46 2026 +0900) (1004.21ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 3 mW
+*** Sampled system activity (Wed Sep 23 04:34:47 2026 +0900) (1003.26ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 3 mW
+*** Sampled system activity (Wed Sep 23 04:34:48 2026 +0900) (1004.24ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.76% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.24%
+GPU Power: 3 mW
+*** Sampled system activity (Wed Sep 23 04:34:49 2026 +0900) (1004.28ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 3 mW
+*** Sampled system activity (Wed Sep 23 04:34:50 2026 +0900) (1004.36ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 3 mW
+*** Sampled system activity (Wed Sep 23 04:34:51 2026 +0900) (1004.27ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 3 mW
+*** Sampled system activity (Wed Sep 23 04:34:52 2026 +0900) (1004.36ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.76% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.24%
+GPU Power: 3 mW
+*** Sampled system activity (Wed Sep 23 04:34:53 2026 +0900) (1004.25ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.76% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.24%
+GPU Power: 3 mW
+*** Sampled system activity (Wed Sep 23 04:34:54 2026 +0900) (1004.32ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.75% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.25%
+GPU Power: 3 mW
+===== co =====
+*** Sampled system activity (Wed Sep 23 04:35:25 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1347 MHz
+GPU HW active residency:  27.39% (502 MHz: 1.8% 669 MHz:   0% 834 MHz: .42% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz: .21% 1266 MHz:  15% 1354 MHz: .97% 1442 MHz: .65% 1530 MHz: .36% 1620 MHz: .31% 1680 MHz: .44% 1735 MHz: 6.8%)
+GPU idle residency:  72.61%
+GPU Power: 1730 mW
+*** Sampled system activity (Wed Sep 23 04:35:26 2026 +0900) (1002.99ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1402 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  65% 1354 MHz: 3.9% 1442 MHz: 2.5% 1530 MHz: 1.3% 1620 MHz: 1.3% 1680 MHz: 1.5% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8046 mW
+*** Sampled system activity (Wed Sep 23 04:35:27 2026 +0900) (1003.29ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1414 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  61% 1354 MHz: 5.3% 1442 MHz: 3.4% 1530 MHz: 1.6% 1620 MHz: 1.1% 1680 MHz: 1.1% 1735 MHz:  27%)
+GPU idle residency:   0.00%
+GPU Power: 7850 mW
+*** Sampled system activity (Wed Sep 23 04:35:28 2026 +0900) (1002.92ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1417 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  61% 1354 MHz: 4.3% 1442 MHz: 2.9% 1530 MHz: 1.8% 1620 MHz: 1.7% 1680 MHz: 1.9% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8004 mW
+*** Sampled system activity (Wed Sep 23 04:35:29 2026 +0900) (1003.20ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1398 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  66% 1354 MHz: 4.7% 1442 MHz: 2.5% 1530 MHz: .98% 1620 MHz: .83% 1680 MHz: .99% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8119 mW
+*** Sampled system activity (Wed Sep 23 04:35:30 2026 +0900) (1002.90ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1429 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  56% 1354 MHz: 6.4% 1442 MHz: 3.8% 1530 MHz: 1.8% 1620 MHz: 1.9% 1680 MHz: 2.2% 1735 MHz:  28%)
+GPU idle residency:   0.00%
+GPU Power: 8131 mW
+*** Sampled system activity (Wed Sep 23 04:35:31 2026 +0900) (1002.89ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1413 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  61% 1354 MHz: 4.7% 1442 MHz: 3.5% 1530 MHz: 2.1% 1620 MHz: 1.5% 1680 MHz: 1.5% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 7891 mW
+*** Sampled system activity (Wed Sep 23 04:35:32 2026 +0900) (1003.05ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1406 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  62% 1354 MHz: 6.0% 1442 MHz: 3.8% 1530 MHz: 1.8% 1620 MHz: 1.4% 1680 MHz: 1.3% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8227 mW
+*** Sampled system activity (Wed Sep 23 04:35:33 2026 +0900) (1002.90ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1419 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  60% 1354 MHz: 4.5% 1442 MHz: 3.2% 1530 MHz: 2.0% 1620 MHz: 1.5% 1680 MHz: 1.5% 1735 MHz:  27%)
+GPU idle residency:   0.00%
+GPU Power: 7904 mW
+*** Sampled system activity (Wed Sep 23 04:35:34 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1421 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  61% 1354 MHz: 3.5% 1442 MHz: 2.5% 1530 MHz: 1.6% 1620 MHz: 1.5% 1680 MHz: 1.7% 1735 MHz:  28%)
+GPU idle residency:   0.00%
+GPU Power: 8627 mW
+*** Sampled system activity (Wed Sep 23 04:35:35 2026 +0900) (1002.98ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1422 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  57% 1354 MHz: 6.3% 1442 MHz: 4.5% 1530 MHz: 2.2% 1620 MHz: 1.5% 1680 MHz: 1.5% 1735 MHz:  27%)
+GPU idle residency:   0.00%
+GPU Power: 7998 mW
+*** Sampled system activity (Wed Sep 23 04:35:36 2026 +0900) (1002.89ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1411 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 3.8% 1442 MHz: 2.4% 1530 MHz: 1.5% 1620 MHz: 1.3% 1680 MHz: 1.4% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8082 mW
+*** Sampled system activity (Wed Sep 23 04:35:37 2026 +0900) (1003.73ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1402 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  64% 1354 MHz: 4.4% 1442 MHz: 3.1% 1530 MHz: 1.7% 1620 MHz: 1.2% 1680 MHz: 1.3% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8283 mW
+*** Sampled system activity (Wed Sep 23 04:35:38 2026 +0900) (1003.01ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1419 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  58% 1354 MHz: 6.6% 1442 MHz: 4.3% 1530 MHz: 2.0% 1620 MHz: 1.5% 1680 MHz: 1.5% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8119 mW
+*** Sampled system activity (Wed Sep 23 04:35:39 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1401 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  66% 1354 MHz: 4.2% 1442 MHz: 2.3% 1530 MHz: .83% 1620 MHz: .73% 1680 MHz: .94% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 7875 mW
+*** Sampled system activity (Wed Sep 23 04:35:40 2026 +0900) (1002.89ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1410 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  61% 1354 MHz: 5.6% 1442 MHz: 3.5% 1530 MHz: 1.7% 1620 MHz: 1.4% 1680 MHz: 1.2% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8305 mW
+*** Sampled system activity (Wed Sep 23 04:35:41 2026 +0900) (1002.94ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1427 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  58% 1354 MHz: 5.2% 1442 MHz: 3.3% 1530 MHz: 1.7% 1620 MHz: 1.4% 1680 MHz: 1.5% 1735 MHz:  29%)
+GPU idle residency:   0.00%
+GPU Power: 8335 mW
+*** Sampled system activity (Wed Sep 23 04:35:42 2026 +0900) (1002.96ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1406 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  64% 1354 MHz: 4.2% 1442 MHz: 2.4% 1530 MHz: 1.1% 1620 MHz: .91% 1680 MHz: 1.0% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8347 mW
+*** Sampled system activity (Wed Sep 23 04:35:43 2026 +0900) (1002.95ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1416 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz: .05% 1266 MHz:  60% 1354 MHz: 6.0% 1442 MHz: 3.7% 1530 MHz: 1.5% 1620 MHz: 1.1% 1680 MHz: 1.1% 1735 MHz:  27%)
+GPU idle residency:   0.00%
+GPU Power: 8027 mW
+*** Sampled system activity (Wed Sep 23 04:35:44 2026 +0900) (1002.90ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1416 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  62% 1354 MHz: 4.3% 1442 MHz: 2.9% 1530 MHz: 1.4% 1620 MHz: 1.2% 1680 MHz: 1.5% 1735 MHz:  27%)
+GPU idle residency:   0.00%
+GPU Power: 8263 mW
+*** Sampled system activity (Wed Sep 23 04:35:46 2026 +0900) (1003.01ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1407 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  64% 1354 MHz: 4.1% 1442 MHz: 2.5% 1530 MHz: 1.2% 1620 MHz: .99% 1680 MHz: 1.0% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8537 mW
+*** Sampled system activity (Wed Sep 23 04:35:47 2026 +0900) (1002.93ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1431 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  56% 1354 MHz: 6.5% 1442 MHz: 4.1% 1530 MHz: 1.7% 1620 MHz: 1.4% 1680 MHz: 1.5% 1735 MHz:  29%)
+GPU idle residency:   0.00%
+GPU Power: 8398 mW
+*** Sampled system activity (Wed Sep 23 04:35:48 2026 +0900) (1002.91ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1395 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  66% 1354 MHz: 4.2% 1442 MHz: 2.8% 1530 MHz: 1.5% 1620 MHz: 1.3% 1680 MHz: 1.3% 1735 MHz:  23%)
+GPU idle residency:   0.00%
+GPU Power: 8055 mW
+*** Sampled system activity (Wed Sep 23 04:35:49 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1403 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz: .03% 1266 MHz:  62% 1354 MHz: 6.8% 1442 MHz: 3.7% 1530 MHz: 1.2% 1620 MHz: .96% 1680 MHz: 1.0% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8126 mW
+*** Sampled system activity (Wed Sep 23 04:35:50 2026 +0900) (1002.97ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1417 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz: .03% 1178 MHz: .05% 1266 MHz:  62% 1354 MHz: 3.8% 1442 MHz: 2.4% 1530 MHz: 1.3% 1620 MHz: 1.3% 1680 MHz: 1.5% 1735 MHz:  28%)
+GPU idle residency:   0.00%
+GPU Power: 8326 mW
+*** Sampled system activity (Wed Sep 23 04:35:51 2026 +0900) (1011.46ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1408 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  64% 1354 MHz: 4.0% 1442 MHz: 2.4% 1530 MHz: 1.5% 1620 MHz: 1.3% 1680 MHz: 1.7% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8307 mW
+*** Sampled system activity (Wed Sep 23 04:35:52 2026 +0900) (1002.91ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1418 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz: .03% 1266 MHz:  58% 1354 MHz: 6.8% 1442 MHz: 4.5% 1530 MHz: 2.0% 1620 MHz: 1.8% 1680 MHz: 1.8% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8072 mW
+*** Sampled system activity (Wed Sep 23 04:35:53 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1415 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  61% 1354 MHz: 4.6% 1442 MHz: 2.9% 1530 MHz: 1.7% 1620 MHz: 1.6% 1680 MHz: 1.3% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8195 mW
+*** Sampled system activity (Wed Sep 23 04:35:54 2026 +0900) (1003.07ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1416 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  61% 1354 MHz: 4.4% 1442 MHz: 2.9% 1530 MHz: 1.5% 1620 MHz: 1.3% 1680 MHz: 1.5% 1735 MHz:  27%)
+GPU idle residency:   0.00%
+GPU Power: 8648 mW
+*** Sampled system activity (Wed Sep 23 04:35:55 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1427 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  57% 1354 MHz: 6.5% 1442 MHz: 4.1% 1530 MHz: 2.0% 1620 MHz: 1.5% 1680 MHz: 1.4% 1735 MHz:  28%)
+GPU idle residency:   0.00%
+GPU Power: 8371 mW
+*** Sampled system activity (Wed Sep 23 04:35:56 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1402 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  64% 1354 MHz: 4.7% 1442 MHz: 2.8% 1530 MHz: 1.4% 1620 MHz: 1.0% 1680 MHz: 1.1% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8374 mW
+*** Sampled system activity (Wed Sep 23 04:35:57 2026 +0900) (1002.94ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1412 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  60% 1354 MHz: 6.6% 1442 MHz: 4.0% 1530 MHz: 1.6% 1620 MHz: 1.1% 1680 MHz: 1.0% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8190 mW
+*** Sampled system activity (Wed Sep 23 04:35:58 2026 +0900) (1003.00ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1420 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  60% 1354 MHz: 5.3% 1442 MHz: 3.4% 1530 MHz: 1.6% 1620 MHz: 1.1% 1680 MHz: 1.2% 1735 MHz:  28%)
+GPU idle residency:   0.00%
+GPU Power: 8410 mW
+*** Sampled system activity (Wed Sep 23 04:35:59 2026 +0900) (1002.91ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1409 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 4.8% 1442 MHz: 2.7% 1530 MHz: 1.2% 1620 MHz: 1.0% 1680 MHz: 1.1% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8660 mW
+*** Sampled system activity (Wed Sep 23 04:36:00 2026 +0900) (1002.93ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1414 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  59% 1354 MHz: 6.4% 1442 MHz: 4.7% 1530 MHz: 2.3% 1620 MHz: 1.6% 1680 MHz: 1.4% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8081 mW
+*** Sampled system activity (Wed Sep 23 04:36:01 2026 +0900) (1002.90ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1427 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  57% 1354 MHz: 6.3% 1442 MHz: 3.7% 1530 MHz: 1.9% 1620 MHz: 1.7% 1680 MHz: 1.7% 1735 MHz:  28%)
+GPU idle residency:   0.00%
+GPU Power: 8263 mW
+*** Sampled system activity (Wed Sep 23 04:36:02 2026 +0900) (1003.10ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1395 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  66% 1354 MHz: 4.6% 1442 MHz: 2.5% 1530 MHz: 1.6% 1620 MHz: 1.5% 1680 MHz: 1.2% 1735 MHz:  23%)
+GPU idle residency:   0.00%
+GPU Power: 7921 mW
+*** Sampled system activity (Wed Sep 23 04:36:03 2026 +0900) (1003.25ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1431 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  57% 1354 MHz: 5.4% 1442 MHz: 3.3% 1530 MHz: 1.3% 1620 MHz: 1.3% 1680 MHz: 1.7% 1735 MHz:  30%)
+GPU idle residency:   0.00%
+GPU Power: 8497 mW
+*** Sampled system activity (Wed Sep 23 04:36:04 2026 +0900) (1003.05ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1411 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 4.5% 1442 MHz: 2.8% 1530 MHz: 1.3% 1620 MHz: 1.1% 1680 MHz: 1.2% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8570 mW
+*** Sampled system activity (Wed Sep 23 04:36:05 2026 +0900) (1002.92ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1401 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 5.5% 1442 MHz: 3.7% 1530 MHz: 1.7% 1620 MHz: 1.2% 1680 MHz: 1.1% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8081 mW
+*** Sampled system activity (Wed Sep 23 04:36:06 2026 +0900) (1002.95ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1415 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  61% 1354 MHz: 4.6% 1442 MHz: 3.0% 1530 MHz: 1.6% 1620 MHz: 1.2% 1680 MHz: 1.1% 1735 MHz:  27%)
+GPU idle residency:   0.00%
+GPU Power: 8262 mW
+*** Sampled system activity (Wed Sep 23 04:36:07 2026 +0900) (1002.92ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1405 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 5.3% 1442 MHz: 3.4% 1530 MHz: 1.5% 1620 MHz: 1.2% 1680 MHz: 1.3% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8324 mW
+*** Sampled system activity (Wed Sep 23 04:36:08 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1424 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  56% 1354 MHz: 6.7% 1442 MHz: 4.6% 1530 MHz: 2.2% 1620 MHz: 1.5% 1680 MHz: 1.6% 1735 MHz:  27%)
+GPU idle residency:   0.00%
+GPU Power: 8545 mW
+*** Sampled system activity (Wed Sep 23 04:36:09 2026 +0900) (1002.90ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1415 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 3.8% 1442 MHz: 2.1% 1530 MHz: 1.2% 1620 MHz: 1.3% 1680 MHz: 1.5% 1735 MHz:  27%)
+GPU idle residency:   0.00%
+GPU Power: 8323 mW
+*** Sampled system activity (Wed Sep 23 04:36:10 2026 +0900) (1003.37ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1404 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  64% 1354 MHz: 5.0% 1442 MHz: 3.0% 1530 MHz: 1.2% 1620 MHz: .78% 1680 MHz: .85% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8466 mW
+*** Sampled system activity (Wed Sep 23 04:36:11 2026 +0900) (1001.80ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1415 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  60% 1354 MHz: 5.7% 1442 MHz: 3.8% 1530 MHz: 1.8% 1620 MHz: 1.2% 1680 MHz: 1.3% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8118 mW
+*** Sampled system activity (Wed Sep 23 04:36:12 2026 +0900) (1003.04ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1410 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  64% 1354 MHz: 3.5% 1442 MHz: 2.4% 1530 MHz: 1.5% 1620 MHz: 1.1% 1680 MHz: 1.3% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8326 mW
+*** Sampled system activity (Wed Sep 23 04:36:13 2026 +0900) (1003.03ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1423 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  57% 1354 MHz: 6.2% 1442 MHz: 4.4% 1530 MHz: 2.0% 1620 MHz: 1.3% 1680 MHz: 1.5% 1735 MHz:  27%)
+GPU idle residency:   0.00%
+GPU Power: 8734 mW
+*** Sampled system activity (Wed Sep 23 04:36:14 2026 +0900) (1002.92ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1423 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  58% 1354 MHz: 5.5% 1442 MHz: 3.7% 1530 MHz: 1.8% 1620 MHz: 1.2% 1680 MHz: 1.5% 1735 MHz:  28%)
+GPU idle residency:   0.00%
+GPU Power: 8461 mW
+*** Sampled system activity (Wed Sep 23 04:36:15 2026 +0900) (1003.06ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1401 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  66% 1354 MHz: 3.7% 1442 MHz: 2.1% 1530 MHz: .98% 1620 MHz: .93% 1680 MHz: 1.3% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8398 mW
+*** Sampled system activity (Wed Sep 23 04:36:16 2026 +0900) (1003.19ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1419 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  58% 1354 MHz: 6.3% 1442 MHz: 4.3% 1530 MHz: 2.1% 1620 MHz: 1.6% 1680 MHz: 1.4% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8134 mW
+*** Sampled system activity (Wed Sep 23 04:36:17 2026 +0900) (1002.95ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1419 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  60% 1354 MHz: 5.0% 1442 MHz: 3.8% 1530 MHz: 2.0% 1620 MHz: 1.4% 1680 MHz: 1.4% 1735 MHz:  27%)
+GPU idle residency:   0.00%
+GPU Power: 8409 mW
+*** Sampled system activity (Wed Sep 23 04:36:18 2026 +0900) (1003.08ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1409 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 4.7% 1442 MHz: 3.0% 1530 MHz: 1.6% 1620 MHz: 1.3% 1680 MHz: 1.2% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8613 mW
+*** Sampled system activity (Wed Sep 23 04:36:19 2026 +0900) (1002.99ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1425 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  58% 1354 MHz: 5.7% 1442 MHz: 3.6% 1530 MHz: 1.6% 1620 MHz: 1.1% 1680 MHz: 1.2% 1735 MHz:  29%)
+GPU idle residency:   0.00%
+GPU Power: 8333 mW
+*** Sampled system activity (Wed Sep 23 04:36:20 2026 +0900) (1002.98ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1408 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 5.2% 1442 MHz: 3.2% 1530 MHz: 1.3% 1620 MHz: 1.1% 1680 MHz: 1.2% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8540 mW
+*** Sampled system activity (Wed Sep 23 04:36:21 2026 +0900) (1002.95ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1405 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  62% 1354 MHz: 6.1% 1442 MHz: 3.9% 1530 MHz: 1.8% 1620 MHz: 1.4% 1680 MHz: 1.5% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8153 mW
+*** Sampled system activity (Wed Sep 23 04:36:22 2026 +0900) (1002.97ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1419 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  60% 1354 MHz: 4.8% 1442 MHz: 3.3% 1530 MHz: 1.8% 1620 MHz: 1.4% 1680 MHz: 1.6% 1735 MHz:  27%)
+GPU idle residency:   0.00%
+GPU Power: 8322 mW
+*** Sampled system activity (Wed Sep 23 04:36:23 2026 +0900) (1003.53ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1407 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 4.9% 1442 MHz: 2.9% 1530 MHz: 1.4% 1620 MHz: 1.1% 1680 MHz: 1.1% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8673 mW
+*** Sampled system activity (Wed Sep 23 04:36:24 2026 +0900) (1002.89ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1419 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  58% 1354 MHz: 6.6% 1442 MHz: 4.5% 1530 MHz: 1.9% 1620 MHz: 1.4% 1680 MHz: 1.7% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8284 mW
+*** Sampled system activity (Wed Sep 23 04:36:25 2026 +0900) (1002.93ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1407 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 4.3% 1442 MHz: 2.9% 1530 MHz: 1.6% 1620 MHz: 1.3% 1680 MHz: 1.3% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8288 mW
+*** Sampled system activity (Wed Sep 23 04:36:26 2026 +0900) (1003.01ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1404 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 5.0% 1442 MHz: 3.2% 1530 MHz: 1.5% 1620 MHz: .98% 1680 MHz: 1.5% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8504 mW
+*** Sampled system activity (Wed Sep 23 04:36:27 2026 +0900) (1002.99ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1412 MHz
+GPU HW active residency:  95.96% (502 MHz: .01% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  58% 1354 MHz: 5.5% 1442 MHz: 3.4% 1530 MHz: 1.6% 1620 MHz: 1.3% 1680 MHz: 1.6% 1735 MHz:  24%)
+GPU idle residency:   4.04%
+GPU Power: 7526 mW
+*** Sampled system activity (Wed Sep 23 04:36:28 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1409 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 4.4% 1442 MHz: 2.9% 1530 MHz: 1.6% 1620 MHz: 1.4% 1680 MHz: 1.6% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8449 mW
+*** Sampled system activity (Wed Sep 23 04:36:29 2026 +0900) (1003.12ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1408 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 4.9% 1442 MHz: 3.0% 1530 MHz: 1.5% 1620 MHz: 1.2% 1680 MHz: 1.6% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8540 mW
+*** Sampled system activity (Wed Sep 23 04:36:30 2026 +0900) (1002.96ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1410 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 4.1% 1442 MHz: 2.8% 1530 MHz: 1.7% 1620 MHz: 1.2% 1680 MHz: 1.5% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8205 mW
+*** Sampled system activity (Wed Sep 23 04:36:31 2026 +0900) (1002.92ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1404 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  65% 1354 MHz: 3.9% 1442 MHz: 2.4% 1530 MHz: 1.5% 1620 MHz: 1.4% 1680 MHz: 1.8% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8436 mW
+*** Sampled system activity (Wed Sep 23 04:36:32 2026 +0900) (1002.98ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1398 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  64% 1354 MHz: 5.2% 1442 MHz: 3.3% 1530 MHz: 1.5% 1620 MHz: 1.3% 1680 MHz: 1.7% 1735 MHz:  23%)
+GPU idle residency:   0.00%
+GPU Power: 8083 mW
+*** Sampled system activity (Wed Sep 23 04:36:33 2026 +0900) (1002.90ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1410 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  64% 1354 MHz: 3.5% 1442 MHz: 2.1% 1530 MHz: 1.2% 1620 MHz: 1.2% 1680 MHz: 1.8% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8386 mW
+*** Sampled system activity (Wed Sep 23 04:36:34 2026 +0900) (1003.00ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1404 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  65% 1354 MHz: 3.9% 1442 MHz: 2.1% 1530 MHz: 1.0% 1620 MHz: 1.0% 1680 MHz: 2.6% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8738 mW
+*** Sampled system activity (Wed Sep 23 04:36:35 2026 +0900) (1002.93ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1403 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  64% 1354 MHz: 5.0% 1442 MHz: 3.3% 1530 MHz: 1.5% 1620 MHz: 1.1% 1680 MHz: 2.0% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8074 mW
+*** Sampled system activity (Wed Sep 23 04:36:36 2026 +0900) (1002.94ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1403 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  66% 1354 MHz: 3.2% 1442 MHz: 2.1% 1530 MHz: 1.3% 1620 MHz: .99% 1680 MHz: 2.0% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8311 mW
+*** Sampled system activity (Wed Sep 23 04:36:37 2026 +0900) (1003.03ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1394 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  66% 1354 MHz: 4.6% 1442 MHz: 2.9% 1530 MHz: 1.2% 1620 MHz: .88% 1680 MHz: 2.0% 1735 MHz:  22%)
+GPU idle residency:   0.00%
+GPU Power: 8356 mW
+*** Sampled system activity (Wed Sep 23 04:36:38 2026 +0900) (1002.92ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1407 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 4.7% 1442 MHz: 3.0% 1530 MHz: 1.5% 1620 MHz: 1.1% 1680 MHz: 1.3% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8242 mW
+*** Sampled system activity (Wed Sep 23 04:36:39 2026 +0900) (1003.11ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1403 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  66% 1354 MHz: 3.3% 1442 MHz: 2.0% 1530 MHz: 1.1% 1620 MHz: .93% 1680 MHz: 3.5% 1735 MHz:  23%)
+GPU idle residency:   0.00%
+GPU Power: 8653 mW
+*** Sampled system activity (Wed Sep 23 04:36:40 2026 +0900) (1002.98ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1405 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  62% 1354 MHz: 5.3% 1442 MHz: 3.6% 1530 MHz: 1.9% 1620 MHz: 1.3% 1680 MHz: 2.7% 1735 MHz:  23%)
+GPU idle residency:   0.00%
+GPU Power: 8047 mW
+*** Sampled system activity (Wed Sep 23 04:36:41 2026 +0900) (1002.91ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1406 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  65% 1354 MHz: 3.3% 1442 MHz: 2.2% 1530 MHz: 1.4% 1620 MHz: 1.1% 1680 MHz: 3.4% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8276 mW
+*** Sampled system activity (Wed Sep 23 04:36:42 2026 +0900) (1004.49ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1391 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  68% 1354 MHz: 4.2% 1442 MHz: 2.3% 1530 MHz: 1.0% 1620 MHz: .98% 1680 MHz: 1.6% 1735 MHz:  22%)
+GPU idle residency:   0.00%
+GPU Power: 8481 mW
+*** Sampled system activity (Wed Sep 23 04:36:43 2026 +0900) (1003.00ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1405 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 4.7% 1442 MHz: 3.0% 1530 MHz: 1.7% 1620 MHz: 1.6% 1680 MHz: 2.5% 1735 MHz:  23%)
+GPU idle residency:   0.00%
+GPU Power: 8028 mW
+*** Sampled system activity (Wed Sep 23 04:36:44 2026 +0900) (1002.96ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1407 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  65% 1354 MHz: 3.1% 1442 MHz: 2.0% 1530 MHz: 1.3% 1620 MHz: 1.3% 1680 MHz: 1.7% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8604 mW
+*** Sampled system activity (Wed Sep 23 04:36:45 2026 +0900) (1002.98ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1398 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  65% 1354 MHz: 4.4% 1442 MHz: 3.0% 1530 MHz: 1.5% 1620 MHz: 1.3% 1680 MHz: 2.1% 1735 MHz:  23%)
+GPU idle residency:   0.00%
+GPU Power: 8295 mW
+*** Sampled system activity (Wed Sep 23 04:36:46 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1408 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 4.0% 1442 MHz: 2.5% 1530 MHz: 1.4% 1620 MHz: 1.4% 1680 MHz: 3.3% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8228 mW
+*** Sampled system activity (Wed Sep 23 04:36:47 2026 +0900) (1002.92ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1392 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  67% 1354 MHz: 4.2% 1442 MHz: 2.3% 1530 MHz: 1.1% 1620 MHz: 1.2% 1680 MHz: 3.6% 1735 MHz:  21%)
+GPU idle residency:   0.00%
+GPU Power: 8290 mW
+*** Sampled system activity (Wed Sep 23 04:36:48 2026 +0900) (1003.03ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1401 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 5.7% 1442 MHz: 3.6% 1530 MHz: 1.6% 1620 MHz: 1.2% 1680 MHz: 2.3% 1735 MHz:  23%)
+GPU idle residency:   0.00%
+GPU Power: 8123 mW
+*** Sampled system activity (Wed Sep 23 04:36:49 2026 +0900) (1002.92ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1404 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  65% 1354 MHz: 3.7% 1442 MHz: 2.4% 1530 MHz: 1.3% 1620 MHz: 1.2% 1680 MHz: 2.7% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8363 mW
+*** Sampled system activity (Wed Sep 23 04:36:50 2026 +0900) (1003.35ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1404 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  64% 1354 MHz: 4.0% 1442 MHz: 2.8% 1530 MHz: 1.4% 1620 MHz: 1.8% 1680 MHz: 3.2% 1735 MHz:  23%)
+GPU idle residency:   0.00%
+GPU Power: 8658 mW
+*** Sampled system activity (Wed Sep 23 04:36:51 2026 +0900) (1002.94ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1401 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  64% 1354 MHz: 5.1% 1442 MHz: 3.3% 1530 MHz: 1.5% 1620 MHz: 1.2% 1680 MHz: 1.5% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8049 mW
+*** Sampled system activity (Wed Sep 23 04:36:52 2026 +0900) (1002.90ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1402 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  66% 1354 MHz: 3.3% 1442 MHz: 2.0% 1530 MHz: 1.1% 1620 MHz: 1.3% 1680 MHz: 5.3% 1735 MHz:  21%)
+GPU idle residency:   0.00%
+GPU Power: 8238 mW
+*** Sampled system activity (Wed Sep 23 04:36:53 2026 +0900) (1002.96ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1393 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  67% 1354 MHz: 4.0% 1442 MHz: 2.7% 1530 MHz: 1.6% 1620 MHz: 1.8% 1680 MHz: 2.8% 1735 MHz:  21%)
+GPU idle residency:   0.00%
+GPU Power: 8412 mW
+*** Sampled system activity (Wed Sep 23 04:36:54 2026 +0900) (1002.93ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1412 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  62% 1354 MHz: 4.2% 1442 MHz: 2.9% 1530 MHz: 1.8% 1620 MHz: 1.6% 1680 MHz: 1.9% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8129 mW
+*** Sampled system activity (Wed Sep 23 04:36:55 2026 +0900) (1002.93ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1398 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  66% 1354 MHz: 3.4% 1442 MHz: 2.1% 1530 MHz: 1.2% 1620 MHz: 1.4% 1680 MHz: 3.2% 1735 MHz:  22%)
+GPU idle residency:   0.00%
+GPU Power: 8617 mW
+*** Sampled system activity (Wed Sep 23 04:36:56 2026 +0900) (1003.21ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1407 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 4.3% 1442 MHz: 2.9% 1530 MHz: 1.6% 1620 MHz: 1.2% 1680 MHz: 3.0% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8180 mW
+*** Sampled system activity (Wed Sep 23 04:36:57 2026 +0900) (1002.94ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1409 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  64% 1354 MHz: 3.8% 1442 MHz: 2.3% 1530 MHz: 1.4% 1620 MHz: 1.5% 1680 MHz: 2.7% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8356 mW
+*** Sampled system activity (Wed Sep 23 04:36:58 2026 +0900) (1003.33ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1385 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  69% 1354 MHz: 3.3% 1442 MHz: 2.0% 1530 MHz: 1.1% 1620 MHz: 1.8% 1680 MHz: 3.5% 1735 MHz:  19%)
+GPU idle residency:   0.00%
+GPU Power: 8359 mW
+*** Sampled system activity (Wed Sep 23 04:36:59 2026 +0900) (1002.98ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1399 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  65% 1354 MHz: 4.9% 1442 MHz: 2.9% 1530 MHz: 1.2% 1620 MHz: 1.7% 1680 MHz: 3.8% 1735 MHz:  21%)
+GPU idle residency:   0.00%
+GPU Power: 7887 mW
+*** Sampled system activity (Wed Sep 23 04:37:00 2026 +0900) (1003.04ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1405 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  65% 1354 MHz: 3.6% 1442 MHz: 2.2% 1530 MHz: 1.3% 1620 MHz: 1.4% 1680 MHz: 3.3% 1735 MHz:  23%)
+GPU idle residency:   0.00%
+GPU Power: 8181 mW
+*** Sampled system activity (Wed Sep 23 04:37:01 2026 +0900) (1003.04ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1409 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  62% 1354 MHz: 4.6% 1442 MHz: 2.6% 1530 MHz: 1.7% 1620 MHz: 1.7% 1680 MHz: 4.2% 1735 MHz:  23%)
+GPU idle residency:   0.00%
+GPU Power: 8493 mW
+*** Sampled system activity (Wed Sep 23 04:37:02 2026 +0900) (1003.03ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1410 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  61% 1354 MHz: 5.6% 1442 MHz: 3.5% 1530 MHz: 1.9% 1620 MHz: 1.7% 1680 MHz: 2.8% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8017 mW
+*** Sampled system activity (Wed Sep 23 04:37:03 2026 +0900) (1002.95ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1398 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  66% 1354 MHz: 3.4% 1442 MHz: 2.0% 1530 MHz: 1.1% 1620 MHz: 1.8% 1680 MHz: 3.2% 1735 MHz:  22%)
+GPU idle residency:   0.00%
+GPU Power: 8263 mW
+*** Sampled system activity (Wed Sep 23 04:37:04 2026 +0900) (1003.05ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1389 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  67% 1354 MHz: 4.2% 1442 MHz: 2.6% 1530 MHz: 1.2% 1620 MHz: 1.3% 1680 MHz: 4.2% 1735 MHz:  19%)
+GPU idle residency:   0.00%
+GPU Power: 8279 mW
+*** Sampled system activity (Wed Sep 23 04:37:05 2026 +0900) (1002.94ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1410 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 4.2% 1442 MHz: 3.0% 1530 MHz: 1.8% 1620 MHz: 1.7% 1680 MHz: 2.4% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8036 mW
+*** Sampled system activity (Wed Sep 23 04:37:06 2026 +0900) (1002.94ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1392 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  68% 1354 MHz: 3.5% 1442 MHz: 2.1% 1530 MHz: 1.3% 1620 MHz: 1.5% 1680 MHz: 3.2% 1735 MHz:  21%)
+GPU idle residency:   0.00%
+GPU Power: 8235 mW
+*** Sampled system activity (Wed Sep 23 04:37:07 2026 +0900) (1003.00ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1411 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  62% 1354 MHz: 5.5% 1442 MHz: 3.2% 1530 MHz: 1.1% 1620 MHz: 1.4% 1680 MHz: 2.5% 1735 MHz:  25%)
+GPU idle residency:   0.00%
+GPU Power: 8583 mW
+*** Sampled system activity (Wed Sep 23 04:37:08 2026 +0900) (1002.96ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1405 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  65% 1354 MHz: 3.4% 1442 MHz: 2.2% 1530 MHz: 1.2% 1620 MHz: 1.2% 1680 MHz: 2.7% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8358 mW
+*** Sampled system activity (Wed Sep 23 04:37:09 2026 +0900) (1003.45ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1393 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  68% 1354 MHz: 3.0% 1442 MHz: 1.9% 1530 MHz: 1.3% 1620 MHz: 1.2% 1680 MHz: 3.9% 1735 MHz:  21%)
+GPU idle residency:   0.00%
+GPU Power: 8262 mW
+*** Sampled system activity (Wed Sep 23 04:37:10 2026 +0900) (1002.92ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1403 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 4.5% 1442 MHz: 3.2% 1530 MHz: 1.9% 1620 MHz: 2.0% 1680 MHz: 4.4% 1735 MHz:  21%)
+GPU idle residency:   0.00%
+GPU Power: 7915 mW
+*** Sampled system activity (Wed Sep 23 04:37:11 2026 +0900) (1001.30ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1409 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 4.4% 1442 MHz: 3.0% 1530 MHz: 1.5% 1620 MHz: 1.8% 1680 MHz: 2.4% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8275 mW
+*** Sampled system activity (Wed Sep 23 04:37:12 2026 +0900) (1003.08ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1392 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  67% 1354 MHz: 4.0% 1442 MHz: 2.3% 1530 MHz: 1.1% 1620 MHz: 1.1% 1680 MHz: 4.3% 1735 MHz:  20%)
+GPU idle residency:   0.00%
+GPU Power: 8426 mW
+*** Sampled system activity (Wed Sep 23 04:37:13 2026 +0900) (1002.93ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1419 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  61% 1354 MHz: 4.1% 1442 MHz: 2.8% 1530 MHz: 1.7% 1620 MHz: 2.5% 1680 MHz: 4.1% 1735 MHz:  24%)
+GPU idle residency:   0.00%
+GPU Power: 8295 mW
+*** Sampled system activity (Wed Sep 23 04:37:14 2026 +0900) (1002.93ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1401 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  65% 1354 MHz: 3.6% 1442 MHz: 2.0% 1530 MHz: 1.3% 1620 MHz: 2.3% 1680 MHz: 5.0% 1735 MHz:  20%)
+GPU idle residency:   0.00%
+GPU Power: 8505 mW
+*** Sampled system activity (Wed Sep 23 04:37:15 2026 +0900) (1002.96ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1393 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  65% 1354 MHz: 5.9% 1442 MHz: 3.5% 1530 MHz: 1.4% 1620 MHz: 1.5% 1680 MHz: 3.5% 1735 MHz:  20%)
+GPU idle residency:   0.00%
+GPU Power: 8104 mW
+*** Sampled system activity (Wed Sep 23 04:37:16 2026 +0900) (1002.94ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1406 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  65% 1354 MHz: 3.3% 1442 MHz: 1.9% 1530 MHz: 1.1% 1620 MHz: 1.6% 1680 MHz: 4.2% 1735 MHz:  23%)
+GPU idle residency:   0.00%
+GPU Power: 8139 mW
+*** Sampled system activity (Wed Sep 23 04:37:17 2026 +0900) (1002.93ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1394 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  67% 1354 MHz: 3.4% 1442 MHz: 2.0% 1530 MHz: 1.1% 1620 MHz: 2.3% 1680 MHz: 4.2% 1735 MHz:  20%)
+GPU idle residency:   0.00%
+GPU Power: 8240 mW
+*** Sampled system activity (Wed Sep 23 04:37:18 2026 +0900) (1002.95ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1412 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  60% 1354 MHz: 5.9% 1442 MHz: 3.8% 1530 MHz: 1.8% 1620 MHz: 1.9% 1680 MHz: 4.3% 1735 MHz:  22%)
+GPU idle residency:   0.00%
+GPU Power: 8526 mW
+*** Sampled system activity (Wed Sep 23 04:37:19 2026 +0900) (1002.95ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1405 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  66% 1354 MHz: 2.4% 1442 MHz: 1.8% 1530 MHz: 1.3% 1620 MHz: 2.1% 1680 MHz: 4.7% 1735 MHz:  22%)
+GPU idle residency:   0.00%
+GPU Power: 8245 mW
+*** Sampled system activity (Wed Sep 23 04:37:20 2026 +0900) (1003.04ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1391 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  67% 1354 MHz: 3.7% 1442 MHz: 2.4% 1530 MHz: 1.6% 1620 MHz: 1.3% 1680 MHz: 4.5% 1735 MHz:  19%)
+GPU idle residency:   0.00%
+GPU Power: 8304 mW
+*** Sampled system activity (Wed Sep 23 04:37:21 2026 +0900) (1003.24ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1404 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 4.4% 1442 MHz: 3.1% 1530 MHz: 1.8% 1620 MHz: 2.0% 1680 MHz: 3.3% 1735 MHz:  22%)
+GPU idle residency:   0.00%
+GPU Power: 8025 mW
+*** Sampled system activity (Wed Sep 23 04:37:22 2026 +0900) (1003.06ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1395 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  67% 1354 MHz: 3.1% 1442 MHz: 1.8% 1530 MHz: 1.2% 1620 MHz: 1.7% 1680 MHz: 4.4% 1735 MHz:  20%)
+GPU idle residency:   0.00%
+GPU Power: 8204 mW
+*** Sampled system activity (Wed Sep 23 04:37:23 2026 +0900) (1003.01ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1405 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  62% 1354 MHz: 5.3% 1442 MHz: 3.6% 1530 MHz: 2.0% 1620 MHz: 1.6% 1680 MHz: 4.5% 1735 MHz:  21%)
+GPU idle residency:   0.00%
+GPU Power: 8454 mW
+*** Sampled system activity (Wed Sep 23 04:37:24 2026 +0900) (1003.10ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1414 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 3.7% 1442 MHz: 2.3% 1530 MHz: 1.3% 1620 MHz: 2.1% 1680 MHz: 2.4% 1735 MHz:  26%)
+GPU idle residency:   0.00%
+GPU Power: 8512 mW
+*** Sampled system activity (Wed Sep 23 04:37:25 2026 +0900) (1003.19ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1390 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  68% 1354 MHz: 3.7% 1442 MHz: 1.8% 1530 MHz: 1.1% 1620 MHz: 1.5% 1680 MHz: 2.5% 1735 MHz:  21%)
+GPU idle residency:   0.00%
+GPU Power: 8154 mW
+*** Sampled system activity (Wed Sep 23 04:37:26 2026 +0900) (1003.00ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1403 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  63% 1354 MHz: 5.3% 1442 MHz: 3.4% 1530 MHz: 1.6% 1620 MHz: 2.1% 1680 MHz: 2.8% 1735 MHz:  22%)
+GPU idle residency:   0.00%
+GPU Power: 7978 mW
+*** Sampled system activity (Wed Sep 23 04:37:27 2026 +0900) (1002.97ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1406 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  64% 1354 MHz: 3.9% 1442 MHz: 2.4% 1530 MHz: 1.5% 1620 MHz: 2.4% 1680 MHz: 4.4% 1735 MHz:  22%)
+GPU idle residency:   0.00%
+GPU Power: 8255 mW
+*** Sampled system activity (Wed Sep 23 04:37:28 2026 +0900) (1003.01ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1396 MHz
+GPU HW active residency: 100.00% (502 MHz:   0% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:  65% 1354 MHz: 5.0% 1442 MHz: 3.2% 1530 MHz: 1.5% 1620 MHz: 1.9% 1680 MHz: 4.7% 1735 MHz:  19%)
+GPU idle residency:   0.00%
+GPU Power: 8446 mW
+*** Sampled system activity (Wed Sep 23 04:37:29 2026 +0900) (1002.98ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 1352 MHz
+GPU HW active residency:  12.85% (502 MHz: 1.4% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz: 4.7% 1354 MHz: 1.4% 1442 MHz: 1.0% 1530 MHz: .44% 1620 MHz: .34% 1680 MHz: .28% 1735 MHz: 3.2%)
+GPU idle residency:  87.15%
+GPU Power: 886 mW
+*** Sampled system activity (Wed Sep 23 04:37:30 2026 +0900) (1003.04ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.57% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.43%
+GPU Power: 6 mW
+*** Sampled system activity (Wed Sep 23 04:37:31 2026 +0900) (1002.96ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.60% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.40%
+GPU Power: 6 mW
+*** Sampled system activity (Wed Sep 23 04:37:32 2026 +0900) (1003.09ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.58% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.42%
+GPU Power: 6 mW
+*** Sampled system activity (Wed Sep 23 04:37:33 2026 +0900) (1002.92ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.58% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.42%
+GPU Power: 6 mW
+*** Sampled system activity (Wed Sep 23 04:37:34 2026 +0900) (1002.91ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.78% (502 MHz: 1.8% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.22%
+GPU Power: 6 mW
+*** Sampled system activity (Wed Sep 23 04:37:35 2026 +0900) (1002.90ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.59% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.41%
+GPU Power: 6 mW
+*** Sampled system activity (Wed Sep 23 04:37:36 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.60% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.40%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:37 2026 +0900) (1002.92ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.60% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.40%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:38 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.57% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.43%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:39 2026 +0900) (1002.91ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.58% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.42%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:40 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.58% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.42%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:41 2026 +0900) (1002.96ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.58% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.42%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:42 2026 +0900) (1002.92ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.58% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.42%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:43 2026 +0900) (1002.93ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.59% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.41%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:44 2026 +0900) (1002.89ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.56% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.44%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:45 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.57% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.43%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:46 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.58% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.42%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:47 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.58% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.42%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:48 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:49 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.57% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.43%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:50 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.58% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.42%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:51 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.58% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.42%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:52 2026 +0900) (1002.98ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.59% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.41%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:53 2026 +0900) (1003.32ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.58% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.42%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:54 2026 +0900) (1003.21ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.60% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.40%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:55 2026 +0900) (1003.27ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.60% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.40%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:56 2026 +0900) (1002.94ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.58% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.42%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:57 2026 +0900) (1002.98ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.60% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.40%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:58 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.59% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.41%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:37:59 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.59% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.41%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:00 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   4.50% (502 MHz: 4.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  95.50%
+GPU Power: 19 mW
+*** Sampled system activity (Wed Sep 23 04:38:01 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   4.49% (502 MHz: 4.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  95.51%
+GPU Power: 20 mW
+*** Sampled system activity (Wed Sep 23 04:38:02 2026 +0900) (1002.81ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   2.89% (502 MHz: 2.9% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  97.11%
+GPU Power: 11 mW
+*** Sampled system activity (Wed Sep 23 04:38:03 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:04 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:05 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:06 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:07 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:08 2026 +0900) (1003.24ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.67% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.33%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:09 2026 +0900) (1002.82ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:38:10 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.57% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.43%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:11 2026 +0900) (1002.81ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.57% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.43%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:12 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:38:13 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:14 2026 +0900) (1002.81ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:15 2026 +0900) (1002.82ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:16 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:17 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:38:18 2026 +0900) (1003.25ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:38:19 2026 +0900) (1002.82ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.52% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.48%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:20 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:38:21 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.52% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.48%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:38:22 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.50% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.50%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:38:23 2026 +0900) (1002.81ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:24 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:38:25 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:38:26 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:27 2026 +0900) (1002.97ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.56% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.44%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:28 2026 +0900) (1002.81ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:38:29 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:30 2026 +0900) (1002.80ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:31 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:32 2026 +0900) (1002.82ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:33 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.52% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.48%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:38:34 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:35 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.51% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.49%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:38:36 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.51% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.49%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:38:37 2026 +0900) (1002.95ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.56% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.44%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:38 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:39 2026 +0900) (1002.81ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:40 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:41 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.56% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.44%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:42 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:43 2026 +0900) (1002.90ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:44 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:45 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:46 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:47 2026 +0900) (1003.03ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.52% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.48%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:38:48 2026 +0900) (1002.98ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.51% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.49%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:49 2026 +0900) (1000.96ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.51% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.49%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:50 2026 +0900) (1003.11ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:51 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.51% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.49%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:38:52 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.52% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.48%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:53 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:38:54 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.50% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.50%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:55 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:56 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:57 2026 +0900) (1002.82ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.56% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.44%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:58 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:38:59 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.56% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.44%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:00 2026 +0900) (1003.20ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   4.41% (502 MHz: 4.4% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  95.59%
+GPU Power: 18 mW
+*** Sampled system activity (Wed Sep 23 04:39:01 2026 +0900) (1003.00ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   4.20% (502 MHz: 4.2% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  95.80%
+GPU Power: 18 mW
+*** Sampled system activity (Wed Sep 23 04:39:02 2026 +0900) (1003.03ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   2.44% (502 MHz: 2.4% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  97.56%
+GPU Power: 9 mW
+*** Sampled system activity (Wed Sep 23 04:39:03 2026 +0900) (1002.82ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:04 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:05 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:06 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:07 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:08 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:09 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:10 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:11 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:12 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:13 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:14 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:15 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+===== aneonly =====
+*** Sampled system activity (Wed Sep 23 04:39:39 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.51% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.49%
+GPU Power: 4 mW
+*** Sampled system activity (Wed Sep 23 04:39:40 2026 +0900) (1002.91ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.51% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.49%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:41 2026 +0900) (1002.92ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:42 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:43 2026 +0900) (1003.00ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.56% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.44%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:44 2026 +0900) (1002.95ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:45 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.56% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.44%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:46 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.57% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.43%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:47 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.57% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.43%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:48 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.56% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.44%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:49 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:50 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:51 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.52% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.48%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:52 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.52% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.48%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:53 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.71% (502 MHz: 1.7% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.29%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:54 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.52% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.48%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:55 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:56 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.52% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.48%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:57 2026 +0900) (1002.82ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.52% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.48%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:58 2026 +0900) (1002.85ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.51% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.49%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:39:59 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.52% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.48%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:00 2026 +0900) (1002.82ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   6.87% (502 MHz: 6.9% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  93.13%
+GPU Power: 32 mW
+*** Sampled system activity (Wed Sep 23 04:40:01 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   5.26% (502 MHz: 5.3% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  94.74%
+GPU Power: 24 mW
+*** Sampled system activity (Wed Sep 23 04:40:02 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   2.08% (502 MHz: 2.1% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  97.92%
+GPU Power: 8 mW
+*** Sampled system activity (Wed Sep 23 04:40:03 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:04 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:05 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.57% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.43%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:06 2026 +0900) (1002.82ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.56% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.44%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:07 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:08 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.56% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.44%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:09 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:10 2026 +0900) (1002.83ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:11 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:12 2026 +0900) (1002.82ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.55% (502 MHz: 1.6% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.45%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:13 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.52% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.48%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:14 2026 +0900) (1002.86ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.50% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.50%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:15 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.49% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.51%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:16 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:17 2026 +0900) (1002.84ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.52% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.48%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:18 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.51% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.49%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:19 2026 +0900) (1002.88ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.52% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.48%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:20 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:21 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.53% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.47%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:22 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.54% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.46%
+GPU Power: 5 mW
+*** Sampled system activity (Wed Sep 23 04:40:23 2026 +0900) (1002.87ms elapsed) ***
+Current pressure level: Nominal
+GPU HW active frequency: 502 MHz
+GPU HW active residency:   1.51% (502 MHz: 1.5% 669 MHz:   0% 834 MHz:   0% 1002 MHz:   0% 1090 MHz:   0% 1178 MHz:   0% 1266 MHz:   0% 1354 MHz:   0% 1442 MHz:   0% 1530 MHz:   0% 1620 MHz:   0% 1680 MHz:   0% 1735 MHz:   0%)
+GPU idle residency:  98.49%
+GPU Power: 5 mW
