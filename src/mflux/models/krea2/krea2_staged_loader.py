@@ -6,12 +6,14 @@ import mlx.core as mx
 import mlx.nn as nn
 
 from mflux.models.common.config import ModelConfig
+from mflux.models.common.lora.mapping.lora_loader import LoRALoader
 from mflux.models.common.resolution.path_resolution import PathResolution
 from mflux.models.common.weights.loading.weight_applier import WeightApplier
 from mflux.models.common.weights.loading.weight_definition import ComponentDefinition
 from mflux.models.common.weights.loading.weight_loader import WeightLoader
 from mflux.models.krea2.model.krea2_text_encoder.text_encoder import Krea2TextEncoder
 from mflux.models.krea2.model.krea2_transformer.transformer import Krea2Transformer
+from mflux.models.krea2.weights.krea2_lora_mapping import Krea2LoRAMapping
 from mflux.models.krea2.weights.krea2_weight_definition import Krea2WeightDefinition
 from mflux.models.krea2.weights.krea2_weight_stream import Krea2BlockStream
 from mflux.models.qwen.model.qwen_vae.qwen_vae import QwenVAE
@@ -31,7 +33,14 @@ class Krea2StagedLoader:
     DOWN_SPLITS = 4
     NATIVE_NORM = True
 
-    def __init__(self, model_path: str, model_config: ModelConfig, quantize: int | None = None):
+    def __init__(
+        self,
+        model_path: str,
+        model_config: ModelConfig,
+        quantize: int | None = None,
+        lora_paths: list[str] | None = None,
+        lora_scales: list[float] | None = None,
+    ):
         root = PathResolution.resolve(
             path=model_path,
             patterns=Krea2WeightDefinition.get_download_patterns(model_config.model_name),
@@ -41,6 +50,8 @@ class Krea2StagedLoader:
         self.root: Path = root
         self.model_config = model_config
         self.quantize = quantize
+        self.lora_paths = lora_paths
+        self.lora_scales = lora_scales
         self.bits: int | None = None
         self.stream: Krea2BlockStream | None = None
 
@@ -64,6 +75,16 @@ class Krea2StagedLoader:
         stream = Krea2BlockStream(Krea2BlockStream.locate(self.root))
         transformer = Krea2Transformer(**(self.model_config.transformer_overrides or {}))
         self._apply(transformer, self._component("transformer"), materialize=False)
+        # Never baked: a streamed block's weights arrive from disk on every step, so there is
+        # nothing stable to fold into. The adapters ride as a side path instead, and their
+        # factors are the one part of a block that stays resident between steps.
+        self.lora_paths, self.lora_scales = LoRALoader.load_and_apply_lora(
+            lora_mapping=Krea2LoRAMapping.get_mapping(),
+            transformer=transformer,
+            lora_paths=self.lora_paths,
+            lora_scales=self.lora_scales,
+            bake_lora=False,
+        )
         stream.attach(transformer, down_splits=self.DOWN_SPLITS, native_norm=self.NATIVE_NORM)
         self.stream = stream
         return transformer

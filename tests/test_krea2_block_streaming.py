@@ -6,6 +6,7 @@ from mlx import nn
 from mlx.utils import tree_flatten, tree_unflatten
 
 from mflux.models.common.config import ModelConfig
+from mflux.models.common.lora.layer.linear_lora_layer import LoRALinear
 from mflux.models.krea2.krea2_initializer import Krea2Initializer
 from mflux.models.krea2.model.krea2_transformer.common import Krea2RMSNorm
 from mflux.models.krea2.model.krea2_transformer.feed_forward import Krea2SwiGLU
@@ -49,10 +50,21 @@ class _StreamFixture:
         (path / Krea2BlockStream.INDEX_FILE).write_text(json.dumps({"weight_map": weight_map}))
 
     @staticmethod
-    def zero_blocks(transformer: Krea2Transformer) -> None:
+    def zero_blocks(transformer: Krea2Transformer, keep: tuple = ()) -> None:
         for block in transformer.blocks:
             flat = tree_flatten(block.parameters())
-            block.update(tree_unflatten([(k, mx.zeros_like(v)) for k, v in flat]))
+            kept = [(k, v if any(t in k for t in keep) else mx.zeros_like(v)) for k, v in flat]
+            block.update(tree_unflatten(kept))
+        mx.eval(transformer.parameters())
+
+    @staticmethod
+    def wrap_with_lora(transformer: Krea2Transformer, r: int = 4, scale: float = 0.5) -> None:
+        # Stands in for a runtime adapter without needing a file on disk. The wrappers are
+        # what the streamed bind has to see through: the checkpoint still names attn.wq.weight
+        # while the live block keeps that tensor at attn.wq.linear.weight.
+        for block in transformer.blocks:
+            for holder, name in ((block.attn, "wq"), (block.mlp, "down")):
+                setattr(holder, name, LoRALinear.from_linear(getattr(holder, name), r=r, scale=scale))
         mx.eval(transformer.parameters())
 
     @staticmethod
@@ -156,15 +168,52 @@ def test_attach_rejects_a_checkpoint_with_the_wrong_block_count(tmp_path):
         stream.attach(_StreamFixture.transformer(layers=2))
 
 
-def test_block_streaming_refuses_a_runtime_lora_before_touching_the_disk():
+def test_streamed_forward_matches_the_resident_one_through_a_lora(tmp_path):
+    resident = _StreamFixture.transformer()
+    mx.eval(resident.parameters())
+    # Written before the adapters go on: a checkpoint never holds them.
+    _StreamFixture.write_checkpoint(resident, tmp_path / "transformer")
+    streamed = _StreamFixture.transformer()
+    _StreamFixture.wrap_with_lora(resident)
+    _StreamFixture.wrap_with_lora(streamed)
+    streamed.update(resident.parameters())
+    mx.eval(streamed.parameters())
+    hidden, timestep, context = _StreamFixture.inputs(resident)
+    expected = resident(hidden, timestep, context)
+
+    # Only the tensors the checkpoint supplies are zeroed, so a bind that misses the adapter's
+    # position fails and an adapter that never fires fails too.
+    _StreamFixture.zero_blocks(streamed, keep=("lora_A", "lora_B"))
+    stream = Krea2BlockStream(Krea2BlockStream.locate(tmp_path))
+    stream.attach(streamed)
+
+    assert stream.wrapped == {"attn.wq": "linear", "mlp.down": "linear"}
+    assert mx.array_equal(streamed(hidden, timestep, context), expected)
+    assert mx.array_equal(streamed(hidden, timestep, context), expected)
+
+
+def test_down_projection_in_slices_matches_the_whole_one_through_a_lora():
+    mlp = Krea2SwiGLU(features=64, multiplier=2)
+    mx.eval(mlp.parameters())
+    nn.quantize(mlp, group_size=64, bits=8)
+    mlp.down = LoRALinear.from_linear(mlp.down, r=4, scale=0.5)
+    mx.eval(mlp.parameters())
+    x = mx.random.normal((1, 8, 64), key=mx.random.key(0))
+    whole = mlp(x)
+
+    mlp.down_splits = 2
+    mlp._down_adapter = Krea2BlockStream._down_adapter(mlp.down)
+
+    sliced = mlp(x)
+    assert mlp._down_adapter is not None
+    assert mx.abs(sliced - whole).max().item() < 1e-3 * mx.abs(whole).max().item()
+
+
+def test_block_streaming_hands_the_lora_to_the_staged_loader(tmp_path):
     model = type("Stub", (), {})()
 
-    with pytest.raises(ValueError, match="bake_lora_checkpoint"):
-        Krea2Initializer.init(
-            model=model,
-            model_config=ModelConfig.krea2(),
-            quantize=None,
-            model_path="/nonexistent",
-            lora_paths=["some-lora.safetensors"],
-            block_streaming=True,
-        )
+    Krea2Initializer._init_staged(model, str(tmp_path), ModelConfig.krea2(), None, ["a.safetensors"], [0.7])
+
+    assert model.staged_loader.lora_paths == ["a.safetensors"]
+    assert model.staged_loader.lora_scales == [0.7]
+    assert (model.lora_paths, model.lora_scales) == (["a.safetensors"], [0.7])

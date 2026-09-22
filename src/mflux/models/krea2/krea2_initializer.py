@@ -31,7 +31,7 @@ class Krea2Initializer:
         path = model_path if model_path else model_config.model_name
         Krea2Initializer._init_config(model, model_config)
         if block_streaming:
-            Krea2Initializer._init_staged(model, path, model_config, quantize, lora_paths)
+            Krea2Initializer._init_staged(model, path, model_config, quantize, lora_paths, lora_scales)
             Krea2Initializer._init_tokenizers(model, path)
             return
         weights = Krea2Initializer._load_weights(path, model_config)
@@ -50,17 +50,21 @@ class Krea2Initializer:
         model_config: ModelConfig,
         quantize: int | None,
         lora_paths: list[str] | None,
+        lora_scales: list[float] | None,
     ) -> None:
         # Nothing is built here. Each component is built, used and released inside
         # generate_image, because all three at once is 22.2 GB and this mode exists for
-        # machines that cannot hold that.
-        if lora_paths:
-            raise ValueError(
-                "Block streaming cannot apply a LoRA at load time: the blocks live on disk and are "
-                "bound one at a time. Fold the LoRA into the checkpoint first with "
-                "tools/bench/bake_lora_checkpoint.py, then point --model-path at the result."
-            )
-        model.staged_loader = Krea2StagedLoader(model_path=path, model_config=model_config, quantize=quantize)
+        # machines that cannot hold that. The LoRAs travel with the loader and are applied
+        # unbaked when it builds the transformer, since a streamed block has no stable
+        # weights to fold them into.
+        model.staged_loader = Krea2StagedLoader(
+            model_path=path,
+            model_config=model_config,
+            quantize=quantize,
+            lora_paths=lora_paths,
+            lora_scales=lora_scales,
+        )
+        model.lora_paths, model.lora_scales = lora_paths, lora_scales
         model.text_encoder = None
         model.transformer = None
         model.vae = None

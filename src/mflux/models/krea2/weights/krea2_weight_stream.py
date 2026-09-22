@@ -10,6 +10,9 @@ import mlx.core as mx
 import numpy as np
 from mlx.utils import tree_flatten, tree_unflatten
 
+from mflux.models.common.lora.layer.fused_linear_lora_layer import FusedLoRALinear
+from mflux.models.common.lora.layer.linear_lokr_layer import LoKrLinear
+from mflux.models.common.lora.layer.linear_lora_layer import LoRALinear
 from mflux.models.krea2.model.krea2_transformer.common import Krea2RMSNorm
 
 # Streams the DiT's transformer blocks from disk instead of holding them in memory.
@@ -70,6 +73,9 @@ class Krea2BlockStream:
     # more than about two blocks' worth of dropped buffers and activations.
     CACHE_LIMIT_BYTES = 2 << 30
     INDEX_FILE = "model.safetensors.index.json"
+    # An adapter keeps the real projection as a child of itself, so once one is applied the
+    # checkpoint's attn.wq.weight belongs at attn.wq.linear.weight. Child attribute per kind.
+    WRAPPERS = ((LoRALinear, "linear"), (LoKrLinear, "linear"), (FusedLoRALinear, "base_linear"))
     # safetensors dtype -> (numpy view dtype, mlx dtype). bf16 has no numpy dtype: it is
     # allocated as uint16 and viewed as bf16, and the two share one buffer.
     DTYPES = {
@@ -97,6 +103,7 @@ class Krea2BlockStream:
         }
         self.pool: list[tuple[dict, dict[str, memoryview]]] = []
         self.turn = 0
+        self.wrapped: dict[str, str] = {}
 
     @staticmethod
     def _header(path: Path) -> tuple[int, dict]:
@@ -132,9 +139,13 @@ class Krea2BlockStream:
             mx.eval(getattr(transformer, name).parameters())
         mx.clear_cache()
         mx.set_cache_limit(Krea2BlockStream.CACHE_LIMIT_BYTES)
+        # Where the adapters sit has to be known before any layout is taken: the buffers the
+        # reader fills are keyed by the position each tensor now occupies in the block.
+        self.wrapped = Krea2BlockStream._wrapped_paths(transformer.blocks[0])
         for block in transformer.blocks:
             if down_splits > 1:
                 block.mlp.down_splits = down_splits
+                block.mlp._down_adapter = Krea2BlockStream._down_adapter(block.mlp.down)
             if native_norm:
                 for module in block.modules():
                     if isinstance(module, Krea2RMSNorm):
@@ -152,8 +163,38 @@ class Krea2BlockStream:
         flat = []
         for shard, keys in self.by_block[index].items():
             data = mx.load(str(self.root / shard))
-            flat.extend((key[len(prefix) :], data[key]) for key in keys)
+            flat.extend((self._position(key[len(prefix) :]), data[key]) for key in keys)
         return tree_unflatten(flat)
+
+    def _position(self, name: str) -> str:
+        # Where a checkpoint tensor belongs in the live block, which is one level deeper
+        # than the checkpoint says whenever an adapter wraps its layer.
+        head, _, leaf = name.rpartition(".")
+        child = self.wrapped.get(head)
+        return f"{head}.{child}.{leaf}" if child else name
+
+    @staticmethod
+    def _wrapped_paths(block) -> dict[str, str]:
+        wrapped = {}
+        for path, module in block.named_modules():
+            for kind, child in Krea2BlockStream.WRAPPERS:
+                if isinstance(module, kind):
+                    wrapped[path] = child
+        return wrapped
+
+    @staticmethod
+    def _down_adapter(down):
+        # (base projection, delta) for the adapters whose contribution is a side path that
+        # does not need the base output, so the K-split can still run underneath them. LoKr's
+        # dora variant rescales the base weight itself and has no such form, so it is left
+        # out and keeps the unsplit projection.
+        if isinstance(down, LoRALinear):
+            return down.linear, lambda h: down.scale * mx.matmul(mx.matmul(h, down.lora_A), down.lora_B)
+        if isinstance(down, FusedLoRALinear) and all(isinstance(a, LoRALinear) for a in down.loras):
+            return down.base_linear, lambda h: sum(
+                a.scale * mx.matmul(mx.matmul(h, a.lora_A), a.lora_B) for a in down.loras
+            )
+        return None
 
     def prefetch(self, index: int) -> float:
         # The fallback when the checkpoint cannot be read directly: reads and materializes a
@@ -177,7 +218,8 @@ class Krea2BlockStream:
             for key in keys:
                 meta = header[key]
                 lo, hi = meta["data_offsets"]
-                rows.append((key[len(prefix) :], shard, base + lo, hi - lo, meta["dtype"], tuple(meta["shape"])))
+                name = self._position(key[len(prefix) :])
+                rows.append((name, shard, base + lo, hi - lo, meta["dtype"], tuple(meta["shape"])))
         return sorted(rows)
 
     def _direct_readable(self) -> bool:

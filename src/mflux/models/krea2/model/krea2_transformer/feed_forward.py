@@ -17,15 +17,22 @@ class Krea2SwiGLU(nn.Module):
         # changes the accumulation order, so the resident path keeps its reference images.
         # See docs/16gb/measurements/2026-09-22-m9-ceiling-probe.md, section 2.
         self.down_splits = 1
+        # Set to (base projection, delta) when an adapter wraps the down projection, so the
+        # K-split can run on the base and have the adapter's contribution added back. Only
+        # Krea2BlockStream installs it, and only for adapters whose delta it can express
+        # without the base output; everything else falls through to self.down below.
+        self._down_adapter = None
 
     def __call__(self, x: mx.array) -> mx.array:
         h = nn.silu(self.gate(x)) * self.up(x)
-        if self.down_splits > 1 and isinstance(self.down, nn.QuantizedLinear):
-            return self._down_in_slices(h)
+        base, delta = self._down_adapter if self._down_adapter is not None else (self.down, None)
+        if self.down_splits > 1 and isinstance(base, nn.QuantizedLinear):
+            sliced = self._down_in_slices(h, base)
+            return sliced if delta is None else sliced + delta(h)
         return self.down(h)
 
-    def _down_in_slices(self, h: mx.array) -> mx.array:
-        d, parts = self.down, self.down_splits
+    def _down_in_slices(self, h: mx.array, d: nn.QuantizedLinear) -> mx.array:
+        parts = self.down_splits
         cache = getattr(self, "_down_planes", None)
         if cache is None or cache[0] is not d.weight:
             # (N, K/pack) -> (parts, N, K/pack/parts), cut once per bound weight: the
