@@ -26,10 +26,10 @@
 |---|---|
 | `docs/16gb/research/` | 調査メモ(ウェイトの入手元、実装の読み解き、モデル固有の作法) |
 | `docs/16gb/measurements/` | 実測値。機材・日付・再現コードつき |
-| `docs/16gb/runs/` | 実行ログ(swapwatch の CSV、コマンド、所要時間) |
+| `docs/16gb/runs/` | 実行ログ(swapwatch の CSV / JSON)と `images/` に出力画像 |
 | `.cursor/plans/` | 実装計画(RULE.md の規約) |
 | `tools/` | fork 固有のツール(`swapwatch.py`) |
-| `tools/bench/` | 段階ごとの計測スクリプト(`memstat.py` / `te_encode.py` / `dit_steps.py`) |
+| `tools/bench/` | 段階ごとの計測スクリプト(`memstat.py` / `te_encode.py` / `dit_steps.py` / `vae_decode.py`) |
 | `~/Library/Caches/mflux/16gb-bench/` | 段の間で受け渡す中間生成物(埋め込み・latent)。リポジトリには入れない |
 
 ## 索引
@@ -51,10 +51,13 @@
 
 **実測済み(事実)**
 
-- このマシン: `hw.memsize` 19.33GB、`iogpu.wired_limit_mb` 14.34GB、
-  `max_recommended_working_set_size` 15.03GB、GPU の max buffer length 9.66GB。
+- このマシン: `hw.memsize` 19.33GB、GPU の max buffer length 9.66GB。
+  **`iogpu.wired_limit_mb` の既定は 0**(以前 14336 と記録していたのは手動設定の残骸)。
+  既定 0 では `max_recommended_working_set_size` は 12.88GB、14336 MiB で 15.03GB、
+  15360 MiB で 16.11GB。**単位は MiB**(14336 MiB = 15,032,385,536 B と一致)。
 - q8 の実サイズ: DiT 13.62GB(1 ブロック 461.3MB × 28 + globals 0.71GB)、
-  TE 8.05GB、VAE 0.51GB。**DiT + 4step LoRA = 14.06GB** が載るかどうかが勝負どころ。
+  TE 8.05GB、VAE 0.51GB。**4step LoRA は bake すると常駐を増やさない**
+  (q8 のウェイトに畳み込まれる)。bake 中だけ一時的に 15.23GB まで上がる。
 - 実ウェイトの読み出し: 1 ブロック 461.3MB を **74 ms (6.24 GB/s)**、
   transformer 全体 13.62GB を 3.05 s (4.47 GB/s)。散らばった配置でも帯域は落ちない。
 - M3 Pro の行列積は 5.1〜5.9 TFLOPS(合成テンソル)。
